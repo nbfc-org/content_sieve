@@ -2,7 +2,8 @@
   <div id="app">
     <p class="username">{{ currentUser.username }}'s posts:</p>
     <ul>
-      <li v-for="post in posts" :key="post.id">{{ post.content.url ? post.content.title : post.content.body }}</li>
+      <li v-for="post in posts" :key="post.id">{{ post.content.url ? post.content.title : post.content.body }} id: {{post.id}} parent: {{post.parent}} <a href="wut" v-on:click.prevent="reply(post)">reply</a></li>
+
     </ul>
     <div>
       <input v-model="newPostContent">
@@ -33,11 +34,12 @@ const POSTS_BY_USER = gql`query ($userId: String!) {
         title
       }
     }
+    parent
   }
 }`;
 
-const ADD_POST = gql`mutation ($content: String!) {
-  addPost(content: $content) {
+const ADD_POST = gql`mutation ($content: String!, $parent: ID) {
+  addPost(content: $content, parent: $parent) {
     id
     content {
       ... on Text {
@@ -48,6 +50,7 @@ const ADD_POST = gql`mutation ($content: String!) {
         title
       }
     }
+    parent
   }
 }`;
 
@@ -80,16 +83,20 @@ export default {
         }
     },
     methods: {
-        addPost() {
+        reply(post) {
+            this.addPost(post.id);
+        },
+        addPost(parent) {
             this.$apollo.mutate({
                 mutation: ADD_POST,
-                variables: { content: this.newPostContent },
+                variables: { content: this.newPostContent, parent },
                 update: updateAddPost.bind(this),
                 optimisticResponse: {
                     __typename: 'Mutation',
                     addPost: {
                         __typename: 'Post',
                         id: 'xyz-?',
+                        parent: 'xyz-?',
                         content: {
                             __typename: 'Text',
                             body: this.newPostContent,
@@ -99,7 +106,7 @@ export default {
                 },
             })
 
-            this.newPostContent = ''
+            // this.newPostContent = ''
         }
     },
     apollo: {

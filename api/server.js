@@ -7,7 +7,7 @@ const schema = gql(`
   }
 
   type Mutation {
-    addPost(content: String!): Post
+    addPost(content: String!, parent: ID): Post
   }
 
   type User {
@@ -31,6 +31,8 @@ const schema = gql(`
     id: ID!
     content: Content!
     userId: ID!
+    parent: ID
+    replies: [ID]
   }
 `);
 
@@ -50,6 +52,7 @@ data.posts = [
             body: "Second Post - Hello again",
         },
         userId: 'abc-1',
+        parent: 'xyz-1',
     },
     {
         id: 'xyz-3',
@@ -58,6 +61,7 @@ data.posts = [
             url: "https://google.com",
         },
         userId: 'abc-1',
+        parent: 'xyz-1',
     }
 ];
 
@@ -82,17 +86,18 @@ var resolvers = {
         },
         postsByUser: (_, { userId }, { data }) => {
             let posts = data.posts.filter( p => p.userId === userId );
-            return posts
+            return posts;
         },
     },
     Mutation: {
-        addPost: async (_, { content }, { currentUserId, data }) => {
+        addPost: async (_, { content, parent }, { currentUserId, data }) => {
             let post = {
                 id: 'xyz-' + (data.posts.length + 1),
                 content: {
                     body: content,
                 },
                 userId: currentUserId,
+                parent,
             };
             data.posts.push(post);
             return post;
