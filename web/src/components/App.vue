@@ -69,6 +69,15 @@ export default {
                 mutation: ADD_POST,
                 variables: { content: this.newPostContent },
                 update: updateAddPost.bind(this),
+                optimisticResponse: {
+                    __typename: 'Mutation',
+                    addPost: {
+                        __typename: 'Post',
+                        id: 'xyz-?',
+                        content: this.newPostContent,
+                        userId: this.currentUser.id
+                    },
+                },
             })
 
             this.newPostContent = ''
