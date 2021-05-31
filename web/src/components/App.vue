@@ -2,7 +2,7 @@
   <div id="app">
     <p class="username">{{ currentUser.username }}'s posts:</p>
     <ul>
-      <li v-for="post in posts" :key="post.id">{{ post.content }}</li>
+      <li v-for="post in posts" :key="post.id">{{ post.content.url ? post.content.title : post.content.body }}</li>
     </ul>
     <div>
       <input v-model="newPostContent">
@@ -24,14 +24,30 @@ const CURRENT_USER = gql`query {
 const POSTS_BY_USER = gql`query ($userId: String!) {
   postsByUser(userId: $userId) {
     id
-    content
+    content {
+      ... on Text {
+        body
+      }
+      ... on Link {
+        url
+        title
+      }
+    }
   }
 }`;
 
 const ADD_POST = gql`mutation ($content: String!) {
   addPost(content: $content) {
     id
-    content
+    content {
+      ... on Text {
+        body
+      }
+      ... on Link {
+        url
+        title
+      }
+    }
   }
 }`;
 
@@ -74,7 +90,10 @@ export default {
                     addPost: {
                         __typename: 'Post',
                         id: 'xyz-?',
-                        content: this.newPostContent,
+                        content: {
+                            __typename: 'Text',
+                            body: this.newPostContent,
+                        },
                         userId: this.currentUser.id
                     },
                 },

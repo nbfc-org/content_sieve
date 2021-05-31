@@ -1,0 +1,1 @@
+{"__schema":{"types":[{"kind":"UNION","name":"Content","possibleTypes":[{"name":"Link"},{"name":"Text"}]}]}}

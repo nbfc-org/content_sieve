@@ -16,9 +16,20 @@ const schema = gql(`
     posts: [Post]
   }
 
+  type Text {
+    body: String!
+  }
+
+  type Link {
+    url: String!
+    title: String
+  }
+
+  union Content = Link | Text
+
   type Post {
     id: ID!
-    content: String!
+    content: Content!
     userId: ID!
   }
 `);
@@ -28,18 +39,25 @@ var data = {};
 data.posts = [
     {
         id: 'xyz-1',
-        content: "First Post - Hello world",
+        content: {
+            body: "First Post - Hello world",
+        },
         userId: 'abc-1',
     },
     {
         id: 'xyz-2',
-        content: "Second Post - Hello again",
+        content: {
+            body: "Second Post - Hello again",
+        },
         userId: 'abc-1',
     },
     {
         id: 'xyz-3',
-        content: "Random Post",
-        userId: 'abc-2',
+        content: {
+            title: "Random Post",
+            url: "https://google.com",
+        },
+        userId: 'abc-1',
     }
 ];
 
@@ -71,7 +89,9 @@ var resolvers = {
         addPost: async (_, { content }, { currentUserId, data }) => {
             let post = {
                 id: 'xyz-' + (data.posts.length + 1),
-                content: content,
+                content: {
+                    body: content,
+                },
                 userId: currentUserId,
             };
             data.posts.push(post);
@@ -83,7 +103,18 @@ var resolvers = {
             let posts = data.posts.filter( p => p.userId === parent.id );
             return posts;
         }
-    }
+    },
+    Content: {
+        __resolveType(obj, context, info){
+            if(obj.body){
+                return 'Text';
+            }
+            if(obj.url){
+                return 'Link';
+            }
+            return null;
+        },
+    },
 };
 
 const server = new ApolloServer({
