@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "nohup nodemon server.js </dev/null | tee /dev/null",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +11,8 @@
   "author": "",
   "dependencies": {
     "apollo-server": "^2.25.0",
-    "graphql": "^15.5.0"
+    "graphql": "^15.5.0",
+    "symbol-tree": "^3.2.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
