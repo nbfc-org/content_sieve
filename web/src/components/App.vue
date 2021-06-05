@@ -2,8 +2,7 @@
   <div id="app">
     <p class="username">{{ currentUser.username }}'s posts:</p>
     <ul>
-      <li v-for="post in posts" :key="post.id">{{ post.content.url ? post.content.title : post.content.body }} id: {{post.id}} parent: {{post.parent}} <a href="wut" v-on:click.prevent="reply(post)">reply</a></li>
-
+      <li v-for="post in posts" :key="post.id">{{ post.content.url ? post.content.title : post.content.body }} id: {{post.id}} parent: {{post.parent}} <a href="wut" v-on:click.prevent="reply(post)">reply</a> {{ new Date(post.createdAt) }}</li>
     </ul>
     <div>
       <input v-model="newPostContent">
@@ -35,6 +34,7 @@ const POSTS_BY_USER = gql`query ($userId: String!) {
       }
     }
     parent
+    createdAt
   }
 }`;
 
@@ -51,6 +51,7 @@ const ADD_POST = gql`mutation ($content: String!, $parent: ID) {
       }
     }
     parent
+    createdAt
   }
 }`;
 
@@ -101,6 +102,7 @@ export default {
                             __typename: 'Text',
                             body: this.newPostContent,
                         },
+                        createdAt: new Date(),
                         userId: this.currentUser.id
                     },
                 },

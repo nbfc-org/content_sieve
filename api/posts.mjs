@@ -8,6 +8,7 @@ const p = [
         content: {
             body: "First Post - Hello world",
         },
+        createdAt: '2020-09-01T21:11:07.000Z',
         userId: 'abc-1',
     },
     {
@@ -15,6 +16,7 @@ const p = [
         content: {
             body: "Second Post - Hello again",
         },
+        createdAt: '2020-09-01T21:11:07.000Z',
         userId: 'abc-1',
     },
     {
@@ -23,6 +25,7 @@ const p = [
             title: "Random Post",
             url: "https://google.com",
         },
+        createdAt: '2020-09-01T21:11:07.000Z',
         userId: 'abc-1',
     }
 ];
