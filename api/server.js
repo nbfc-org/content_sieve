@@ -18,7 +18,8 @@ const schema = gql(`
   type User {
     id: ID!
     username: String!
-    posts: [Post]
+    posts: [ID]
+    karma: Int
   }
 
   type Text {
@@ -39,11 +40,31 @@ const schema = gql(`
     createdAt: Timestamp!
     parent: ID
     replies: [ID]
-    tags: [Tag]
+    tags: [ID]
+    score: Int
   }
 
   type Tag {
+    id: ID!
     slug: String!
+    createdAt: Timestamp!
+    posts: [ID]
+  }
+
+  enum VoteType {
+    UP,
+    DOWN,
+    FLAG,
+    SAVE,
+    HIDE,
+  }
+
+  type Vote {
+    id: ID!
+    type: VoteType!
+    createdAt: Timestamp!
+    userId: ID!
+    postId: ID!
   }
 `);
 
