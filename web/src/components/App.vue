@@ -13,6 +13,7 @@
 
 <script>
 import gql from 'graphql-tag'
+import uuid62 from 'uuid62';
 
 const CURRENT_USER = gql`query {
   currentUser {
@@ -96,8 +97,8 @@ export default {
                     __typename: 'Mutation',
                     addPost: {
                         __typename: 'Post',
-                        id: 'xyz-?',
-                        parent: 'xyz-?',
+                        id: uuid62.v4(),
+                        parent: parent || uuid62.v4(),
                         content: {
                             __typename: 'Text',
                             body: this.newPostContent,

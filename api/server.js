@@ -1,6 +1,9 @@
 import { ApolloServer, gql } from 'apollo-server';
 import scalars from 'graphql-scalars';
 const { DateTimeResolver } = scalars;
+
+import uuid62 from 'uuid62';
+
 import data from './posts.mjs';
 
 const schema = gql(`
@@ -82,7 +85,7 @@ var resolvers = {
     Mutation: {
         addPost: async (_, { content, parent }, { currentUserId, data }) => {
             let post = {
-                id: 'xyz-' + (data.thread.length + 1),
+                id: uuid62.v4(),
                 content: {
                     body: content,
                 },

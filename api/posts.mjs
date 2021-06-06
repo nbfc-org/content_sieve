@@ -1,10 +1,11 @@
 import SymbolTree from 'symbol-tree';
+import uuid62 from 'uuid62';
 
 const data = {};
 
 const p = [
     {
-        id: 'xyz-1',
+        id: uuid62.v4(),
         content: {
             body: "First Post - Hello world",
         },
@@ -12,7 +13,7 @@ const p = [
         userId: 'abc-1',
     },
     {
-        id: 'xyz-2',
+        id: uuid62.v4(),
         content: {
             body: "Second Post - Hello again",
         },
@@ -20,7 +21,7 @@ const p = [
         userId: 'abc-1',
     },
     {
-        id: 'xyz-3',
+        id: uuid62.v4(),
         content: {
             title: "Random Post",
             url: "https://google.com",
@@ -36,14 +37,12 @@ class Thread {
         this.root = {};
         this.tree.initialize(this.root);
         this.lookup = {}
-        this.length = 0;
         this.lookup[undefined] = this.root;
         this.reply(undefined, newPost);
     }
     insert(newPost) {
         const { id } = newPost;
         this.lookup[id] = newPost;
-        this.length += 1;
         return id;
     }
     reply(parentId, newPost) {

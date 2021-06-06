@@ -13,7 +13,8 @@
     "apollo-server": "^2.25.0",
     "graphql": "^15.5.0",
     "graphql-scalars": "^1.9.3",
-    "symbol-tree": "^3.2.4"
+    "symbol-tree": "^3.2.4",
+    "uuid62": "^1.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
