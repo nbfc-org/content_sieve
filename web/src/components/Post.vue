@@ -35,11 +35,11 @@
             <button type="button">Flag</button>
 
             <!-- Reply form start -->
-            <form method="POST" class="reply-form d-none" :id="`comment-${post.id}-reply-form`">
-                <textarea placeholder="Reply to comment" rows="4"></textarea>
-                <button type="submit">Submit</button>
+            <div class="reply-form d-none" :id="`comment-${post.id}-reply-form`">
+                <textarea v-model="newPostContent" placeholder="Reply to comment" rows="4"></textarea>
+                <button @click="addPost">Submit</button>
                 <button type="button" data-toggle="reply-form" :data-target="`comment-${post.id}-reply-form`">Cancel</button>
-            </form>
+            </div>
             <!-- Reply form end -->
         </div>
         <div class="replies">
@@ -50,6 +50,11 @@
 <script>
 export default {
     props: ['post'],
+    data: function() {
+        return {
+            newPostContent: '',
+        }
+    },
     methods: {
         reply: function(event) {
             var target = event.target;
@@ -58,6 +63,9 @@ export default {
                 replyForm = document.getElementById(target.getAttribute("data-target"));
                 replyForm.classList.toggle("d-none");
             }
+        },
+        addPost: function(event) {
+            this.$emit('postReply', event, this.post, this.newPostContent);
         },
    },
 }

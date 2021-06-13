@@ -2,11 +2,7 @@
   <div id="app">
     <p class="username">{{ currentUser.username }}'s posts:</p>
     <div class="comment-thread">
-      <Post v-for="post in posts" :key="post.id" v-bind:post="post" />
-    </div>
-    <div>
-      <input v-model="newPostContent">
-      <button @click="addPost({index: 0})">Add Post</button>
+      <Post @postReply="postReply" v-for="post in posts" :key="post.id" v-bind:post="post" />
     </div>
   </div>
 </template>
@@ -89,18 +85,16 @@ export default {
         return {
             currentUser: { username: 'user' },
             posts: [],
-            newPostContent: ''
-
-        }
+        };
     },
     methods: {
-        reply(post) {
-            this.addPost(post);
+        postReply(event, parent, text) {
+            this.addPost(parent, text);
         },
-        addPost(parent) {
+        addPost(parent, content) {
             this.$apollo.mutate({
                 mutation: ADD_POST,
-                variables: { content: this.newPostContent, parent: parent.id, index: parent.index + 1 },
+                variables: { content, parent: parent.id, index: parent.index + 1 },
                 update: updateAddPost.bind(this),
                 optimisticResponse: {
                     __typename: 'Mutation',
@@ -110,7 +104,7 @@ export default {
                         parent: parent.id || uuid62.v4(),
                         content: {
                             __typename: 'Text',
-                            body: this.newPostContent,
+                            body: content,
                         },
                         createdAt: new Date(),
                         depth: parent.depth + 1,
@@ -119,9 +113,7 @@ export default {
                     },
                 },
             })
-
-            // this.newPostContent = ''
-        }
+        },
     },
     apollo: {
         currentUser: CURRENT_USER,
