@@ -15,7 +15,7 @@ const schema = gql(`
   }
 
   type Mutation {
-    addPost(content: String!, parent: ID): Post
+    addPost(content: String!, parent: ID, index: Int): Post
   }
 
   type User {
@@ -45,6 +45,8 @@ const schema = gql(`
     replies: [ID]
     tags: [ID]
     score: Int
+    depth: Int
+    index: Int
   }
 
   type Tag {
@@ -83,7 +85,7 @@ var resolvers = {
         },
     },
     Mutation: {
-        addPost: async (_, { content, parent }, { currentUserId, data }) => {
+        addPost: async (_, { content, parent, index }, { currentUserId, data }) => {
             let post = {
                 id: uuid62.v4(),
                 content: {
@@ -92,7 +94,7 @@ var resolvers = {
                 userId: currentUserId,
                 createdAt: new Date(),
             };
-            return data.thread.reply(parent, post);
+            return data.thread.reply(parent, post, index);
         }
     },
     User: {

@@ -34,7 +34,10 @@ const p = [
 class Thread {
     constructor(newPost) {
         this.tree = new SymbolTree();
-        this.root = {};
+        this.root = {
+            depth: -1,
+            index: -1,
+        };
         this.tree.initialize(this.root);
         this.lookup = {}
         this.lookup[undefined] = this.root;
@@ -45,22 +48,24 @@ class Thread {
         this.lookup[id] = newPost;
         return id;
     }
-    reply(parentId, newPost) {
+    reply(parentId, newPost, index=0) {
         const id = this.insert(newPost);
-        this.tree.appendChild(this.lookup[parentId], newPost);
-        return this._objectWithParent(newPost);
+        const parent = this.lookup[parentId];
+        newPost.depth = parent.depth + 1;
+        this.tree.appendChild(parent, newPost);
+        return this._objectWithContext(newPost, index);
     }
-    _objectWithParent(o) {
+    _objectWithContext(o, index) {
         const p = this.tree.parent(o);
         if (p) {
-            return { parent: p.id, ...o };
+            return { parent: p.id, index, ...o };
         }
         return o;
     }
     toArray(id) {
         return this.tree
             .treeToArray(this.lookup[id])
-            .map(o => this._objectWithParent(o));
+            .map((o, index) => this._objectWithContext(o, index));
     }
 }
 
