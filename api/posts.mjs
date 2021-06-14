@@ -1,5 +1,6 @@
 import SymbolTree from 'symbol-tree';
 import uuid62 from 'uuid62';
+import base62 from 'base62';
 
 const data = {};
 
@@ -61,7 +62,7 @@ class Thread {
         return o;
     }
     _dfs(o, paths, depth) {
-        paths[o.id] = depth.join(':');
+        paths[o.id] = depth.map(i => base62.encode(i).padStart(2, "0")).join(':');
         let i = 0;
         for (const node of this.tree.childrenIterator(o)) {
             this._dfs(node, paths, [...depth, i]);
