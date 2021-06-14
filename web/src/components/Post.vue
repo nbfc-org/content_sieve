@@ -37,8 +37,8 @@
             <!-- Reply form start -->
             <div class="reply-form d-none" :id="`comment-${post.id}-reply-form`">
                 <textarea v-model="newPostContent" placeholder="Reply to comment" rows="4"></textarea>
-                <button @click="addPost">Submit</button>
-                <button type="button" data-toggle="reply-form" :data-target="`comment-${post.id}-reply-form`">Cancel</button>
+                <button type="button" v-on:click="addPost" data-toggle="reply-form" :data-target="`comment-${post.id}-reply-form`">Submit</button>
+                <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.id}-reply-form`">Cancel</button>
             </div>
             <!-- Reply form end -->
         </div>
@@ -66,6 +66,8 @@ export default {
         },
         addPost: function(event) {
             this.$emit('postReply', event, this.post, this.newPostContent);
+            this.newPostContent = '';
+            this.reply(event);
         },
    },
 }

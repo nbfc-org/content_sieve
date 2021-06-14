@@ -100,10 +100,10 @@ var resolvers = {
     },
     Content: {
         __resolveType(obj, context, info){
-            if(obj.body){
+            if(obj.hasOwnProperty('body')) {
                 return 'Text';
             }
-            if(obj.url){
+            if(obj.hasOwnProperty('url')) {
                 return 'Link';
             }
             return null;
