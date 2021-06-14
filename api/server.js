@@ -1,14 +1,10 @@
 import { ApolloServer, gql } from 'apollo-server';
-import scalars from 'graphql-scalars';
-const { DateTimeResolver } = scalars;
 
 import uuid62 from 'uuid62';
 
 import data from './posts.mjs';
 
 const schema = gql(`
-  scalar Timestamp
-
   type Query {
     currentUser: User
     postsByUser(userId: String!): [Post]
@@ -40,7 +36,7 @@ const schema = gql(`
     id: ID!
     content: Content!
     userId: ID!
-    createdAt: Timestamp!
+    createdAt: Float!
     parent: ID
     replies: [ID]
     tags: [ID]
@@ -51,7 +47,7 @@ const schema = gql(`
   type Tag {
     id: ID!
     slug: String!
-    createdAt: Timestamp!
+    createdAt: Float!
     posts: [ID]
   }
 
@@ -66,7 +62,7 @@ const schema = gql(`
   type Vote {
     id: ID!
     type: VoteType!
-    createdAt: Timestamp!
+    createdAt: Float!
     userId: ID!
     postId: ID!
   }
@@ -91,7 +87,7 @@ var resolvers = {
                     body: content,
                 },
                 userId: currentUserId,
-                createdAt: new Date(),
+                createdAt: Date.now(),
             };
             return data.thread.reply(parent, post, index);
         }
@@ -113,8 +109,6 @@ var resolvers = {
             return null;
         },
     },
-    Timestamp: DateTimeResolver,
-
 };
 
 const currentUserId = 'abc-1';

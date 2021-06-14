@@ -6,6 +6,10 @@ module.exports = {
     'src/polyfills.js',
     'src/index.js'
   ],
+  transformModules: [
+    'uuid62',
+    'base-x',
+  ],
   html: {
     title: pkg.productName,
     description: pkg.description,

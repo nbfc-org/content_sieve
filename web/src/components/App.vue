@@ -67,7 +67,7 @@ function updateAddPost(cache, result) {
     const data = cache.readQuery(cacheId)
     const newData = [ ...data.postsByUser, newPost ]
     newData.sort((a, b) => {
-        return a.index.localeCompare(b.index) || b.createdAt.localeCompare(a.createdAt);
+        return a.index.localeCompare(b.index) || b.createdAt - a.createdAt;
     });
 
     cache.writeQuery({
@@ -106,7 +106,7 @@ export default {
                             __typename: 'Text',
                             body: content,
                         },
-                        createdAt: new Date(),
+                        createdAt: Date.now(),
                         index: `${parent.index}:0`,
                         userId: this.currentUser.id
                     },
