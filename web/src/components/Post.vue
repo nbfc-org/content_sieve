@@ -1,6 +1,6 @@
 <template>
-    <details open class="comment" :id="`comment-${post.id}`">
-        <a href="`comment-${post.id}`" class="comment-border-link">
+    <details open class="comment" :style="`margin-left: ${post.index.split(':').length * 2}em;`" :id="`comment-${post.id}`">
+        <a :href="`#comment-${post.id}`" class="comment-border-link">
             <span class="sr-only">Jump to {{ post.id }}</span>
         </a>
         <summary>
@@ -18,10 +18,10 @@
                 <div class="comment-info">
                     <a href="#" class="comment-author">someguy14</a>
                     <p class="m-0">
-                        22 points &bull; {{ new Date(post.createdAt) }}
-                        &bull; {{ post.depth }}
+                        22 points
+                        &bull; <a :href="`#comment-${post.parent}`">#parent</a>
+                        &bull; {{ new Date(post.createdAt) }}
                         &bull; {{ post.index }}
-                        &bull; {{ post.parent }}
                     </p>
                 </div>
             </div>

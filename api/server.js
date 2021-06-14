@@ -15,7 +15,7 @@ const schema = gql(`
   }
 
   type Mutation {
-    addPost(content: String!, parent: ID, index: Int): Post
+    addPost(content: String!, parent: ID, index: String): Post
   }
 
   type User {
@@ -45,8 +45,7 @@ const schema = gql(`
     replies: [ID]
     tags: [ID]
     score: Int
-    depth: Int
-    index: Int
+    index: String
   }
 
   type Tag {

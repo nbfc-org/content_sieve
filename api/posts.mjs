@@ -34,10 +34,7 @@ const p = [
 class Thread {
     constructor(newPost) {
         this.tree = new SymbolTree();
-        this.root = {
-            depth: -1,
-            index: -1,
-        };
+        this.root = {};
         this.tree.initialize(this.root);
         this.lookup = {}
         this.lookup[undefined] = this.root;
@@ -51,21 +48,37 @@ class Thread {
     reply(parentId, newPost, index=0) {
         const id = this.insert(newPost);
         const parent = this.lookup[parentId];
-        newPost.depth = parent.depth + 1;
         this.tree.appendChild(parent, newPost);
-        return this._objectWithContext(newPost, index);
+        const pathmap = {};
+        pathmap[id] = `${index}:0`;
+        return this._objectWithContext(newPost, pathmap);
     }
-    _objectWithContext(o, index) {
+    _objectWithContext(o, pathmap) {
         const p = this.tree.parent(o);
         if (p) {
-            return { parent: p.id, index, ...o };
+            return { parent: p.id, index: pathmap[o.id], ...o };
         }
         return o;
     }
+    _dfs(o, paths, depth) {
+        paths[o.id] = depth.join(':');
+        let i = 0;
+        for (const node of this.tree.childrenIterator(o)) {
+            this._dfs(node, paths, [...depth, i]);
+            i = i + 1;
+        }
+    }
     toArray(id) {
+        const obj = this.lookup[id];
+        const pathmap = {};
+        this._dfs(obj, pathmap, []);
+        // console.log(pathmap);
+        for (const node of this.tree.treeIterator(obj)) {
+            // console.log(node);
+        }
         return this.tree
-            .treeToArray(this.lookup[id])
-            .map((o, index) => this._objectWithContext(o, index));
+            .treeToArray(obj)
+            .map(o => this._objectWithContext(o, pathmap));
     }
 }
 

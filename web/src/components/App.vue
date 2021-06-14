@@ -33,12 +33,11 @@ const POSTS_BY_USER = gql`query ($userId: String!) {
     }
     parent
     createdAt
-    depth
     index
   }
 }`;
 
-const ADD_POST = gql`mutation ($content: String!, $parent: ID, $index: Int) {
+const ADD_POST = gql`mutation ($content: String!, $parent: ID, $index: String) {
   addPost(content: $content, parent: $parent, index: $index) {
     id
     content {
@@ -52,7 +51,6 @@ const ADD_POST = gql`mutation ($content: String!, $parent: ID, $index: Int) {
     }
     parent
     createdAt
-    depth
     index
   }
 }`;
@@ -68,7 +66,9 @@ function updateAddPost(cache, result) {
 
     const data = cache.readQuery(cacheId)
     const newData = [ ...data.postsByUser, newPost ]
-    newData.sort((a, b) => a.index - b.index);
+    newData.sort((a, b) => {
+        return a.index.localeCompare(b.index) || b.createdAt.localeCompare(a.createdAt);
+    });
 
     cache.writeQuery({
         ...cacheId,
@@ -94,7 +94,7 @@ export default {
         addPost(parent, content) {
             this.$apollo.mutate({
                 mutation: ADD_POST,
-                variables: { content, parent: parent.id, index: parent.index + 1 },
+                variables: { content, parent: parent.id, index: parent.index },
                 update: updateAddPost.bind(this),
                 optimisticResponse: {
                     __typename: 'Mutation',
@@ -107,8 +107,7 @@ export default {
                             body: content,
                         },
                         createdAt: new Date(),
-                        depth: parent.depth + 1,
-                        index: parent.index + 1,
+                        index: `${parent.index}:0`,
                         userId: this.currentUser.id
                     },
                 },
