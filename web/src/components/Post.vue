@@ -43,17 +43,27 @@
             <!-- Reply form end -->
         </div>
         <div class="replies">
+          <Post @postReply="postReply" :key="child" v-for="child in children" v-bind:thread="{object: thread.object, id: child}" v-if="children" />
         </div>
     </details>
 </template>
 
 <script>
 export default {
-    props: ['post'],
+    name: 'Post',
+    props: ['thread'],
     data: function() {
         return {
             newPostContent: '',
         }
+    },
+    computed: {
+        post: function() {
+            return this.thread.object.get(this.thread.id);
+        },
+        children: function() {
+            return this.thread.object.childIds(this.thread.id);
+        },
     },
     methods: {
         reply: function(event) {
@@ -63,6 +73,9 @@ export default {
                 replyForm = document.getElementById(target.getAttribute("data-target"));
                 replyForm.classList.toggle("d-none");
             }
+        },
+        postReply: function(event, parent, text) {
+            this.$emit('postReply', event, parent, text);
         },
         addPost: function(event) {
             this.$emit('postReply', event, this.post, this.newPostContent);

@@ -39,25 +39,30 @@ class Thread {
         this.tree.initialize(this.root);
         this.lookup = {}
         this.lookup[undefined] = this.root;
-        this.reply(undefined, newPost);
+    }
+    get(id) {
+        return this.lookup[id];
+    }
+    childIds(id) {
+        return this.tree.childrenToArray(this.lookup[id]).map(o => o.id);
     }
     insert(newPost) {
         const { id } = newPost;
         this.lookup[id] = newPost;
         return id;
     }
-    reply(parentId, newPost, index=0) {
+    reply(parentId, newPost, index='00') {
         const id = this.insert(newPost);
         const parent = this.lookup[parentId];
         this.tree.appendChild(parent, newPost);
         const pathmap = {};
-        pathmap[id] = `${index}:0`;
+        pathmap[id] = `${index}:00`;
         return this._objectWithContext(newPost, pathmap);
     }
     _objectWithContext(o, pathmap) {
         const p = this.tree.parent(o);
         if (p) {
-            return { parent: p.id, index: pathmap[o.id], ...o };
+            return Object.assign({}, o, { parent: p.id, index: pathmap[o.id] });
         }
         return o;
     }
@@ -83,7 +88,8 @@ class Thread {
     }
 }
 
-const thread = new Thread(p[0]);
+const thread = new Thread();
+thread.reply(undefined, p[0]);
 thread.reply(p[0].id, p[1]);
 thread.reply(p[0].id, p[2]);
 data.thread = thread;
@@ -99,4 +105,4 @@ data.users = [
     }
 ];
 
-export default data;
+export { data, Thread };

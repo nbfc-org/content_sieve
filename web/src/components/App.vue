@@ -2,7 +2,7 @@
   <div id="app">
     <p class="username">{{ currentUser.username }}'s posts:</p>
     <div class="comment-thread">
-      <Post @postReply="postReply" v-for="post in posts" :key="post.id" v-bind:post="post" />
+      <Post @postReply="postReply" :key="thread.id" v-bind:thread="thread" v-if="thread.id" />
     </div>
   </div>
 </template>
@@ -11,6 +11,7 @@
 import gql from 'graphql-tag'
 import uuid62 from 'uuid62';
 import Post from './Post';
+import { Thread } from '../../../api/posts.mjs';
 
 const CURRENT_USER = gql`query {
   currentUser {
@@ -84,7 +85,10 @@ export default {
     data: function(){
         return {
             currentUser: { username: 'user' },
-            posts: [],
+            thread: {
+                object: undefined,
+                id: undefined,
+            },
         };
     },
     methods: {
@@ -116,13 +120,32 @@ export default {
     },
     apollo: {
         currentUser: CURRENT_USER,
-        posts: {
+        thread: {
             query: POSTS_BY_USER,
             variables() {
                 return { userId: this.currentUser.id }
             },
             update(data) {
-                return data.postsByUser
+                const posts = data.postsByUser;
+                const thread = new Thread();
+                let parents = [];
+                for (let i = 0; i < posts.length; i++) {
+                    const c = posts[i];
+                    let p = parents.length ? posts[parents[parents.length - 1]] : undefined;
+                    thread.reply(p ? p.id : undefined, c, p ? p.index : undefined);
+                    if (i + 1 < posts.length) {
+                        let n = posts[i + 1];
+                        if (n.index.length > c.index.length) {
+                            parents.push(i);
+                        } else if (n.index.length < c.index.length) {
+                            const num = c.index.split(':').length - n.index.split(':').length;
+                            for (let j = 0; j < num; j++) {
+                                parents.pop();
+                            }
+                        }
+                    }
+                }
+                return { object: thread, id: posts[0].id };
             },
         },
     }
