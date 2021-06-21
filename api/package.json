@@ -11,7 +11,7 @@
   "author": "",
   "dependencies": {
     "apollo-server": "^2.25.0",
-    "base62": "^2.0.1",
+    "base36": "^1.0.0",
     "graphql": "^15.5.0",
     "symbol-tree": "^3.2.4",
     "uuid62": "^1.0.1"

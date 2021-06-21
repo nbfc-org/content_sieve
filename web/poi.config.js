@@ -9,7 +9,7 @@ module.exports = {
   transformModules: [
     'uuid62',
     'base-x',
-    'base62',
+    'base36',
     'symbol-tree',
   ],
   html: {

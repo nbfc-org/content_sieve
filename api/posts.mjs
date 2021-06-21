@@ -1,6 +1,6 @@
 import SymbolTree from 'symbol-tree';
 import uuid62 from 'uuid62';
-import base62 from 'base62';
+import base36 from 'base36';
 
 const data = {};
 
@@ -67,7 +67,7 @@ class Thread {
         return o;
     }
     _dfs(o, paths, depth) {
-        paths[o.id] = depth.map(i => base62.encode(i).padStart(2, "0")).join(':');
+        paths[o.id] = depth.map(i => base36.base36encode(i).padStart(2, "0")).join(':');
         let i = 0;
         for (const node of this.tree.childrenIterator(o)) {
             this._dfs(node, paths, [...depth, i]);
@@ -90,7 +90,7 @@ class Thread {
 
 const thread = new Thread();
 thread.reply(undefined, p[0]);
-for (const i of [...Array(200).keys()]) {
+for (const i of [...Array(500).keys()]) {
     thread.reply(p[0].id, Object.assign({}, p[1], {id: uuid62.v4()}));
     thread.reply(p[0].id, Object.assign({}, p[2], {id: uuid62.v4()}));
 }
