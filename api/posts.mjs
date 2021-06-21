@@ -90,8 +90,10 @@ class Thread {
 
 const thread = new Thread();
 thread.reply(undefined, p[0]);
-thread.reply(p[0].id, p[1]);
-thread.reply(p[0].id, p[2]);
+for (const i of [...Array(200).keys()]) {
+    thread.reply(p[0].id, Object.assign({}, p[1], {id: uuid62.v4()}));
+    thread.reply(p[0].id, Object.assign({}, p[2], {id: uuid62.v4()}));
+}
 data.thread = thread;
 
 data.users = [
