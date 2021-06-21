@@ -9,6 +9,8 @@ module.exports = {
   transformModules: [
     'uuid62',
     'base-x',
+    'base62',
+    'symbol-tree',
   ],
   html: {
     title: pkg.productName,
@@ -21,6 +23,7 @@ module.exports = {
     ]
   },
   presets: [
+    require('poi-preset-babel-minify')(),
     require('poi-preset-bundle-report')(),
     require('poi-preset-offline')({
       pwa: './src/pwa.js', // Path to pwa runtime entry
