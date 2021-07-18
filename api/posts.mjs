@@ -52,7 +52,7 @@ class Thread {
         if (!this.lookup.hasOwnProperty(id)) {
             this.lookup[id] = newPost;
             const parent = this.lookup[parentId];
-            this.tree.appendChild(parent, newPost);
+            this.tree.prependChild(parent, newPost);
         }
         const pathmap = {};
         pathmap[id] = `${index}:00`;
