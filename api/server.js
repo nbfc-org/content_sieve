@@ -11,7 +11,7 @@ const schema = gql(`
   }
 
   type Mutation {
-    addPost(content: String!, parent: ID, index: String): Post
+    addPost(id: ID, content: String!, parent: ID, index: String): Post
   }
 
   type User {
@@ -82,9 +82,9 @@ var resolvers = {
         },
     },
     Mutation: {
-        addPost: async (_, { content, parent, index }, { currentUserId, data }) => {
+        addPost: async (_, { id, content, parent, index }, { currentUserId, data }) => {
             let post = {
-                id: uuid62.v4(),
+                id: id || uuid62.v4(),
                 content: {
                     body: content,
                 },
