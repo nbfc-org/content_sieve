@@ -100,6 +100,7 @@ export default {
                 mutation: ADD_POST,
                 variables: { content, parent: parent.id, index: parent.index },
                 update: updateAddPost.bind(this),
+                /*
                 optimisticResponse: {
                     __typename: 'Mutation',
                     addPost: {
@@ -115,6 +116,7 @@ export default {
                         userId: this.currentUser.id
                     },
                 },
+                */
             })
         },
     },
@@ -136,6 +138,7 @@ export default {
             update(data) {
                 const posts = data.postsByUser;
                 let parents = [];
+                // const start = Date.now();
                 for (let i = 0; i < posts.length; i++) {
                     const c = posts[i];
                     let p = parents.length ? posts[parents[parents.length - 1]] : undefined;
@@ -157,6 +160,7 @@ export default {
                         }
                     }
                 }
+                // console.log(`rerender: ${Date.now() - start}`);
                 return { id: posts[0].id, childrenCount: posts.length - 1 };
             },
         },
