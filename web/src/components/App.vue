@@ -2,7 +2,7 @@
   <div id="app">
     <p class="username">{{ currentUser.username }}'s posts:</p>
     <div class="comment-thread">
-      <Post @postReply="postReply" :key="thread.id" v-bind:thread="thread" v-if="thread.id" />
+      <Post @postReply="postReply" :key="`${postId}_${childrenCount}`" :thread="thread" :postId="postId" v-if="postId" />
     </div>
   </div>
 </template>
@@ -85,10 +85,10 @@ export default {
     data: function(){
         return {
             currentUser: { username: 'user' },
-            thread: {
-                object: undefined,
+            postsByUser: {
                 id: undefined,
             },
+            thread: new Thread(),
         };
     },
     methods: {
@@ -111,28 +111,40 @@ export default {
                             body: content,
                         },
                         createdAt: Date.now(),
-                        index: `${parent.index}:0`,
+                        index: `${parent.index}:00`,
                         userId: this.currentUser.id
                     },
                 },
             })
         },
     },
+    computed: {
+        postId: function() {
+            return this.postsByUser.id;
+        },
+        childrenCount: function() {
+            return this.postsByUser.childrenCount;
+        },
+    },
     apollo: {
         currentUser: CURRENT_USER,
-        thread: {
+        postsByUser: {
             query: POSTS_BY_USER,
             variables() {
                 return { userId: this.currentUser.id }
             },
             update(data) {
                 const posts = data.postsByUser;
-                const thread = new Thread();
                 let parents = [];
                 for (let i = 0; i < posts.length; i++) {
                     const c = posts[i];
                     let p = parents.length ? posts[parents[parents.length - 1]] : undefined;
-                    thread.reply(p ? p.id : undefined, c, p ? p.index : undefined);
+                    try {
+                        this.thread.reply(p ? p.id : undefined, c, p ? p.index : undefined);
+                    } catch (err) {
+                        console.error(err);
+                    }
+
                     if (i + 1 < posts.length) {
                         let n = posts[i + 1];
                         if (n.index.length > c.index.length) {
@@ -145,7 +157,7 @@ export default {
                         }
                     }
                 }
-                return { object: thread, id: posts[0].id };
+                return { id: posts[0].id, childrenCount: posts.length - 1 };
             },
         },
     }
@@ -231,9 +243,6 @@ export default {
   }
   .comment-author:hover {
       text-decoration: underline;
-  }
-  .replies {
-      margin-left: 20px;
   }
 
   /* Adjustments for the comment border links */

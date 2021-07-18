@@ -2,7 +2,7 @@ import { ApolloServer, gql } from 'apollo-server';
 
 import uuid62 from 'uuid62';
 
-import { data } from './posts.mjs';
+import { testData } from './posts.mjs';
 
 const schema = gql(`
   type Query {
@@ -67,6 +67,8 @@ const schema = gql(`
     postId: ID!
   }
 `);
+
+const data = testData();
 
 var resolvers = {
     Query: {

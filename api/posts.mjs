@@ -2,8 +2,6 @@ import SymbolTree from 'symbol-tree';
 import uuid62 from 'uuid62';
 import base36 from 'base36';
 
-const data = {};
-
 const p = [
     {
         id: uuid62.v4(),
@@ -43,18 +41,19 @@ class Thread {
     get(id) {
         return this.lookup[id];
     }
+    childrenCount(id) {
+        return this.tree.childrenCount(this.get(id));
+    }
     childIds(id) {
         return this.tree.childrenToArray(this.lookup[id]).map(o => o.id);
     }
-    insert(newPost) {
-        const { id } = newPost;
-        this.lookup[id] = newPost;
-        return id;
-    }
     reply(parentId, newPost, index='00') {
-        const id = this.insert(newPost);
-        const parent = this.lookup[parentId];
-        this.tree.appendChild(parent, newPost);
+        const { id } = newPost;
+        if (!this.lookup.hasOwnProperty(id)) {
+            this.lookup[id] = newPost;
+            const parent = this.lookup[parentId];
+            this.tree.appendChild(parent, newPost);
+        }
         const pathmap = {};
         pathmap[id] = `${index}:00`;
         return this._objectWithContext(newPost, pathmap);
@@ -88,23 +87,28 @@ class Thread {
     }
 }
 
-const thread = new Thread();
-thread.reply(undefined, p[0]);
-for (const i of [...Array(500).keys()]) {
-    thread.reply(p[0].id, Object.assign({}, p[1], {id: uuid62.v4()}));
-    thread.reply(p[0].id, Object.assign({}, p[2], {id: uuid62.v4()}));
-}
-data.thread = thread;
-
-data.users = [
-    {
-        id: 'abc-1',
-        username: "andy25",
-    },
-    {
-        id: 'abc-2',
-        username: "randomUser",
+const testData = function() {
+    const thread = new Thread();
+    thread.reply(undefined, p[0]);
+    for (const i of [...Array(20).keys()]) {
+        thread.reply(p[0].id, Object.assign({}, p[1], {id: uuid62.v4()}));
+        thread.reply(p[0].id, Object.assign({}, p[2], {id: uuid62.v4()}));
     }
-];
+    const data = {};
 
-export { data, Thread };
+    data.thread = thread;
+
+    data.users = [
+        {
+            id: 'abc-1',
+            username: "andy25",
+        },
+        {
+            id: 'abc-2',
+            username: "randomUser",
+        }
+    ];
+    return data;
+};
+
+export { testData, Thread };
