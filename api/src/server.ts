@@ -2,7 +2,7 @@ import { ApolloServer, gql } from 'apollo-server';
 
 import uuid62 from 'uuid62';
 
-import { testData } from './posts.mjs';
+import { testData } from './posts.js';
 
 const schema = gql(`
   type Query {
@@ -95,7 +95,7 @@ var resolvers = {
         }
     },
     User: {
-        posts: (parent, __, { data }) => {
+        posts: (parent, { userId }, { data }) => {
             let posts = data.thread.toArray().filter( p => p.userId === userId );
             return posts;
         }
