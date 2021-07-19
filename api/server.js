@@ -2,7 +2,7 @@ import { ApolloServer, gql } from 'apollo-server';
 
 import uuid62 from 'uuid62';
 
-import { testData } from './posts.mjs';
+import { testData } from './posts.js';
 
 const schema = gql(`
   type Query {
