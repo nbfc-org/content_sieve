@@ -75,6 +75,7 @@ export default {
             if (target.matches("[data-toggle='reply-form']")) {
                 replyForm = document.getElementById(target.getAttribute("data-target"));
                 replyForm.classList.toggle("d-none");
+                replyForm.getElementsByTagName("textarea")[0].focus();
             }
         },
         postReply: function(event, parent, text) {
