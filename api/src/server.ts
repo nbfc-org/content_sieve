@@ -95,7 +95,7 @@ var resolvers = {
         }
     },
     User: {
-        posts: (parent, __, { data }) => {
+        posts: (parent, { userId }, { data }) => {
             let posts = data.thread.toArray().filter( p => p.userId === userId );
             return posts;
         }
