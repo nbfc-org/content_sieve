@@ -11,7 +11,7 @@
 import gql from 'graphql-tag'
 import uuid62 from 'uuid62';
 import Post from './Post';
-import { Thread } from '../../../api/posts.js';
+import { Thread } from '../../../api/src/posts.js';
 
 const CURRENT_USER = gql`query {
   currentUser {
