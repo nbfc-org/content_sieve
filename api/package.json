@@ -13,8 +13,14 @@
   "dependencies": {
     "apollo-server": "^2.25.0",
     "base36": "^1.0.0",
+    "class-validator": "^0.13.1",
     "graphql": "^15.5.0",
+    "pg": "^8.6.0",
     "symbol-tree": "^3.2.4",
+    "type-graphql": "^1.1.1",
+    "typedi": "^0.10.0",
+    "typeorm": "^0.2.34",
+    "typeorm-typedi-extensions": "^0.4.1",
     "uuid62": "^1.0.1"
   },
   "devDependencies": {

@@ -127,3 +127,6 @@ const server = new ApolloServer({
 server.listen(4001).then(({ url }) => {
     console.log('API server running at localhost:4001');
 });
+
+import { bootstrap } from "./typeorm-lazy-relations/index.js";
+bootstrap();
