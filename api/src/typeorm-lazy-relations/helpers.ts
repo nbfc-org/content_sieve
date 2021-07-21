@@ -3,6 +3,9 @@ import { getRepository } from "typeorm";
 import { Recipe } from "./entities/recipe.js";
 import { Rate } from "./entities/rate.js";
 import { User } from "./entities/user.js";
+import { Post } from "./entities/post.js";
+import { Text } from "./entities/text.js";
+import { Link } from "./entities/link.js";
 
 export async function seedDatabase() {
   const recipeRepository = getRepository(Recipe);
@@ -40,6 +43,26 @@ export async function seedDatabase() {
     { value: 4, user: defaultUser, recipe: recipe2 },
   ]);
   await ratingsRepository.save(ratings);
+
+  const postRepository = getRepository(Post);
+  const textRepository = getRepository(Text);
+  const linkRepository = getRepository(Link);
+
+  const texts = textRepository.create([
+      { body: 'wat' },
+  ]);
+  await textRepository.save(texts);
+
+  const links = linkRepository.create([
+      { url: 'http://google.com', title: 'Google' },
+  ]);
+  await linkRepository.save(links);
+
+  const posts = postRepository.create([
+      ...texts.map(t => { return { text: t }; }),
+      ...links.map(l => { return { link: l }; }),
+  ]);
+  await postRepository.save(posts);
 
   return {
     defaultUser,

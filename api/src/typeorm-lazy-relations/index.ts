@@ -8,6 +8,9 @@ import { RecipeResolver } from "./resolvers/recipe-resolver.js";
 import { Recipe } from "./entities/recipe.js";
 import { Rate } from "./entities/rate.js";
 import { User } from "./entities/user.js";
+import { Link } from "./entities/link.js";
+import { Text } from "./entities/text.js";
+import { Post } from "./entities/post.js";
 import { seedDatabase } from "./helpers.js";
 import { Context } from "./resolvers/types/context.js";
 
@@ -24,7 +27,7 @@ export async function bootstrap() {
       password: "wat", // and password
       port: 5432, // and port
       host: "localhost", // and host
-      entities: [Recipe, Rate, User],
+      entities: [Recipe, Rate, User, Text, Link, Post],
       synchronize: true,
       logger: "advanced-console",
       logging: "all",

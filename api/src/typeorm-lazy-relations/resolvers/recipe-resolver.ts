@@ -1,18 +1,22 @@
 import { Resolver, Query, Arg, Mutation, Ctx, Int } from "type-graphql";
 import { Repository } from "typeorm";
+import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
 import { Recipe } from "../entities/recipe.js";
 import { Rate } from "../entities/rate.js";
+import { Content, Post } from "../entities/post.js";
 import { RecipeInput } from "./types/recipe-input.js";
 import { RateInput } from "./types/rate-input.js";
 import { Context } from "./types/context.js";
 
+@Service()
 @Resolver(Recipe)
 export class RecipeResolver {
   constructor(
     @InjectRepository(Recipe) private readonly recipeRepository: Repository<Recipe>,
     @InjectRepository(Rate) private readonly ratingsRepository: Repository<Rate>,
+    @InjectRepository(Post) private readonly postRepository: Repository<Post>,
   ) {}
 
   @Query(returns => Recipe, { nullable: true })
@@ -23,6 +27,11 @@ export class RecipeResolver {
   @Query(returns => [Recipe])
   recipes(): Promise<Recipe[]> {
     return this.recipeRepository.find();
+  }
+
+  @Query(returns => [Post])
+  postsByUser(): Promise<Post[]> {
+      return this.postRepository.find();
   }
 
   @Mutation(returns => Recipe)
