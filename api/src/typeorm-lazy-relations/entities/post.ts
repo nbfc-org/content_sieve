@@ -1,7 +1,10 @@
 import { ObjectType, ID, Field } from "type-graphql";
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, ManyToOne } from "typeorm";
-import { AfterLoad, getRepository } from "typeorm";
+import { getManager, getTreeRepository, AfterLoad } from "typeorm";
 import { createUnionType } from "type-graphql";
+import { Tree, TreeChildren, TreeParent } from "typeorm";
+
+import uuid62 from 'uuid62';
 
 import { User } from "./user.js";
 import { Link } from "./link.js";
@@ -24,16 +27,27 @@ export const Content = createUnionType({
 
 @Entity()
 @ObjectType()
+@Tree("closure-table")
 export class Post {
+    @PrimaryGeneratedColumn()
+    readonly id: number;
+
     @Field(type => ID)
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @Column('uuid')
+    postId: string;
 
     @Field(type => Content)
     content: typeof Content;
 
     @Column({ nullable: true })
     linkId: number;
+
+    @Field(type => Date)
+    @Column('timestamp with time zone', { nullable: false, default: () => 'CURRENT_TIMESTAMP' })
+    createdAt: Date;
+
+    @Field(type => String)
+    index: string;
 
     @OneToOne(type => Link, { cascade: true, eager: true })
     @JoinColumn()
@@ -53,5 +67,13 @@ export class Post {
     @AfterLoad()
     async afterLoad() {
         this.content = this.text || this.link;
+        this.postId = uuid62.encode(this.postId);
     }
+
+    @TreeChildren()
+    children: Post[];
+
+    @Field(type => Post, { nullable: true })
+    @TreeParent()
+    parent: Post;
 }

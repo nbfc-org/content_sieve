@@ -1,5 +1,6 @@
 import { Resolver, Query, Arg, Mutation, Ctx, Int } from "type-graphql";
 import { Repository } from "typeorm";
+import { getManager } from "typeorm";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
@@ -9,6 +10,8 @@ import { Content, Post } from "../entities/post.js";
 import { RecipeInput } from "./types/recipe-input.js";
 import { RateInput } from "./types/rate-input.js";
 import { Context } from "./types/context.js";
+
+import base36 from 'base36';
 
 @Service()
 @Resolver(Recipe)
@@ -29,9 +32,34 @@ export class RecipeResolver {
     return this.recipeRepository.find();
   }
 
+    _dfs(nodes, pathmap, depth, parent=null) {
+      let i = 0;
+      for (const node of nodes) {
+          const newdepth = [...depth, i];
+          pathmap[node.id] = {
+              index: newdepth.map(j => base36.base36encode(j).padStart(2, "0")).join(':'),
+              parent,
+          };
+          this._dfs(node.children, pathmap, newdepth, node);
+          i = i + 1;
+      }
+  }
+
   @Query(returns => [Post])
-  postsByUser(): Promise<Post[]> {
-      return this.postRepository.find();
+  async postsByUser(): Promise<Post[]> {
+      const manager = getManager();
+      const posts = await this.postRepository.find();
+      const nodes = await manager.getTreeRepository(Post).findTrees();
+      const pathmap = {};
+      this._dfs(nodes, pathmap, []);
+      for (const post of posts) {
+          post.index = pathmap[post.id].index;
+          post.parent = pathmap[post.id].parent;
+      }
+      posts.sort((a, b) => {
+          return a.index.localeCompare(b.index); // || a.createdAt - b.createdAt;
+      });
+      return posts;
   }
 
   @Mutation(returns => Recipe)

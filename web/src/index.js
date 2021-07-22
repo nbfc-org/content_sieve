@@ -21,7 +21,7 @@ const apolloProvider = new VueApollo({
   defaultClient: new ApolloClient({
     cache,
     link: new HttpLink({
-      uri: 'http://localhost:4001',
+      uri: 'http://localhost:4002',
     }),
   })
 });

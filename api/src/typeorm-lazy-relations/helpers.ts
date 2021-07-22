@@ -1,4 +1,5 @@
 import { getRepository } from "typeorm";
+import { v4 as uuidv4 } from 'uuid';
 
 import { Recipe } from "./entities/recipe.js";
 import { Rate } from "./entities/rate.js";
@@ -48,21 +49,26 @@ export async function seedDatabase() {
   const textRepository = getRepository(Text);
   const linkRepository = getRepository(Link);
 
-  const texts = textRepository.create([
-      { body: 'wat' },
-  ]);
-  await textRepository.save(texts);
+  for (const i of [...Array(20).keys()]) {
+      const texts = textRepository.create([
+          { body: 'wat' },
+      ]);
+      await textRepository.save(texts);
 
-  const links = linkRepository.create([
-      { url: 'http://google.com', title: 'Google' },
-  ]);
-  await linkRepository.save(links);
+      const links = linkRepository.create([
+          { url: 'http://google.com', title: 'Google' },
+      ]);
+      await linkRepository.save(links);
 
-  const posts = postRepository.create([
-      ...texts.map(t => { return { text: t }; }),
-      ...links.map(l => { return { link: l }; }),
-  ]);
-  await postRepository.save(posts);
+      const posts = postRepository.create([
+          ...texts.map(t => { return { text: t, postId: uuidv4() }; }),
+          ...links.map(l => { return { link: l, postId: uuidv4() }; }),
+      ]);
+      await postRepository.save(posts);
+
+      posts[1].parent = posts[0];
+      await postRepository.save(posts[1]);
+  }
 
   return {
     defaultUser,
