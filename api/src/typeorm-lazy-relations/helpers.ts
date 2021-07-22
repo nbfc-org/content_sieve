@@ -49,7 +49,7 @@ export async function seedDatabase() {
   const textRepository = getRepository(Text);
   const linkRepository = getRepository(Link);
 
-  for (const i of [...Array(20).keys()]) {
+  for (const i of [...Array(100).keys()]) {
       const texts = textRepository.create([
           { body: 'wat' },
       ]);

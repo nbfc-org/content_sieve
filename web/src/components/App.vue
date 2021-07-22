@@ -32,9 +32,9 @@ const POSTS_BY_USER = gql`query {
   }
 }`;
 
-const ADD_POST = gql`mutation ($id: ID, $content: String!, $parent: ID, $index: String) {
-  addPost(id: $id, content: $content, parent: $parent, index: $index) {
-    id
+const ADD_POST = gql`mutation ($post: PostInput!) {
+  addPost(post: $post) {
+    postId
     content {
       ... on Text {
         body
@@ -44,7 +44,9 @@ const ADD_POST = gql`mutation ($id: ID, $content: String!, $parent: ID, $index: 
         title
       }
     }
-    parent
+    parent {
+      postId
+    }
     createdAt
     index
   }
@@ -91,14 +93,24 @@ export default {
             const id = uuid62.v4();
             this.$apollo.mutate({
                 mutation: ADD_POST,
-                variables: { id, content, parent: parent.postId, index: parent.index },
+                variables: {
+                    post: {
+                        postId: id,
+                        body: content,
+                        parentId: parent.postId,
+                        index: parent.index,
+                    }
+                },
                 update: updateAddPost.bind(this),
                 optimisticResponse: {
                     __typename: 'Mutation',
                     addPost: {
                         __typename: 'Post',
-                        id,
-                        parent: parent.postId,
+                        postId: id,
+                        parent: {
+                            __typename: 'Post',
+                            postId: parent.postId,
+                        },
                         content: {
                             __typename: 'Text',
                             body: content,

@@ -6,12 +6,15 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 
 import { Recipe } from "../entities/recipe.js";
 import { Rate } from "../entities/rate.js";
-import { Content, Post } from "../entities/post.js";
+import { Post } from "../entities/post.js";
+import { Text } from "../entities/text.js";
 import { RecipeInput } from "./types/recipe-input.js";
+import { PostInput } from "./types/post-input.js";
 import { RateInput } from "./types/rate-input.js";
 import { Context } from "./types/context.js";
 
 import base36 from 'base36';
+import uuid62 from 'uuid62';
 
 @Service()
 @Resolver(Recipe)
@@ -20,6 +23,7 @@ export class RecipeResolver {
     @InjectRepository(Recipe) private readonly recipeRepository: Repository<Recipe>,
     @InjectRepository(Rate) private readonly ratingsRepository: Repository<Rate>,
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
+    @InjectRepository(Text) private readonly textRepository: Repository<Text>,
   ) {}
 
   @Query(returns => Recipe, { nullable: true })
@@ -61,6 +65,23 @@ export class RecipeResolver {
       });
       return posts;
   }
+
+  @Mutation(returns => Post)
+  async addPost(@Arg("post") postInput: PostInput, @Ctx() { user }: Context): Promise<Post> {
+      const texts = this.textRepository.create([
+          { body: postInput.body },
+      ]);
+      const post = this.postRepository.create({
+          postId: uuid62.decode(postInput.postId),
+          text: texts[0],
+          author: user,
+      });
+      await this.postRepository.save(post);
+      post.parent = await this.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
+      const saved = await this.postRepository.save(post);
+      saved.index = `${postInput.index}:00`;
+      return saved;
+    }
 
   @Mutation(returns => Recipe)
   addRecipe(@Arg("recipe") recipeInput: RecipeInput, @Ctx() { user }: Context): Promise<Recipe> {

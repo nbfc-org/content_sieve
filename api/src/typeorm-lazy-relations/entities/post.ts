@@ -1,6 +1,6 @@
-import { ObjectType, ID, Field } from "type-graphql";
+import { ObjectType, ID, Field, Float } from "type-graphql";
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, ManyToOne } from "typeorm";
-import { getManager, getTreeRepository, AfterLoad } from "typeorm";
+import { AfterInsert, AfterLoad } from "typeorm";
 import { createUnionType } from "type-graphql";
 import { Tree, TreeChildren, TreeParent } from "typeorm";
 
@@ -42,7 +42,7 @@ export class Post {
     @Column({ nullable: true })
     linkId: number;
 
-    @Field(type => Date)
+    @Field(type => Float)
     @Column('timestamp with time zone', { nullable: false, default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
 
@@ -65,6 +65,7 @@ export class Post {
     author: Lazy<User>;
 
     @AfterLoad()
+    @AfterInsert()
     async afterLoad() {
         this.content = this.text || this.link;
         this.postId = uuid62.encode(this.postId);
