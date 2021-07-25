@@ -135,6 +135,9 @@ export default {
             query: POSTS_BY_USER,
             update(data) {
                 const posts = data.postsByUser;
+                posts.sort((a, b) => {
+                    return a.index.localeCompare(b.index) || a.createdAt - b.createdAt;
+    });
                 let parents = [];
                 // const start = Date.now();
                 const postIds = [];

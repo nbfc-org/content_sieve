@@ -60,9 +60,17 @@ export class RecipeResolver {
           post.index = pathmap[post.id].index;
           post.parent = pathmap[post.id].parent;
       }
-      posts.sort((a, b) => {
-          return a.index.localeCompare(b.index); // || a.createdAt - b.createdAt;
-      });
+      // defector: threaded only; newest, oldest, most replies, highest score
+      // reddit: threaded only; best, top, new, controversial, old, q&a
+      // metafilter: flat only; oldest first, no matter what
+      // hn: threaded only; by score only
+      //
+      // quatratic weighting ... nth vote costs n^2
+      //     weighting a vote by the "degree of separation" of the voter? (ie., friends count more)
+      // hyperbolic discounting of karma acquisition
+      // limiting the number of voters per item
+      // new accounts can't vote until achived a network & karam status (eg., shares, by friends, are upvoted).
+      // accounts which primarily upvote/downvote outside of their network are ignored
       return posts;
   }
 
