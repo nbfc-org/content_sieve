@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from "type-graphql";
 import { PrimaryGeneratedColumn, Column, Entity, OneToMany } from "typeorm";
 
-import { Recipe } from "./recipe.js";
+import { Post } from "./post.js";
 import { Lazy } from "../helpers.js";
 
 @ObjectType()
@@ -13,16 +13,16 @@ export class User {
 
   @Field()
   @Column()
-  email: string;
+  username: string;
 
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  nickname?: string;
+  @Field()
+  @Column()
+  email: string;
 
   @Column()
   password: string;
 
-  @OneToMany(type => Recipe, recipe => recipe.author, { lazy: true })
-  @Field(type => [Recipe])
-  recipes: Lazy<Recipe[]>;
+  @OneToMany(type => Post, recipe => recipe.author, { lazy: true })
+  @Field(type => [Post])
+  posts: Lazy<Post[]>;
 }

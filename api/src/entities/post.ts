@@ -61,7 +61,7 @@ export class Post {
     @JoinColumn()
     text: Text;
 
-    @Field(type => User, { nullable: true })
+    @Field(type => User)
     @ManyToOne(type => User, { lazy: true })
     author: Lazy<User>;
 
