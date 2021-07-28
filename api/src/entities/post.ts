@@ -1,5 +1,6 @@
 import { ObjectType, ID, Field, Float } from "type-graphql";
-import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Column, JoinColumn, OneToOne, ManyToOne } from "typeorm";
 import { AfterInsert, AfterLoad } from "typeorm";
 import { createUnionType } from "type-graphql";
 import { Tree, TreeChildren, TreeParent } from "typeorm";
@@ -43,7 +44,7 @@ export class Post {
     linkId: number;
 
     @Field(type => Float)
-    @Column('timestamp with time zone', { nullable: false, default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn()
     createdAt: Date;
 
     @Field(type => String)
