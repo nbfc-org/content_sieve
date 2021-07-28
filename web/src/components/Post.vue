@@ -1,7 +1,7 @@
 <template>
-<details open class="comment" :style="`margin-left: ${post.index.split(':').length * 2}em;`" :id="`comment-${post.id}`">
-  <a :href="`#comment-${post.id}`" class="comment-border-link">
-    <span class="sr-only">Jump to {{ post.id }}</span>
+<details open class="comment" :id="`comment-${post.postId}`">
+  <a :href="`#comment-${post.postId}`" class="comment-border-link">
+    <span class="sr-only">Jump to {{ post.postId }}</span>
   </a>
   <summary>
     <div class="comment-heading">
@@ -16,10 +16,10 @@
         </button>
       </div>
       <div class="comment-info">
-        <a href="#" class="comment-author">someguy14</a>
+        <a href="#" class="comment-author">{{ post.author.username }}</a>
         <p class="m-0">
           22 points
-          &bull; <a :href="`#comment-${post.parent}`">#parent</a>
+          &bull; <a :href="`#comment-${post.parent && post.parent.postId}`">click to go to parent</a>
           &bull; {{ new Date(post.createdAt) }}
           &bull; {{ post.index }}
         </p>
@@ -31,14 +31,14 @@
     <p>
       {{ post.content.url ? post.content.title : post.content.body }}
     </p>
-    <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.id}-reply-form`">Reply</button>
+    <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
     <button type="button">Flag</button>
 
     <!-- Reply form start -->
-    <div class="reply-form d-none" :id="`comment-${post.id}-reply-form`">
+    <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
       <textarea v-model="newPostContent" placeholder="Reply to comment" rows="4"></textarea>
-      <button type="button" v-on:click="addPost" data-toggle="reply-form" :data-target="`comment-${post.id}-reply-form`">Submit</button>
-      <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.id}-reply-form`">Cancel</button>
+      <button type="button" v-on:click="addPost" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
+      <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Cancel</button>
     </div>
     <!-- Reply form end -->
   </div>

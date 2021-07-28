@@ -1,8 +1,7 @@
 <template>
   <div id="app">
-    <p class="username">{{ currentUser.username }}'s posts:</p>
     <div class="comment-thread">
-      <Post @postReply="postReply" :key="`${postId}_${childrenCount}`" :thread="thread" :postId="postId" v-if="postId" />
+      <Post @postReply="postReply" :key="`${postId}_${childrenCount}`" :thread="thread" :postId="postId" v-for="postId in postIds" />
     </div>
   </div>
 </template>
@@ -11,18 +10,11 @@
 import gql from 'graphql-tag'
 import uuid62 from 'uuid62';
 import Post from './Post';
-import { Thread } from '../../../api/src/posts.js';
+import { Thread } from '../posts.js';
 
-const CURRENT_USER = gql`query {
-  currentUser {
-    id
-    username
-  }
-}`;
-
-const POSTS_BY_USER = gql`query ($userId: String!) {
-  postsByUser(userId: $userId) {
-    id
+const POSTS_BY_USER = gql`query {
+  postsByUser {
+    postId
     content {
       ... on Text {
         body
@@ -32,15 +24,20 @@ const POSTS_BY_USER = gql`query ($userId: String!) {
         title
       }
     }
-    parent
+    parent {
+      postId
+    }
     createdAt
     index
+    author {
+      username
+    }
   }
 }`;
 
-const ADD_POST = gql`mutation ($id: ID, $content: String!, $parent: ID, $index: String) {
-  addPost(id: $id, content: $content, parent: $parent, index: $index) {
-    id
+const ADD_POST = gql`mutation ($post: PostInput!) {
+  addPost(post: $post) {
+    postId
     content {
       ... on Text {
         body
@@ -50,9 +47,14 @@ const ADD_POST = gql`mutation ($id: ID, $content: String!, $parent: ID, $index: 
         title
       }
     }
-    parent
+    parent {
+      postId
+    }
     createdAt
     index
+    author {
+      username
+    }
   }
 }`;
 
@@ -62,7 +64,6 @@ function updateAddPost(cache, result) {
 
     let cacheId = {
         query: POSTS_BY_USER,
-        variables: { userId: this.currentUser.id },
     }
 
     const data = cache.readQuery(cacheId)
@@ -84,9 +85,8 @@ export default {
     },
     data: function(){
         return {
-            currentUser: { username: 'user' },
             postsByUser: {
-                id: undefined,
+                postIds: [],
             },
             thread: new Thread(),
         };
@@ -99,50 +99,68 @@ export default {
             const id = uuid62.v4();
             this.$apollo.mutate({
                 mutation: ADD_POST,
-                variables: { id, content, parent: parent.id, index: parent.index },
+                variables: {
+                    post: {
+                        postId: id,
+                        body: content,
+                        parentId: parent.postId,
+                        index: parent.index,
+                    }
+                },
                 update: updateAddPost.bind(this),
                 optimisticResponse: {
                     __typename: 'Mutation',
                     addPost: {
                         __typename: 'Post',
-                        id,
-                        parent: parent.id,
+                        postId: id,
+                        parent: {
+                            __typename: 'Post',
+                            postId: parent.postId,
+                        },
+                        author: {
+                            __typename: 'User',
+                            // TODO: unhardcode this when auth exists
+                            username: "foobar",
+                        },
                         content: {
                             __typename: 'Text',
                             body: content,
                         },
                         createdAt: Date.now(),
                         index: `${parent.index}:00`,
-                        userId: this.currentUser.id
                     },
                 },
             })
         },
     },
     computed: {
-        postId: function() {
-            return this.postsByUser.id;
+        postIds: function() {
+            return this.postsByUser.postIds;
         },
         childrenCount: function() {
             return this.postsByUser.childrenCount;
         },
     },
     apollo: {
-        currentUser: CURRENT_USER,
         postsByUser: {
             query: POSTS_BY_USER,
-            variables() {
-                return { userId: this.currentUser.id }
-            },
             update(data) {
                 const posts = data.postsByUser;
+                posts.sort((a, b) => {
+                    return a.index.localeCompare(b.index) || a.createdAt - b.createdAt;
+    });
                 let parents = [];
                 // const start = Date.now();
+                const postIds = [];
                 for (let i = 0; i < posts.length; i++) {
                     const c = posts[i];
+                    c.id = c.postId;
                     let p = parents.length ? posts[parents[parents.length - 1]] : undefined;
+                    if (!p) {
+                        postIds.push(c.postId);
+                    }
                     try {
-                        this.thread.reply(p ? p.id : undefined, c, p ? p.index : undefined);
+                        this.thread.reply(p ? p.postId : undefined, c, p ? p.index : undefined);
                     } catch (err) {
                         console.error(err);
                     }
@@ -160,7 +178,7 @@ export default {
                     }
                 }
                 // console.log(`rerender: ${Date.now() - start}`);
-                return { id: posts[0].id, childrenCount: posts.length - 1 };
+                return { postIds, childrenCount: posts.length - 1 };
             },
         },
     }
