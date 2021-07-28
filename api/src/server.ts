@@ -4,9 +4,7 @@ import { Container } from "typedi";
 import * as TypeORM from "typeorm";
 import * as TypeGraphQL from "type-graphql";
 
-import { RecipeResolver } from "./resolvers/recipe-resolver.js";
-import { Recipe } from "./entities/recipe.js";
-import { Rate } from "./entities/rate.js";
+import { PostResolver } from "./resolvers/post-resolver.js";
 import { User } from "./entities/user.js";
 import { Link } from "./entities/link.js";
 import { Text } from "./entities/text.js";
@@ -28,7 +26,7 @@ export async function bootstrap() {
             password: "wat", // and password
             port: 5432, // and port
             host: "localhost", // and host
-            entities: [Recipe, Rate, User, Text, Link, Post, Vote],
+            entities: [User, Text, Link, Post, Vote],
             synchronize: true,
             logger: "advanced-console",
             logging: "all",
@@ -41,7 +39,7 @@ export async function bootstrap() {
 
         // build TypeGraphQL executable schema
         const schema = await TypeGraphQL.buildSchema({
-            resolvers: [RecipeResolver],
+            resolvers: [PostResolver],
             container: Container,
         });
 

@@ -1,7 +1,6 @@
 import { getRepository } from "typeorm";
 import { v4 as uuidv4 } from 'uuid';
 
-import { Recipe } from "./entities/recipe.js";
 import { Vote, VoteType } from "./entities/vote.js";
 import { User } from "./entities/user.js";
 import { Post } from "./entities/post.js";
@@ -9,7 +8,6 @@ import { Text } from "./entities/text.js";
 import { Link } from "./entities/link.js";
 
 export async function seedDatabase() {
-    const recipeRepository = getRepository(Recipe);
     const postRepository = getRepository(Post);
     const textRepository = getRepository(Text);
     const linkRepository = getRepository(Link);
@@ -23,19 +21,6 @@ export async function seedDatabase() {
         password: "s3cr3tp4ssw0rd",
     });
     await userRepository.save(defaultUser);
-
-    const [recipe1, recipe2] = recipeRepository.create([
-        {
-            title: "Recipe 1",
-            description: "Desc 1",
-            author: defaultUser,
-        },
-        {
-            title: "Recipe 2",
-            author: defaultUser,
-        },
-    ]);
-    await recipeRepository.save([recipe1, recipe2]);
 
     for (const i of [...Array(100).keys()]) {
         const texts = textRepository.create([

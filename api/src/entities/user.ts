@@ -23,7 +23,7 @@ export class User {
   @Column()
   password: string;
 
-  @OneToMany(type => Post, recipe => recipe.author, { lazy: true })
+  @OneToMany(type => Post, post => post.author, { lazy: true })
   @Field(type => [Post])
   posts: Lazy<Post[]>;
 }
