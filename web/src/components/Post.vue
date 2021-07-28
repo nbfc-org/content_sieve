@@ -16,7 +16,7 @@
         </button>
       </div>
       <div class="comment-info">
-        <a href="#" class="comment-author">someguy14</a>
+        <a href="#" class="comment-author">{{ post.author.username }}</a>
         <p class="m-0">
           22 points
           &bull; <a :href="`#comment-${post.parent && post.parent.postId}`">click to go to parent</a>

@@ -29,6 +29,9 @@ const POSTS_BY_USER = gql`query {
     }
     createdAt
     index
+    author {
+      username
+    }
   }
 }`;
 
@@ -49,6 +52,9 @@ const ADD_POST = gql`mutation ($post: PostInput!) {
     }
     createdAt
     index
+    author {
+      username
+    }
   }
 }`;
 
@@ -110,6 +116,11 @@ export default {
                         parent: {
                             __typename: 'Post',
                             postId: parent.postId,
+                        },
+                        author: {
+                            __typename: 'User',
+                            // TODO: unhardcode this when auth exists
+                            username: "foobar",
                         },
                         content: {
                             __typename: 'Text',

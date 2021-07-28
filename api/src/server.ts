@@ -44,7 +44,7 @@ export async function bootstrap() {
       container: Container,
     });
 
-    // create mocked context
+    // TODO: unhardcode this when auth exists
     const context: Context = { user: defaultUser };
 
     // Create GraphQL server

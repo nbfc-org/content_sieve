@@ -62,7 +62,7 @@ export class Post {
     text: Text;
 
     @Field(type => User)
-    @ManyToOne(type => User, { lazy: true })
+    @ManyToOne(type => User, { eager: true })
     author: Lazy<User>;
 
     @AfterLoad()
