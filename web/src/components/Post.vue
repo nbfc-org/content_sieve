@@ -1,5 +1,5 @@
 <template>
-<details open class="comment" :style="`margin-left: ${post.index.split(':').length * 2}em;`" :id="`comment-${post.postId}`">
+<details open class="comment" :id="`comment-${post.postId}`">
   <a :href="`#comment-${post.postId}`" class="comment-border-link">
     <span class="sr-only">Jump to {{ post.postId }}</span>
   </a>
@@ -19,7 +19,7 @@
         <a href="#" class="comment-author">someguy14</a>
         <p class="m-0">
           22 points
-          &bull; <a :href="`#comment-${post.parent && post.parent.postId}`">#parent</a>
+          &bull; <a :href="`#comment-${post.parent && post.parent.postId}`">click to go to parent</a>
           &bull; {{ new Date(post.createdAt) }}
           &bull; {{ post.index }}
         </p>
