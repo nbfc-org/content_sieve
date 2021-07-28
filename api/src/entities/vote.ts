@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int } from "type-graphql";
+import { ObjectType, Field, registerEnumType } from "type-graphql";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 
 import { User } from "./user.js";
@@ -13,12 +13,17 @@ export enum VoteType {
     HIDE = "hide",
 }
 
+registerEnumType(VoteType, {
+    name: "VoteType", // this one is mandatory
+});
+
 @Entity()
 @ObjectType()
 export class Vote {
     @PrimaryGeneratedColumn()
     readonly id: number;
 
+    @Field(type => VoteType)
     @Column({
         type: "enum",
         enum: VoteType,

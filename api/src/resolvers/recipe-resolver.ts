@@ -5,12 +5,12 @@ import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
 import { Recipe } from "../entities/recipe.js";
-import { Rate } from "../entities/rate.js";
+import { Vote } from "../entities/vote.js";
 import { Post } from "../entities/post.js";
 import { Text } from "../entities/text.js";
 import { RecipeInput } from "./types/recipe-input.js";
 import { PostInput } from "./types/post-input.js";
-import { RateInput } from "./types/rate-input.js";
+import { VoteInput } from "./types/vote-input.js";
 import { Context } from "./types/context.js";
 
 import base36 from 'base36';
@@ -21,7 +21,7 @@ import uuid62 from 'uuid62';
 export class RecipeResolver {
   constructor(
     @InjectRepository(Recipe) private readonly recipeRepository: Repository<Recipe>,
-    @InjectRepository(Rate) private readonly ratingsRepository: Repository<Rate>,
+    @InjectRepository(Vote) private readonly voteRepository: Repository<Vote>,
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     @InjectRepository(Text) private readonly textRepository: Repository<Text>,
   ) {}
@@ -100,26 +100,23 @@ export class RecipeResolver {
     return this.recipeRepository.save(recipe);
   }
 
-  @Mutation(returns => Recipe)
-  async rate(@Ctx() { user }: Context, @Arg("rate") rateInput: RateInput): Promise<Recipe> {
-    // find the recipe
-    const recipe = await this.recipeRepository.findOne(rateInput.recipeId, {
-      relations: ["ratings"], // preload the relation as we will modify it
-    });
-    if (!recipe) {
-      throw new Error("Invalid recipe ID");
-    }
+    @Mutation(returns => Post)
+    async vote(@Ctx() { user }: Context, @Arg("vote") voteInput: VoteInput): Promise<Post> {
+        const post = await this.postRepository.findOne(voteInput.postId, {
+            relations: ["votes"], // preload the relation as we will modify it
+        });
+        if (!post) {
+            throw new Error("Invalid post ID");
+        }
 
-    // add the new recipe rate
-    (await recipe.ratings).push(
-      this.ratingsRepository.create({
-        recipe,
-        user,
-        value: rateInput.value,
-      }),
-    );
+        (await post.votes).push(
+            this.voteRepository.create({
+                post,
+                user,
+                type: voteInput.type,
+            }),
+        );
 
-    // return updated recipe
-    return await this.recipeRepository.save(recipe);
+        return await this.postRepository.save(post);
   }
 }
