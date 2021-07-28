@@ -1,6 +1,6 @@
 import { ObjectType, ID, Field, Float } from "type-graphql";
 import { Entity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
-import { Column, JoinColumn, OneToOne, ManyToOne } from "typeorm";
+import { Column, JoinColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
 import { AfterInsert, AfterLoad } from "typeorm";
 import { createUnionType } from "type-graphql";
 import { Tree, TreeChildren, TreeParent } from "typeorm";
@@ -10,6 +10,7 @@ import uuid62 from 'uuid62';
 import { User } from "./user.js";
 import { Link } from "./link.js";
 import { Text } from "./text.js";
+import { Vote } from "./vote.js";
 import { Lazy } from "../helpers.js";
 
 export const Content = createUnionType({
@@ -60,6 +61,10 @@ export class Post {
     @OneToOne(type => Text, { cascade: true, eager: true })
     @JoinColumn()
     text: Text;
+
+    @Field(type => [Vote])
+    @OneToMany(type => Vote, vote => vote.post, { lazy: true, cascade: ["insert"] })
+    votes: Lazy<Vote[]>;
 
     @Field(type => User)
     @ManyToOne(type => User, { eager: true })

@@ -11,6 +11,7 @@ import { User } from "./entities/user.js";
 import { Link } from "./entities/link.js";
 import { Text } from "./entities/text.js";
 import { Post } from "./entities/post.js";
+import { Vote } from "./entities/vote.js";
 import { seedDatabase } from "./helpers.js";
 import { Context } from "./resolvers/types/context.js";
 
@@ -18,44 +19,44 @@ import { Context } from "./resolvers/types/context.js";
 TypeORM.useContainer(Container);
 
 export async function bootstrap() {
-  try {
-    // create TypeORM connection
-    await TypeORM.createConnection({
-      type: "postgres",
-      database: "type-graphql-lazy",
-      username: "postgres", // fill this with your username
-      password: "wat", // and password
-      port: 5432, // and port
-      host: "localhost", // and host
-      entities: [Recipe, Rate, User, Text, Link, Post],
-      synchronize: true,
-      logger: "advanced-console",
-      logging: "all",
-      dropSchema: true,
-      cache: true,
-    });
+    try {
+        // create TypeORM connection
+        await TypeORM.createConnection({
+            type: "postgres",
+            database: "type-graphql-lazy",
+            username: "postgres", // fill this with your username
+            password: "wat", // and password
+            port: 5432, // and port
+            host: "localhost", // and host
+            entities: [Recipe, Rate, User, Text, Link, Post, Vote],
+            synchronize: true,
+            logger: "advanced-console",
+            logging: "all",
+            dropSchema: true,
+            cache: true,
+        });
 
-    // seed database with some data
-    const { defaultUser } = await seedDatabase();
+        // seed database with some data
+        const { defaultUser } = await seedDatabase();
 
-    // build TypeGraphQL executable schema
-    const schema = await TypeGraphQL.buildSchema({
-      resolvers: [RecipeResolver],
-      container: Container,
-    });
+        // build TypeGraphQL executable schema
+        const schema = await TypeGraphQL.buildSchema({
+            resolvers: [RecipeResolver],
+            container: Container,
+        });
 
-    // TODO: unhardcode this when auth exists
-    const context: Context = { user: defaultUser };
+        // TODO: unhardcode this when auth exists
+        const context: Context = { user: defaultUser };
 
-    // Create GraphQL server
-    const server = new ApolloServer({ schema, context });
+        // Create GraphQL server
+        const server = new ApolloServer({ schema, context });
 
-    // Start the server
-    const { url } = await server.listen(4001);
-    console.log(`Server is running, GraphQL Playground available at ${url}`);
-  } catch (err) {
-    console.error(err);
-  }
+        // Start the server
+        const { url } = await server.listen(4001);
+        console.log(`Server is running, GraphQL Playground available at ${url}`);
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 bootstrap();

@@ -2,77 +2,71 @@ import { getRepository } from "typeorm";
 import { v4 as uuidv4 } from 'uuid';
 
 import { Recipe } from "./entities/recipe.js";
-import { Rate } from "./entities/rate.js";
+import { Vote, VoteType } from "./entities/vote.js";
 import { User } from "./entities/user.js";
 import { Post } from "./entities/post.js";
 import { Text } from "./entities/text.js";
 import { Link } from "./entities/link.js";
 
 export async function seedDatabase() {
-  const recipeRepository = getRepository(Recipe);
-  const ratingsRepository = getRepository(Rate);
-  const userRepository = getRepository(User);
+    const recipeRepository = getRepository(Recipe);
+    const postRepository = getRepository(Post);
+    const textRepository = getRepository(Text);
+    const linkRepository = getRepository(Link);
 
-  const defaultUser = userRepository.create({
-    email: "foobar@example.com",
-    username: "foobar",
-    password: "s3cr3tp4ssw0rd",
-  });
-  await userRepository.save(defaultUser);
+    const voteRepository = getRepository(Vote);
+    const userRepository = getRepository(User);
 
-  const [recipe1, recipe2] = recipeRepository.create([
-    {
-      title: "Recipe 1",
-      description: "Desc 1",
-      author: defaultUser,
-    },
-    {
-      title: "Recipe 2",
-      author: defaultUser,
-    },
-  ]);
-  await recipeRepository.save([recipe1, recipe2]);
+    const defaultUser = userRepository.create({
+        email: "foobar@example.com",
+        username: "foobar",
+        password: "s3cr3tp4ssw0rd",
+    });
+    await userRepository.save(defaultUser);
 
-  const ratings = ratingsRepository.create([
-    { value: 2, user: defaultUser, recipe: recipe1 },
-    { value: 4, user: defaultUser, recipe: recipe1 },
-    { value: 5, user: defaultUser, recipe: recipe1 },
-    { value: 3, user: defaultUser, recipe: recipe1 },
-    { value: 4, user: defaultUser, recipe: recipe1 },
+    const [recipe1, recipe2] = recipeRepository.create([
+        {
+            title: "Recipe 1",
+            description: "Desc 1",
+            author: defaultUser,
+        },
+        {
+            title: "Recipe 2",
+            author: defaultUser,
+        },
+    ]);
+    await recipeRepository.save([recipe1, recipe2]);
 
-    { value: 2, user: defaultUser, recipe: recipe2 },
-    { value: 4, user: defaultUser, recipe: recipe2 },
-  ]);
-  await ratingsRepository.save(ratings);
+    for (const i of [...Array(100).keys()]) {
+        const texts = textRepository.create([
+            { body: 'wat' },
+        ]);
+        await textRepository.save(texts);
 
-  const postRepository = getRepository(Post);
-  const textRepository = getRepository(Text);
-  const linkRepository = getRepository(Link);
+        const links = linkRepository.create([
+            { url: 'http://google.com', title: 'Google' },
+        ]);
+        await linkRepository.save(links);
 
-  for (const i of [...Array(100).keys()]) {
-      const texts = textRepository.create([
-          { body: 'wat' },
-      ]);
-      await textRepository.save(texts);
+        const posts = postRepository.create([
+            ...texts.map(t => { return { text: t, author: defaultUser, postId: uuidv4() }; }),
+            ...links.map(l => { return { link: l, author: defaultUser, postId: uuidv4() }; }),
+        ]);
+        await postRepository.save(posts);
 
-      const links = linkRepository.create([
-          { url: 'http://google.com', title: 'Google' },
-      ]);
-      await linkRepository.save(links);
+        posts[1].parent = posts[0];
+        await postRepository.save(posts[1]);
 
-      const posts = postRepository.create([
-          ...texts.map(t => { return { text: t, author: defaultUser, postId: uuidv4() }; }),
-          ...links.map(l => { return { link: l, author: defaultUser, postId: uuidv4() }; }),
-      ]);
-      await postRepository.save(posts);
+        const votes = voteRepository.create([
+            { type: VoteType.DOWN, user: defaultUser, post: posts[0] },
+            { type: VoteType.UP, user: defaultUser, post: posts[1] },
+        ]);
+        await voteRepository.save(votes);
+    }
 
-      posts[1].parent = posts[0];
-      await postRepository.save(posts[1]);
-  }
-
-  return {
-    defaultUser,
-  };
+    return {
+        defaultUser,
+    };
 }
 
 export type Lazy<T extends object> = Promise<T> | T;
