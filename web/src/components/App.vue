@@ -10,7 +10,7 @@
 import gql from 'graphql-tag'
 import uuid62 from 'uuid62';
 import Post from './Post';
-import { Thread } from '../../../api/src/posts.js';
+import { Thread } from '../posts.js';
 
 const POSTS_BY_USER = gql`query {
   postsByUser {

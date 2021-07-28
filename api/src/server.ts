@@ -1,132 +1,61 @@
-import { ApolloServer, gql } from 'apollo-server';
+import "reflect-metadata";
+import { ApolloServer } from "apollo-server";
+import { Container } from "typedi";
+import * as TypeORM from "typeorm";
+import * as TypeGraphQL from "type-graphql";
 
-import uuid62 from 'uuid62';
+import { RecipeResolver } from "./resolvers/recipe-resolver.js";
+import { Recipe } from "./entities/recipe.js";
+import { Rate } from "./entities/rate.js";
+import { User } from "./entities/user.js";
+import { Link } from "./entities/link.js";
+import { Text } from "./entities/text.js";
+import { Post } from "./entities/post.js";
+import { seedDatabase } from "./helpers.js";
+import { Context } from "./resolvers/types/context.js";
 
-import { testData } from './posts.js';
+// register 3rd party IOC container
+TypeORM.useContainer(Container);
 
-const schema = gql(`
-  type Query {
-    currentUser: User
-    postsByUser(userId: String!): [Post]
+export async function bootstrap() {
+  try {
+    // create TypeORM connection
+    await TypeORM.createConnection({
+      type: "postgres",
+      database: "type-graphql-lazy",
+      username: "postgres", // fill this with your username
+      password: "wat", // and password
+      port: 5432, // and port
+      host: "localhost", // and host
+      entities: [Recipe, Rate, User, Text, Link, Post],
+      synchronize: true,
+      logger: "advanced-console",
+      logging: "all",
+      dropSchema: true,
+      cache: true,
+    });
+
+    // seed database with some data
+    const { defaultUser } = await seedDatabase();
+
+    // build TypeGraphQL executable schema
+    const schema = await TypeGraphQL.buildSchema({
+      resolvers: [RecipeResolver],
+      container: Container,
+    });
+
+    // create mocked context
+    const context: Context = { user: defaultUser };
+
+    // Create GraphQL server
+    const server = new ApolloServer({ schema, context });
+
+    // Start the server
+    const { url } = await server.listen(4001);
+    console.log(`Server is running, GraphQL Playground available at ${url}`);
+  } catch (err) {
+    console.error(err);
   }
+}
 
-  type Mutation {
-    addPost(id: ID, content: String!, parent: ID, index: String): Post
-  }
-
-  type User {
-    id: ID!
-    username: String!
-    posts: [ID]
-    karma: Int
-  }
-
-  type Text {
-    body: String!
-  }
-
-  type Link {
-    url: String!
-    title: String
-  }
-
-  union Content = Link | Text
-
-  type Post {
-    id: ID!
-    content: Content!
-    userId: ID!
-    createdAt: Float!
-    parent: ID
-    replies: [ID]
-    tags: [ID]
-    score: Int
-    index: String
-  }
-
-  type Tag {
-    id: ID!
-    slug: String!
-    createdAt: Float!
-    posts: [ID]
-  }
-
-  enum VoteType {
-    UP,
-    DOWN,
-    FLAG,
-    SAVE,
-    HIDE,
-  }
-
-  type Vote {
-    id: ID!
-    type: VoteType!
-    createdAt: Float!
-    userId: ID!
-    postId: ID!
-  }
-`);
-
-const data = testData();
-
-var resolvers = {
-    Query: {
-        currentUser: (_, __, { data, currentUserId }) => {
-            let user = data.users.find( u => u.id === currentUserId );
-            return user;
-        },
-        postsByUser: (_, { userId }, { data }) => {
-            let posts = data.thread.toArray().filter( p => p.userId === userId );
-            return posts;
-        },
-    },
-    Mutation: {
-        addPost: async (_, { id, content, parent, index }, { currentUserId, data }) => {
-            let post = {
-                id: id || uuid62.v4(),
-                content: {
-                    body: content,
-                },
-                userId: currentUserId,
-                createdAt: Date.now(),
-            };
-            return data.thread.reply(parent, post, index);
-        }
-    },
-    User: {
-        posts: (parent, { userId }, { data }) => {
-            let posts = data.thread.toArray().filter( p => p.userId === userId );
-            return posts;
-        }
-    },
-    Content: {
-        __resolveType(obj, context, info){
-            if(obj.hasOwnProperty('body')) {
-                return 'Text';
-            }
-            if(obj.hasOwnProperty('url')) {
-                return 'Link';
-            }
-            return null;
-        },
-    },
-};
-
-const currentUserId = 'abc-1';
-
-const server = new ApolloServer({
-    typeDefs: schema,
-    resolvers: resolvers,
-    context: {
-        currentUserId,
-        data
-    }
-});
-
-server.listen(4001).then(({ url }) => {
-    console.log('API server running at localhost:4001');
-});
-
-import { bootstrap } from "./typeorm-lazy-relations/index.js";
 bootstrap();
