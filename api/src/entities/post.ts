@@ -1,4 +1,4 @@
-import { ObjectType, ID, Field, Float } from "type-graphql";
+import { ObjectType, ID, Field, Float, Int } from "type-graphql";
 import { Entity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 import { Column, JoinColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
 import { AfterInsert, AfterLoad } from "typeorm";
@@ -48,8 +48,8 @@ export class Post {
     @CreateDateColumn()
     createdAt: Date;
 
-    @Field(type => String)
-    index: string;
+    @Field(type => [Int])
+    index: number[];
 
     @OneToOne(type => Link, { cascade: true, eager: true })
     @JoinColumn()

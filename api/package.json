@@ -12,7 +12,6 @@
   "author": "",
   "dependencies": {
     "apollo-server": "^2.25.0",
-    "base36": "^1.0.0",
     "class-validator": "^0.13.1",
     "graphql": "^15.5.0",
     "pg": "^8.6.0",

@@ -1,4 +1,4 @@
-import { ID, InputType, Field } from "type-graphql";
+import { ID, InputType, Field, Int } from "type-graphql";
 
 import { Post } from "../../entities/post.js";
 
@@ -13,6 +13,6 @@ export class PostInput implements Partial<Post> {
     @Field(type => String)
     body: string;
 
-    @Field(type => String)
-    index: string;
+    @Field(type => [Int])
+    index: number[];
 }

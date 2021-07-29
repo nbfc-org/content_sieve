@@ -9,6 +9,7 @@
 <script>
 import gql from 'graphql-tag'
 import uuid62 from 'uuid62';
+import base36 from 'base36';
 import Post from './Post';
 import { Thread } from '../posts.js';
 
@@ -58,6 +59,18 @@ const ADD_POST = gql`mutation ($post: PostInput!) {
   }
 }`;
 
+const cmp = (a, b) => {
+    if (a < b) { return -1; }
+    if (a > b) { return 1; }
+    return 0;
+};
+
+const b36 = (a) => a.map(i => base36.base36encode(i).padStart(4, "0")).join('');
+
+const indexSort = (a, b) => {
+    return cmp(b36(a.index), b36(b.index)) || a.createdAt - b.createdAt;
+};
+
 function updateAddPost(cache, result) {
 
     let newPost = result.data.addPost
@@ -68,9 +81,7 @@ function updateAddPost(cache, result) {
 
     const data = cache.readQuery(cacheId)
     const newData = [ ...data.postsByUser, newPost ]
-    newData.sort((a, b) => {
-        return a.index.localeCompare(b.index) || a.createdAt - b.createdAt;
-    });
+    newData.sort(indexSort);
 
     cache.writeQuery({
         ...cacheId,
@@ -127,7 +138,7 @@ export default {
                             body: content,
                         },
                         createdAt: Date.now(),
-                        index: `${parent.index}:00`,
+                        index: [...parent.index, 0],
                     },
                 },
             })
@@ -146,11 +157,10 @@ export default {
             query: POSTS_BY_USER,
             update(data) {
                 const posts = data.postsByUser;
-                posts.sort((a, b) => {
-                    return a.index.localeCompare(b.index) || a.createdAt - b.createdAt;
-    });
-                let parents = [];
                 // const start = Date.now();
+                posts.sort(indexSort);
+                // console.log(`rerender: ${Date.now() - start}`);
+                let parents = [];
                 const postIds = [];
                 for (let i = 0; i < posts.length; i++) {
                     const c = posts[i];
@@ -160,7 +170,7 @@ export default {
                         postIds.push(c.postId);
                     }
                     try {
-                        this.thread.reply(p ? p.postId : undefined, c, p ? p.index : undefined);
+                        this.thread.reply(p ? p.postId : undefined, c, p ? p.index : []);
                     } catch (err) {
                         console.error(err);
                     }
@@ -170,14 +180,13 @@ export default {
                         if (n.index.length > c.index.length) {
                             parents.push(i);
                         } else if (n.index.length < c.index.length) {
-                            const num = c.index.split(':').length - n.index.split(':').length;
+                            const num = c.index.length - n.index.length;
                             for (let j = 0; j < num; j++) {
                                 parents.pop();
                             }
                         }
                     }
                 }
-                // console.log(`rerender: ${Date.now() - start}`);
                 return { postIds, childrenCount: posts.length - 1 };
             },
         },

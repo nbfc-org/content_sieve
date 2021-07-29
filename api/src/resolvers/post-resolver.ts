@@ -11,7 +11,6 @@ import { PostInput } from "./types/post-input.js";
 import { VoteInput } from "./types/vote-input.js";
 import { Context } from "./types/context.js";
 
-import base36 from 'base36';
 import uuid62 from 'uuid62';
 
 @Service()
@@ -33,7 +32,7 @@ export class PostResolver {
         for (const node of nodes) {
             const newdepth = [...depth, i];
             pathmap[node.id] = {
-                index: newdepth.map(j => base36.base36encode(j).padStart(2, "0")).join(':'),
+                index: newdepth,
                 parent,
             };
             this._dfs(node.children, pathmap, newdepth, node);
@@ -79,7 +78,7 @@ export class PostResolver {
         await this.postRepository.save(post);
         post.parent = await this.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
         const saved = await this.postRepository.save(post);
-        saved.index = `${postInput.index}:00`;
+        saved.index = [...postInput.index, 0];
         return saved;
     }
 
