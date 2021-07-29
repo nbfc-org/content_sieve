@@ -45,7 +45,7 @@ export class Post {
     linkId: number;
 
     @Field(type => Float)
-    @CreateDateColumn()
+    @CreateDateColumn({type: 'timestamp with time zone'})
     createdAt: Date;
 
     @Field(type => [Int])
