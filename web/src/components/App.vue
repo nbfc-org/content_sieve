@@ -227,7 +227,6 @@ export default {
       -moz-appearance: none;
       -webkit-appearance: none;
       appearance: none;
-      font-size: 14px;
       padding: 4px 8px;
       color: rgba(0, 0, 0, 0.85);
       background-color: #fff;
@@ -269,8 +268,8 @@ export default {
   .comment-heading {
       display: flex;
       align-items: center;
+      font-size: .8em;
       height: 50px;
-      font-size: 14px;
   }
   .comment-voting {
       width: 20px;
@@ -284,7 +283,6 @@ export default {
       height: 50%;
       padding: 0;
       border: 0;
-      font-size: 10px;
   }
   .comment-info {
       color: rgba(0, 0, 0, 0.5);
@@ -294,6 +292,7 @@ export default {
       color: rgba(0, 0, 0, 0.85);
       font-weight: bold;
       text-decoration: none;
+      font-size: 1.1em;
   }
   .comment-author:hover {
       text-decoration: underline;
@@ -342,7 +341,6 @@ export default {
       position: absolute;
       right: 5px;
       align-self: center;
-      font-size: 12px;
       color: rgba(0, 0, 0, 0.55);
   }
   details.comment[open] .comment-heading::after {
@@ -368,8 +366,6 @@ export default {
   /* Styling the reply to comment form */
 
   .reply-form textarea {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-      font-size: 16px;
       width: 100%;
       max-width: 100%;
       margin-top: 15px;
