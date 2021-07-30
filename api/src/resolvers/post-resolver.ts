@@ -84,9 +84,11 @@ export class PostResolver {
 
     @Mutation(returns => Post)
     async vote(@Ctx() { user }: Context, @Arg("vote") voteInput: VoteInput): Promise<Post> {
-        const post = await this.postRepository.findOne(voteInput.postId, {
-            relations: ["votes"], // preload the relation as we will modify it
-        });
+        const post = await this.postRepository.findOne(
+            { postId: uuid62.decode(voteInput.postId) },
+            { relations: ["votes"] },
+        );
+
         if (!post) {
             throw new Error("Invalid post ID");
         }

@@ -6,11 +6,11 @@
   <summary>
     <div class="comment-heading">
       <div class="comment-voting">
-        <button type="button">
+        <button type="button" v-on:click="up">
           <span aria-hidden="true">&#9650;</span>
           <span class="sr-only">Vote up</span>
         </button>
-        <button type="button">
+        <button type="button" v-on:click="down">
           <span aria-hidden="true">&#9660;</span>
           <span class="sr-only">Vote down</span>
         </button>
@@ -20,8 +20,9 @@
         <p class="m-0">
           22 points
           &bull; <a :href="`#comment-${post.parent && post.parent.postId}`">click to go to parent</a>
-          &bull; {{ new Date(post.createdAt) }}
           &bull; {{ post.index }}
+          &bull; {{ post.votes }}
+          &bull; {{ new Date(post.createdAt) }}
         </p>
       </div>
     </div>
@@ -32,7 +33,7 @@
       {{ post.content.url ? post.content.title : post.content.body }}
     </p>
     <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
-    <button type="button">Flag</button>
+    <button type="button" v-on:click="flag">Flag</button>
 
     <!-- Reply form start -->
     <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
@@ -43,7 +44,7 @@
     <!-- Reply form end -->
   </div>
   <div class="replies">
-    <Post @postReply="postReply" :key="`${child}_${childrenCount}`" v-for="child in children" :thread="thread" :postId="child" v-if="children" />
+    <Post @postReply="postReply" @vote="vote" :key="`${child}_${childrenCount}`" v-for="child in children" :thread="thread" :postId="child" v-if="children" />
   </div>
 </details>
 </template>
@@ -78,8 +79,20 @@ export default {
                 replyForm.getElementsByTagName("textarea")[0].focus();
             }
         },
+        flag: function(event) {
+            this.$emit('vote', event, this.postId, "FLAG");
+        },
+        up: function(event) {
+            this.$emit('vote', event, this.postId, "UP");
+        },
+        down: function(event) {
+            this.$emit('vote', event, this.postId, "DOWN");
+        },
         postReply: function(event, parent, text) {
             this.$emit('postReply', event, parent, text);
+        },
+        vote: function(event, postId, type) {
+            this.$emit('vote', event, postId, type);
         },
         addPost: function(event) {
             this.$emit('postReply', event, this.post, this.newPostContent);

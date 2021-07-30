@@ -1,5 +1,5 @@
 import { ObjectType, Field, registerEnumType } from "type-graphql";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Column, Entity, ManyToOne, Unique, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 
 import { User } from "./user.js";
 import { Post } from "./post.js";
@@ -19,6 +19,7 @@ registerEnumType(VoteType, {
 
 @Entity()
 @ObjectType()
+@Unique(["type", "user", "post"])
 export class Vote {
     @PrimaryGeneratedColumn()
     readonly id: number;

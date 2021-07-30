@@ -1,23 +1,22 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { PrimaryGeneratedColumn, Column, Entity, Unique, OneToMany } from "typeorm";
+import { PrimaryGeneratedColumn, Column, Entity, OneToMany } from "typeorm";
 
 import { Post } from "./post.js";
 import { Lazy } from "../helpers.js";
 
 @ObjectType()
 @Entity()
-@Unique(["username", "email"])
 export class User {
   @Field(type => ID)
   @PrimaryGeneratedColumn()
   readonly id: number;
 
   @Field()
-  @Column()
+  @Column({ unique: true})
   username: string;
 
   @Field()
-  @Column()
+  @Column({ unique: true})
   email: string;
 
   @Column()

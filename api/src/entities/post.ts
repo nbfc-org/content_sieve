@@ -63,7 +63,7 @@ export class Post {
     text: Text;
 
     @Field(type => [Vote])
-    @OneToMany(type => Vote, vote => vote.post, { lazy: true, cascade: ["insert"] })
+    @OneToMany(type => Vote, vote => vote.post, { eager: true, cascade: ["insert"] })
     votes: Lazy<Vote[]>;
 
     @Field(type => User)

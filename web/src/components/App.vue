@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="comment-thread">
-      <Post @postReply="postReply" :key="`${postId}_${childrenCount}`" :thread="thread" :postId="postId" v-for="postId in postIds" />
+      <Post @postReply="postReply" @vote="vote" :key="`${postId}_${childrenCount}`" :thread="thread" :postId="postId" v-for="postId in postIds" />
     </div>
   </div>
 </template>
@@ -33,6 +33,9 @@ const POSTS_BY_USER = gql`query {
     author {
       username
     }
+    votes {
+      type
+    }
   }
 }`;
 
@@ -59,13 +62,22 @@ const ADD_POST = gql`mutation ($post: PostInput!) {
   }
 }`;
 
+const VOTE = gql`mutation ($vote: VoteInput!) {
+  vote(vote: $vote) {
+    postId
+    votes {
+      type
+    }
+  }
+}`;
+
 const cmp = (a, b) => {
     if (a < b) { return -1; }
     if (a > b) { return 1; }
     return 0;
 };
 
-const b36 = (a) => a.map(i => base36.base36encode(i).padStart(4, "0")).join('');
+const b36 = (a) => a.map(i => base36.base36encode(i).padStart(4, "0")).join(':');
 
 const indexSort = (a, b) => {
     return cmp(b36(a.index), b36(b.index)) || a.createdAt - b.createdAt;
@@ -105,6 +117,18 @@ export default {
     methods: {
         postReply(event, parent, text) {
             this.addPost(parent, text);
+        },
+        vote(event, postId, type) {
+            this.$apollo.mutate({
+                mutation: VOTE,
+                variables: {
+                    vote: {
+                        postId,
+                        type,
+                    }
+                },
+                // update: updateAddPost.bind(this),
+            });
         },
         addPost(parent, content) {
             const id = uuid62.v4();
