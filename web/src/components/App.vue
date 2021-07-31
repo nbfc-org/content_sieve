@@ -223,28 +223,10 @@ export default {
 
 <style>
 
-  button {
-      -moz-appearance: none;
-      -webkit-appearance: none;
-      appearance: none;
-      padding: 4px 8px;
-      color: rgba(0, 0, 0, 0.85);
-      background-color: #fff;
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      border-radius: 4px;
-  }
-  button:hover,
-  button:focus,
-  button:active {
-      cursor: pointer;
-      background-color: #ecf0f1;
-  }
   .comment-thread {
-      width: 700px;
       max-width: 100%;
       margin: auto;
       padding: 0 30px;
-      background-color: #fff;
       border: 1px solid transparent; /* Removes margin collapse */
   }
   .m-0 {
@@ -269,7 +251,6 @@ export default {
       display: flex;
       align-items: center;
       font-size: .8em;
-      height: 50px;
   }
   .comment-voting {
       width: 20px;
@@ -289,7 +270,7 @@ export default {
       margin-left: 10px;
   }
   .comment-author {
-      color: rgba(0, 0, 0, 0.85);
+      color: rgba(0, 0, 0, 0.75);
       font-weight: bold;
       text-decoration: none;
       font-size: 1.1em;
@@ -343,10 +324,10 @@ export default {
       align-self: center;
       color: rgba(0, 0, 0, 0.55);
   }
-  details.comment[open] .comment-heading::after {
+  details.comment[open] .comment-info::after {
       content: "Click to hide";
   }
-  details.comment:not([open]) .comment-heading::after {
+  details.comment:not([open]) .comment-info::after {
       content: "Click to show";
   }
 
@@ -357,8 +338,8 @@ export default {
       .comment-heading {
           cursor: default;
       }
-      details.comment[open] .comment-heading::after,
-      details.comment:not([open]) .comment-heading::after {
+      details.comment[open] .comment-info::after,
+      details.comment:not([open]) .comment-info::after {
           content: " ";
       }
   }
