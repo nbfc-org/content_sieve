@@ -1,4 +1,6 @@
 import Vue from 'vue';
+import VueRouter from 'vue-router';
+
 import App from './components/App.vue';
 
 Vue.config.productionTip = false;
@@ -26,10 +28,25 @@ const apolloProvider = new VueApollo({
   })
 });
 
+Vue.use(VueRouter);
+
+import TopLevelPosts from './components/TopLevelPosts.vue';
+import 'normalize.css';
+
+const routes = [
+  { path: '/', component: TopLevelPosts },
+  // { path: '/manage-products', alias: '/foobar', component: ManageProducts }
+];
+
+const router = new VueRouter({
+  routes
+});
+
 Vue.use(VueApollo);
 
 new Vue({
   el: '#app',
+  router,
   apolloProvider,
   render: h => h(App),
 });

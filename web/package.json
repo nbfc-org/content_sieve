@@ -25,7 +25,8 @@
     "offline-plugin": "^4.8.0",
     "promise-polyfill": "^6.0.2",
     "uuid62": "^1.0.1",
-    "vue-apollo": "^3.0.7"
+    "vue-apollo": "^3.0.7",
+    "vue-router": "^3.5.2"
   },
   "devDependencies": {
     "poi": "^9.0.0",
