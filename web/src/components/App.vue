@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <div v-if="error">{{ error }}</div>
     <div class="comment-thread">
       <Post @postReply="postReply" @vote="vote" :key="`${postId}_${childrenCount}`" :thread="thread" :postId="postId" v-for="postId in postIds" />
     </div>
@@ -112,23 +113,29 @@ export default {
                 postIds: [],
             },
             thread: new Thread(),
+            error: null,
         };
     },
     methods: {
         postReply(event, parent, text) {
             this.addPost(parent, text);
         },
-        vote(event, postId, type) {
-            this.$apollo.mutate({
-                mutation: VOTE,
-                variables: {
-                    vote: {
-                        postId,
-                        type,
-                    }
-                },
-                // update: updateAddPost.bind(this),
-            });
+        async vote(event, postId, type) {
+            try {
+                const w = await this.$apollo.mutate({
+                    mutation: VOTE,
+                    variables: {
+                        vote: {
+                            postId,
+                            type,
+                        }
+                    },
+                });
+                // console.info(w);
+            } catch(err) {
+                this.error = err;
+                // console.error(this.error);
+            }
         },
         addPost(parent, content) {
             const id = uuid62.v4();
