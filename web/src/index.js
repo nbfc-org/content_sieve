@@ -31,10 +31,12 @@ const apolloProvider = new VueApollo({
 Vue.use(VueRouter);
 
 import TopLevelPosts from './components/TopLevelPosts.vue';
+import PostWithChildren from './components/PostWithChildren.vue';
 import 'normalize.css';
 
 const routes = [
-  { path: '/', component: TopLevelPosts },
+  { path: '/posts', alias: '/', component: TopLevelPosts },
+  { path: '/post/:postId', component: PostWithChildren },
   // { path: '/manage-products', alias: '/foobar', component: ManageProducts }
 ];
 

@@ -19,7 +19,13 @@
         <a href="#" class="comment-author">{{ post.author.username }}</a>
         <p class="m-0">
           22 points
-          &bull; <a :href="`#comment-${post.parent && post.parent.postId}`">click to go to parent</a>
+          &bull; <router-link
+            :to="`/post/${post.parent.postId}`"
+            class="nav-item nav-link"
+            active-class="active"
+            exact
+            v-if="post.parent"
+            >parent</router-link>
           &bull; {{ post.index }}
           &bull; {{ post.votes }}
           &bull; {{ new Date(post.createdAt) }}
