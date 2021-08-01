@@ -1,4 +1,4 @@
-import { Resolver, Query, Arg, Mutation, Ctx, Int } from "type-graphql";
+import { Resolver, Query, Arg, Mutation, Ctx, ID } from "type-graphql";
 import { Repository } from "typeorm";
 import { getManager } from "typeorm";
 import { Service } from "typedi";
@@ -23,8 +23,9 @@ export class PostResolver {
     ) {}
 
     @Query(returns => Post, { nullable: true })
-    post(@Arg("postId", type => String) postId: string) {
-        return this.postRepository.findOne(postId);
+    post(@Arg("postId", type => ID) postId: string) {
+        const id = uuid62.decode(postId);
+        return this.postRepository.findOne({ postId: id });
     }
 
     _dfs(nodes, pathmap, depth, parent=null) {

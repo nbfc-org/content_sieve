@@ -36,7 +36,10 @@ import 'normalize.css';
 
 const routes = [
   { path: '/posts', alias: '/', component: TopLevelPosts },
-  { path: '/post/:postId', component: PostWithChildren },
+  { path: '/post/:postId',
+    component: PostWithChildren,
+    props: true,
+  },
   // { path: '/manage-products', alias: '/foobar', component: ManageProducts }
 ];
 
