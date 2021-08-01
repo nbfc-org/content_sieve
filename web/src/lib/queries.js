@@ -55,6 +55,14 @@ query ($postId: ID!) {
   }
 }`;
 
+const ADD_POST = gql`
+${postFields}
+mutation ($post: PostInput!) {
+  addPost(post: $post) {
+    ...PostFields
+  }
+}`;
+
 const insertIntoThread = (posts, thread) => {
   let parents = [];
   const postIds = [];
@@ -109,4 +117,4 @@ const postsByUser = {
   },
 };
 
-export { getPost, indexSort, postsByUser, POSTS_BY_USER };
+export { getPost, indexSort, postsByUser, POSTS_BY_USER, ADD_POST };

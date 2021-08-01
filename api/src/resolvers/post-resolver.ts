@@ -105,6 +105,7 @@ export class PostResolver {
         post.parent = await this.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
         const saved = await this.postRepository.save(post);
         saved.index = [...postInput.index, 0];
+        saved.votes = [];
         return saved;
     }
 

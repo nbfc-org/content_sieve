@@ -12,30 +12,7 @@ import gql from 'graphql-tag'
 import uuid62 from 'uuid62';
 import Post from './Post';
 import { Thread } from '../lib/posts.js';
-import { indexSort, postsByUser, POSTS_BY_USER } from '../lib/queries.js';
-
-const ADD_POST = gql`mutation ($post: PostInput!) {
-  addPost(post: $post) {
-    postId
-    content {
-      ... on Text {
-        body
-      }
-      ... on Link {
-        url
-        title
-      }
-    }
-    parent {
-      postId
-    }
-    createdAt
-    index
-    author {
-      username
-    }
-  }
-}`;
+import { indexSort, postsByUser, POSTS_BY_USER, ADD_POST } from '../lib/queries.js';
 
 const VOTE = gql`mutation ($vote: VoteInput!) {
   vote(vote: $vote) {
@@ -130,6 +107,7 @@ export default {
                             __typename: 'Text',
                             body: content,
                         },
+                        votes: [],
                         createdAt: Date.now(),
                         index: [...parent.index, 0],
                     },
