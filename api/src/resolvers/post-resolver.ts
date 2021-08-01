@@ -1,6 +1,5 @@
 import { Resolver, Query, Arg, Mutation, Ctx, ID } from "type-graphql";
-import { Repository } from "typeorm";
-import { getManager } from "typeorm";
+import { Repository, getManager, In } from "typeorm";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
@@ -39,6 +38,32 @@ export class PostResolver {
             this._dfs(node.children, pathmap, newdepth, node);
             i = i + 1;
         }
+    }
+
+    @Query(returns => [Post])
+    async postWithChildren(@Arg("postId", type => ID) postId: string): Promise<Post[]> {
+        const manager = getManager();
+        const id = uuid62.decode(postId);
+        const post = await this.postRepository.findOne({ postId: id });
+
+        if (!post) {
+            throw new Error("Invalid post ID");
+        }
+        let posts = await manager.getTreeRepository(Post).findDescendants(post);
+        // console.log(l);
+        posts = await this.postRepository.find({ id: In(posts.map((p) => p.id)) });
+
+        const node = await manager.getTreeRepository(Post).findDescendantsTree(post);
+        // console.log(node);
+        const pathmap = {};
+        this._dfs([node], pathmap, []);
+        // console.log(pathmap);
+        // const posts = [post];
+        for (const post of posts) {
+            post.index = pathmap[post.id].index;
+            post.parent = pathmap[post.id].parent;
+        }
+        return posts;
     }
 
     @Query(returns => [Post])

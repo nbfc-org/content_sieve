@@ -10,35 +10,9 @@
 <script>
 import gql from 'graphql-tag'
 import uuid62 from 'uuid62';
-import base36 from 'base36';
 import Post from './Post';
 import { Thread } from '../lib/posts.js';
-
-const POSTS_BY_USER = gql`query {
-  postsByUser {
-    postId
-    content {
-      ... on Text {
-        body
-      }
-      ... on Link {
-        url
-        title
-      }
-    }
-    parent {
-      postId
-    }
-    createdAt
-    index
-    author {
-      username
-    }
-    votes {
-      type
-    }
-  }
-}`;
+import { indexSort, postsByUser, POSTS_BY_USER } from '../lib/queries.js';
 
 const ADD_POST = gql`mutation ($post: PostInput!) {
   addPost(post: $post) {
@@ -71,18 +45,6 @@ const VOTE = gql`mutation ($vote: VoteInput!) {
     }
   }
 }`;
-
-const cmp = (a, b) => {
-    if (a < b) { return -1; }
-    if (a > b) { return 1; }
-    return 0;
-};
-
-const b36 = (a) => a.map(i => base36.base36encode(i).padStart(4, "0")).join(':');
-
-const indexSort = (a, b) => {
-    return cmp(b36(a.index), b36(b.index)) || a.createdAt - b.createdAt;
-};
 
 function updateAddPost(cache, result) {
 
@@ -184,43 +146,7 @@ export default {
         },
     },
     apollo: {
-        postsByUser: {
-            query: POSTS_BY_USER,
-            update(data) {
-                const posts = data.postsByUser;
-                // const start = Date.now();
-                posts.sort(indexSort);
-                // console.log(`rerender: ${Date.now() - start}`);
-                let parents = [];
-                const postIds = [];
-                for (let i = 0; i < posts.length; i++) {
-                    const c = posts[i];
-                    c.id = c.postId;
-                    let p = parents.length ? posts[parents[parents.length - 1]] : undefined;
-                    if (!p) {
-                        postIds.push(c.postId);
-                    }
-                    try {
-                        this.thread.reply(p ? p.postId : undefined, c, p ? p.index : []);
-                    } catch (err) {
-                        console.error(err);
-                    }
-
-                    if (i + 1 < posts.length) {
-                        let n = posts[i + 1];
-                        if (n.index.length > c.index.length) {
-                            parents.push(i);
-                        } else if (n.index.length < c.index.length) {
-                            const num = c.index.length - n.index.length;
-                            for (let j = 0; j < num; j++) {
-                                parents.pop();
-                            }
-                        }
-                    }
-                }
-                return { postIds, childrenCount: posts.length - 1 };
-            },
-        },
+        postsByUser,
     }
 }
 </script>
