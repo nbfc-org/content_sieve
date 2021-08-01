@@ -50,12 +50,13 @@
     <!-- Reply form end -->
   </div>
   <div class="replies">
-    <Post @postReply="postReply" @vote="vote" :key="`${child}_${childrenCount}`" v-for="child in children" :thread="thread" :postId="child" v-if="children" />
+    <Post @postReply="postReply" :key="`${child}_${childrenCount}`" v-for="child in children" :thread="thread" :postId="child" v-if="children" />
   </div>
 </details>
 </template>
 
 <script>
+import { VOTE } from '../lib/queries.js';
 export default {
     name: 'Post',
     props: ['thread', 'postId'],
@@ -85,20 +86,35 @@ export default {
                 replyForm.getElementsByTagName("textarea")[0].focus();
             }
         },
+        vote: async function(event, postId, type) {
+            try {
+                const w = await this.$apollo.mutate({
+                    mutation: VOTE,
+                    variables: {
+                        vote: {
+                            postId,
+                            type,
+                        }
+                    },
+                });
+                console.info(w);
+            } catch(err) {
+                // this.error = err;
+                console.error(err);
+            }
+            // this.$emit('dirty', event, this.postId);
+        },
         flag: function(event) {
-            this.$emit('vote', event, this.postId, "FLAG");
+            this.vote(event, this.postId, "FLAG");
         },
         up: function(event) {
-            this.$emit('vote', event, this.postId, "UP");
+            this.vote(event, this.postId, "UP");
         },
         down: function(event) {
-            this.$emit('vote', event, this.postId, "DOWN");
+            this.vote(event, this.postId, "DOWN");
         },
         postReply: function(event, parent, text) {
             this.$emit('postReply', event, parent, text);
-        },
-        vote: function(event, postId, type) {
-            this.$emit('vote', event, postId, type);
         },
         addPost: function(event) {
             this.$emit('postReply', event, this.post, this.newPostContent);

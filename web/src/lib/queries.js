@@ -117,4 +117,13 @@ const postsByUser = {
   },
 };
 
-export { getPost, indexSort, postsByUser, POSTS_BY_USER, ADD_POST };
+const VOTE = gql`mutation ($vote: VoteInput!) {
+  vote(vote: $vote) {
+    postId
+    votes {
+      type
+    }
+  }
+}`;
+
+export { getPost, indexSort, postsByUser, POSTS_BY_USER, ADD_POST, VOTE };

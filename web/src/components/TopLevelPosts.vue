@@ -2,7 +2,7 @@
   <div id="app">
     <div v-if="error">{{ error }}</div>
     <div class="comment-thread">
-      <Post @postReply="postReply" @vote="vote" :key="`${postId}_${childrenCount}`" :thread="thread" :postId="postId" v-for="postId in postIds" />
+      <Post @postReply="postReply" :key="`${postId}_${childrenCount}`" :thread="thread" :postId="postId" v-for="postId in postIds" />
     </div>
   </div>
 </template>
@@ -13,15 +13,6 @@ import uuid62 from 'uuid62';
 import Post from './Post';
 import { Thread } from '../lib/posts.js';
 import { indexSort, postsByUser, POSTS_BY_USER, ADD_POST } from '../lib/queries.js';
-
-const VOTE = gql`mutation ($vote: VoteInput!) {
-  vote(vote: $vote) {
-    postId
-    votes {
-      type
-    }
-  }
-}`;
 
 function updateAddPost(cache, result) {
 
@@ -59,23 +50,6 @@ export default {
         postReply(event, parent, text) {
             this.addPost(parent, text);
         },
-        async vote(event, postId, type) {
-            try {
-                const w = await this.$apollo.mutate({
-                    mutation: VOTE,
-                    variables: {
-                        vote: {
-                            postId,
-                            type,
-                        }
-                    },
-                });
-                // console.info(w);
-            } catch(err) {
-                this.error = err;
-                // console.error(this.error);
-            }
-        },
         addPost(parent, content) {
             const id = uuid62.v4();
             this.$apollo.mutate({
@@ -88,6 +62,12 @@ export default {
                         index: parent.index,
                     }
                 },
+                /*
+                  // refresh all posts on mutation
+                  update: (data) => {
+                  this.$apollo.queries.postsByUser.refetch();
+                  },
+                */
                 update: updateAddPost.bind(this),
                 optimisticResponse: {
                     __typename: 'Mutation',
