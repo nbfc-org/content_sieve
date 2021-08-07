@@ -18,17 +18,22 @@
       <div class="comment-info">
         <a href="#" class="comment-author">{{ post.author.username }}</a>
         <p class="m-0">
-          22 points
+          <router-link
+            :to="`/post/${post.postId}`"
+            class="nav-item nav-link"
+            active-class="active"
+            exact
+          >{{ ago(post.createdAt) }}</router-link>
+          <span v-if="post.parent">
           &bull; <router-link
             :to="`/post/${post.parent.postId}`"
             class="nav-item nav-link"
             active-class="active"
             exact
-            v-if="post.parent"
             >parent</router-link>
+          </span>
           &bull; {{ post.index }}
           &bull; {{ post.votes }}
-          &bull; {{ new Date(post.createdAt) }}
         </p>
       </div>
     </div>
@@ -57,6 +62,7 @@
 
 <script>
 import uuid62 from 'uuid62';
+import { DateTime } from 'luxon';
 import { VOTE } from '../lib/queries.js';
 import { ADD_POST } from '../lib/queries.js';
 export default {
@@ -80,6 +86,9 @@ export default {
         },
     },
     methods: {
+        ago: function(millis) {
+            return DateTime.fromMillis(millis).toRelative();
+        },
         reply: function(event) {
             var target = event.target;
             var replyForm;

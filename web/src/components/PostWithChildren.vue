@@ -4,8 +4,6 @@
     <div class="comment-thread">
       <Post @reloadPost="reloadPost" :key="`${postId}_${getPost.versionMap[postId]}`" :thread="thread" :postId="postId" :versionMap="getPost.versionMap" v-for="postId in getPost.postIds" />
     </div>
-    hello
-    {{ postId }}
   </div>
 </template>
 <script>
