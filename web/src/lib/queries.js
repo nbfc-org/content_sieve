@@ -77,7 +77,7 @@ const insertIntoThread = (posts, thread, version) => {
     try {
       thread.reply(p ? p.postId : undefined, c, p ? p.index : []);
       versionMap[c.postId] = version;
-      console.info(`update ${c.postId}`);
+      // console.info(`update ${c.postId}`);
     } catch (err) {
       // console.error(err);
     }
