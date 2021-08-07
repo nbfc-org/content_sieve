@@ -44,18 +44,27 @@ class Thread {
         return this.tree.childrenCount(this.get(id));
     }
     childIds(id) {
-        return this.tree.childrenToArray(this.lookup[id]).map(o => o.id);
+        return this.tree.childrenToArray(this.get(id)).map(o => o.id);
+    }
+    remove(id) {
+        const o = this.get(id);
+        this.tree.remove(o);
+        delete this.lookup[id];
     }
     reply(parentId, newPost, index=[]) {
         const { id } = newPost;
-        if (!this.lookup.hasOwnProperty(id)) {
+        if (this.lookup.hasOwnProperty(id)) {
+            throw new Error("already in tree");
+        } else {
             this.lookup[id] = newPost;
             const parent = this.lookup[parentId];
             this.tree.prependChild(parent, newPost);
         }
+      /*
         const pathmap = {};
         pathmap[id] = [...index, 0];
         return this._objectWithContext(newPost, pathmap);
+        */
     }
     _objectWithContext(o, pathmap) {
         const p = this.tree.parent(o);

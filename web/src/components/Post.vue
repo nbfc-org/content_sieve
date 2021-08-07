@@ -44,22 +44,28 @@
     <!-- Reply form start -->
     <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
       <textarea v-model="newPostContent" placeholder="Reply to comment" rows="4"></textarea>
-      <button type="button" v-on:click="addPost" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
+      <button type="button" v-on:click="postReply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
       <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Cancel</button>
     </div>
     <!-- Reply form end -->
   </div>
   <div class="replies">
-    <Post @postReply="postReply" :key="`${child}_${childrenCount}`" v-for="child in children" :thread="thread" :postId="child" v-if="children" />
+    <Post @reloadPost="reloadPost" :key="`${child}_${versionMap[child]}`" v-for="child in children" :thread="thread" :postId="child" :versionMap="versionMap" v-if="children" />
   </div>
 </details>
 </template>
 
 <script>
+import uuid62 from 'uuid62';
 import { VOTE } from '../lib/queries.js';
+import { ADD_POST } from '../lib/queries.js';
 export default {
     name: 'Post',
-    props: ['thread', 'postId'],
+    props: [
+        'thread',
+        'postId',
+        'versionMap',
+    ],
     data: function() {
         return {
             newPostContent: '',
@@ -71,9 +77,6 @@ export default {
         },
         children: function() {
             return this.thread.childIds(this.postId);
-        },
-        childrenCount: function() {
-            return this.thread.childrenCount(this.postId);
         },
     },
     methods: {
@@ -96,8 +99,10 @@ export default {
                             type,
                         }
                     },
+                    update: (cache, result) => {
+                        this.$emit('reloadPost', cache, result.data.vote);
+                    },
                 });
-                console.info(w);
             } catch(err) {
                 // this.error = err;
                 console.error(err);
@@ -113,13 +118,67 @@ export default {
         down: function(event) {
             this.vote(event, this.postId, "DOWN");
         },
-        postReply: function(event, parent, text) {
-            this.$emit('postReply', event, parent, text);
+        postReply: function(event) {
+            this.addPost(event, this.post, this.newPostContent);
         },
-        addPost: function(event) {
-            this.$emit('postReply', event, this.post, this.newPostContent);
-            this.newPostContent = '';
-            this.reply(event);
+        reloadPost: function(cache, post) {
+            this.$emit('reloadPost', cache, post);
+        },
+        addPost: async function(event, parent, content) {
+            const id = uuid62.v4();
+            try {
+                const new_post = await this.$apollo.mutate({
+                    mutation: ADD_POST,
+                    variables: {
+                        post: {
+                            postId: id,
+                            body: content,
+                            parentId: parent.postId,
+                            index: parent.index,
+                        }
+                    },
+                    update: (cache, result) => {
+                        this.$emit('reloadPost', cache, parent);
+                    },
+                });
+                this.newPostContent = '';
+                this.reply(event);
+            } catch(err) {
+                // this.error = err;
+                console.error(err);
+            }
+                /*
+                // refresh all posts on mutation
+                update: (data) => {
+                this.$apollo.queries.postsByUser.refetch();
+                },
+                */
+                /*
+                update: updateAddPost.bind(this),
+                optimisticResponse: {
+                    __typename: 'Mutation',
+                    addPost: {
+                        __typename: 'Post',
+                        postId: id,
+                        parent: {
+                            __typename: 'Post',
+                            postId: parent.postId,
+                        },
+                        author: {
+                            __typename: 'User',
+                            // TODO: unhardcode this when auth exists
+                            username: "foobar",
+                        },
+                        content: {
+                            __typename: 'Text',
+                            body: content,
+                        },
+                        votes: [],
+                        createdAt: Date.now(),
+                        index: [...parent.index, 0],
+                    },
+                },
+                */
         },
    },
 }

@@ -63,9 +63,10 @@ mutation ($post: PostInput!) {
   }
 }`;
 
-const insertIntoThread = (posts, thread) => {
+const insertIntoThread = (posts, thread, version) => {
   let parents = [];
   const postIds = [];
+  const versionMap = [];
   for (let i = 0; i < posts.length; i++) {
     const c = posts[i];
     c.id = c.postId;
@@ -75,8 +76,10 @@ const insertIntoThread = (posts, thread) => {
     }
     try {
       thread.reply(p ? p.postId : undefined, c, p ? p.index : []);
+      versionMap[c.postId] = version;
+      console.info(`update ${c.postId}`);
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     }
 
     if (i + 1 < posts.length) {
@@ -86,12 +89,13 @@ const insertIntoThread = (posts, thread) => {
       } else if (n.index.length < c.index.length) {
         const num = c.index.length - n.index.length;
         for (let j = 0; j < num; j++) {
-          parents.pop();
+          const pindex = parents.pop();
+          versionMap[posts[pindex].postId] = versionMap[c.postId];
         }
       }
     }
   }
-  return { postIds, childrenCount: posts.length - 1 };
+  return { postIds, versionMap };
 };
 
 const getPost = {
@@ -104,7 +108,7 @@ const getPost = {
   update(data) {
     const posts = data.postWithChildren;
     posts.sort(indexSort);
-    return insertIntoThread(posts, this.thread);
+    return insertIntoThread(posts, this.thread, this.version);
   },
 };
 
@@ -113,7 +117,7 @@ const postsByUser = {
   update(data) {
     const posts = data.postsByUser;
     posts.sort(indexSort);
-    return insertIntoThread(posts, this.thread);
+    return insertIntoThread(posts, this.thread, this.version);
   },
 };
 

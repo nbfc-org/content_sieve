@@ -2,17 +2,15 @@
   <div id="app">
     <div v-if="error">{{ error }}</div>
     <div class="comment-thread">
-      <Post @postReply="postReply" :key="`${postId}_${childrenCount}`" :thread="thread" :postId="postId" v-for="postId in postIds" />
+      <Post @reloadPost="reloadPost" :key="`${postId}_${postsByUser.versionMap[postId]}`" :thread="thread" :postId="postId" :versionMap="postsByUser.versionMap" v-for="postId in postsByUser.postIds" />
     </div>
   </div>
 </template>
 
 <script>
-import gql from 'graphql-tag'
-import uuid62 from 'uuid62';
 import Post from './Post';
 import { Thread } from '../lib/posts.js';
-import { indexSort, postsByUser, POSTS_BY_USER, ADD_POST } from '../lib/queries.js';
+import { indexSort, postsByUser, POSTS_BY_USER } from '../lib/queries.js';
 
 function updateAddPost(cache, result) {
 
@@ -47,60 +45,11 @@ export default {
         };
     },
     methods: {
-        postReply(event, parent, text) {
-            this.addPost(parent, text);
-        },
-        addPost(parent, content) {
-            const id = uuid62.v4();
-            this.$apollo.mutate({
-                mutation: ADD_POST,
-                variables: {
-                    post: {
-                        postId: id,
-                        body: content,
-                        parentId: parent.postId,
-                        index: parent.index,
-                    }
-                },
-                /*
-                  // refresh all posts on mutation
-                  update: (data) => {
-                  this.$apollo.queries.postsByUser.refetch();
-                  },
-                */
-                update: updateAddPost.bind(this),
-                optimisticResponse: {
-                    __typename: 'Mutation',
-                    addPost: {
-                        __typename: 'Post',
-                        postId: id,
-                        parent: {
-                            __typename: 'Post',
-                            postId: parent.postId,
-                        },
-                        author: {
-                            __typename: 'User',
-                            // TODO: unhardcode this when auth exists
-                            username: "foobar",
-                        },
-                        content: {
-                            __typename: 'Text',
-                            body: content,
-                        },
-                        votes: [],
-                        createdAt: Date.now(),
-                        index: [...parent.index, 0],
-                    },
-                },
-            })
-        },
-    },
-    computed: {
-        postIds: function() {
-            return this.postsByUser.postIds;
-        },
-        childrenCount: function() {
-            return this.postsByUser.childrenCount;
+        reloadPost(cache, post) {
+            // this.thread.remove(post.postId);
+            this.thread = new Thread();
+            this.version++;
+            this.$apollo.queries.postsByUser.refetch();
         },
     },
     apollo: {

@@ -2,7 +2,7 @@
   <div>
     <div v-if="error">{{ error }}</div>
     <div class="comment-thread">
-      <Post :key="`${postId}_${childrenCount}`" :thread="thread" :postId="postId" v-for="postId in postIds" />
+      <Post @reloadPost="reloadPost" :key="`${postId}_${getPost.versionMap[postId]}`" :thread="thread" :postId="postId" :versionMap="getPost.versionMap" v-for="postId in getPost.postIds" />
     </div>
     hello
     {{ postId }}
@@ -13,8 +13,6 @@ import { getPost } from '../lib/queries.js';
 import { Thread } from '../lib/posts.js';
 import Post from './Post';
 
-// TODO: add back postReply and vote
-// <Post @postReply="postReply" @vote="vote" :key="`${postId}_${childrenCount}`" :thread="thread" :postId="postId" v-for="postId in postIds" />
 export default {
     components: {
         Post,
@@ -26,17 +24,18 @@ export default {
             },
             thread: new Thread(),
             error: null,
+            version: 0,
         };
     },
     props: [
         'postId',
     ],
-    computed: {
-        postIds: function() {
-            return this.getPost.postIds;
-        },
-        childrenCount: function() {
-            return this.getPost.childrenCount;
+    methods: {
+        reloadPost(cache, post) {
+            // this.thread.remove(post.postId);
+            this.thread = new Thread();
+            this.version++;
+            this.$apollo.queries.getPost.refetch();
         },
     },
     apollo: {
