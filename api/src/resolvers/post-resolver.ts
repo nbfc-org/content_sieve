@@ -22,61 +22,25 @@ export class PostResolver {
     ) {}
 
     @Query(returns => Post, { nullable: true })
-    post(@Arg("postId", type => ID) postId: string) {
-        const id = uuid62.decode(postId);
-        return this.postRepository.findOne({ postId: id });
-    }
-
-    _dfs(nodes, pathmap, depth, parent=null) {
-        let i = 0;
-        for (const node of nodes) {
-            const newdepth = [...depth, i];
-            pathmap[node.id] = {
-                index: newdepth,
-                parent,
-            };
-            this._dfs(node.children, pathmap, newdepth, node);
-            i = i + 1;
-        }
-    }
-
-    @Query(returns => [Post])
-    async postWithChildren(@Arg("postId", type => ID) postId: string): Promise<Post[]> {
-        const manager = getManager();
+    async post(@Arg("postId", type => ID) postId: string) {
         const id = uuid62.decode(postId);
         const post = await this.postRepository.findOne({ postId: id });
 
-        if (!post) {
-            throw new Error("Invalid post ID");
-        }
-        let posts = await manager.getTreeRepository(Post).findDescendants(post);
-        // console.log(l);
-        posts = await this.postRepository.find({ id: In(posts.map((p) => p.id)) });
+        const repo = getManager().getTreeRepository(Post);
+        const p = await repo.findDescendantsTree(post, { relations: ["link", "text", "votes", "author", "parent"] });
 
-        const node = await manager.getTreeRepository(Post).findDescendantsTree(post);
-        // console.log(node);
-        const pathmap = {};
-        this._dfs([node], pathmap, []);
-        // console.log(pathmap);
-        // const posts = [post];
-        for (const post of posts) {
-            post.index = pathmap[post.id].index;
-            post.parent = pathmap[post.id].parent;
+        // for non-root postId, the above doesn't get the top-level parent
+        const parents = await repo.findAncestors(post);
+        if (parents.length > 1) {
+            p.parent = parents[parents.length-2];
         }
-        return posts;
+        return p;
     }
 
     @Query(returns => [Post])
     async postsByUser(): Promise<Post[]> {
         const manager = getManager();
-        const posts = await this.postRepository.find();
-        const nodes = await manager.getTreeRepository(Post).findTrees();
-        const pathmap = {};
-        this._dfs(nodes, pathmap, []);
-        for (const post of posts) {
-            post.index = pathmap[post.id].index;
-            post.parent = pathmap[post.id].parent;
-        }
+        return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "votes", "author", "parent"] });
         // defector: threaded only; newest, oldest, most replies, highest score
         // reddit: threaded only; best, top, new, controversial, old, q&a
         // metafilter: flat only; oldest first, no matter what
@@ -88,7 +52,6 @@ export class PostResolver {
         // limiting the number of voters per item
         // new accounts can't vote until achived a network & karam status (eg., shares, by friends, are upvoted).
         // accounts which primarily upvote/downvote outside of their network are ignored
-        return posts;
     }
 
     @Mutation(returns => Post)
@@ -104,7 +67,6 @@ export class PostResolver {
         await this.postRepository.save(post);
         post.parent = await this.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
         const saved = await this.postRepository.save(post);
-        saved.index = [...postInput.index, 0];
         saved.votes = [];
         return saved;
     }

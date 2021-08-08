@@ -1,5 +1,6 @@
 import { getRepository } from "typeorm";
 import { v4 as uuidv4 } from 'uuid';
+import uuid62 from 'uuid62';
 
 import { Vote, VoteType } from "./entities/vote.js";
 import { User } from "./entities/user.js";
@@ -46,6 +47,8 @@ export async function seedDatabase() {
             { type: VoteType.DOWN, user: defaultUser, post: posts[0] },
             { type: VoteType.UP, user: defaultUser, post: posts[1] },
         ]);
+        console.log(posts[0].postId);
+        console.log(posts[1].postId);
         await voteRepository.save(votes);
     }
 

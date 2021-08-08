@@ -13,6 +13,7 @@ const indexSort = (a, b) => {
   return cmp(b36(a.index), b36(b.index)) || a.createdAt - b.createdAt;
 };
 
+
 const postFields = gql`
   fragment PostFields on Post {
     postId
@@ -29,7 +30,6 @@ const postFields = gql`
       postId
     }
     createdAt
-    index
     author {
       username
     }
@@ -44,14 +44,38 @@ ${postFields}
 query {
   postsByUser {
     ...PostFields
+    children {
+      ...PostFields
+      children {
+        ...PostFields
+        children {
+          ...PostFields
+          children {
+            ...PostFields
+          }
+        }
+      }
+    }
   }
 }`;
 
-const GET_POST = gql`
+const GET_POST_RECURSIVE = gql`
 ${postFields}
 query ($postId: ID!) {
-  postWithChildren(postId: $postId) {
+  post(postId: $postId) {
     ...PostFields
+    children {
+      ...PostFields
+      children {
+        ...PostFields
+        children {
+          ...PostFields
+          children {
+            ...PostFields
+          }
+        }
+      }
+    }
   }
 }`;
 
@@ -63,48 +87,15 @@ mutation ($post: PostInput!) {
   }
 }`;
 
-const insertIntoThread = (posts, thread) => {
-  let parents = [];
-  const postIds = [];
-  for (let i = 0; i < posts.length; i++) {
-    const c = posts[i];
-    c.id = c.postId;
-    let p = parents.length ? posts[parents[parents.length - 1]] : undefined;
-    if (!p) {
-      postIds.push(c.postId);
-    }
-    try {
-      thread.reply(p ? p.postId : undefined, c, p ? p.index : []);
-    } catch (err) {
-      console.error(err);
-    }
-
-    if (i + 1 < posts.length) {
-      let n = posts[i + 1];
-      if (n.index.length > c.index.length) {
-        parents.push(i);
-      } else if (n.index.length < c.index.length) {
-        const num = c.index.length - n.index.length;
-        for (let j = 0; j < num; j++) {
-          parents.pop();
-        }
-      }
-    }
-  }
-  return { postIds, childrenCount: posts.length - 1 };
-};
-
 const getPost = {
-  query: GET_POST,
+  query: GET_POST_RECURSIVE,
   variables() {
-      return {
-        postId: this.postId,
-      };
+    return {
+      postId: this.postId,
+    };
   },
   update(data) {
-    const posts = data.postWithChildren;
-    posts.sort(indexSort);
-    return insertIntoThread(posts, this.thread);
+    return data.post;
   },
 };
 
@@ -112,8 +103,7 @@ const postsByUser = {
   query: POSTS_BY_USER,
   update(data) {
     const posts = data.postsByUser;
-    posts.sort(indexSort);
-    return insertIntoThread(posts, this.thread);
+    return posts;
   },
 };
 

@@ -12,7 +12,4 @@ export class PostInput implements Partial<Post> {
 
     @Field(type => String)
     body: string;
-
-    @Field(type => [Int])
-    index: number[];
 }

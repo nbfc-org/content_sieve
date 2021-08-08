@@ -15,9 +15,10 @@
     "class-validator": "^0.13.1",
     "graphql": "^15.5.0",
     "pg": "^8.6.0",
+    "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
     "typedi": "^0.10.0",
-    "typeorm": "^0.2.34",
+    "typeorm": "file:../../../src/typeorm/build/package",
     "typeorm-typedi-extensions": "^0.4.1",
     "uuid62": "^1.0.1"
   },
