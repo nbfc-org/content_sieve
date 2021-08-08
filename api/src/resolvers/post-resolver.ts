@@ -22,9 +22,11 @@ export class PostResolver {
     ) {}
 
     @Query(returns => Post, { nullable: true })
-    post(@Arg("postId", type => ID) postId: string) {
+    async post(@Arg("postId", type => ID) postId: string) {
+        const manager = getManager();
         const id = uuid62.decode(postId);
-        return this.postRepository.findOne({ postId: id });
+        const post = await this.postRepository.findOne({ postId: id });
+        return manager.getTreeRepository(Post).findDescendantsTree(post, { relations: ["link", "text", "votes", "author"] });
     }
 
     _dfs(nodes, pathmap, depth, parent=null) {

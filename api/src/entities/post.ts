@@ -77,8 +77,9 @@ export class Post {
         this.postId = uuid62.encode(this.postId);
     }
 
+    @Field(type => [Post], { nullable: true })
     @TreeChildren()
-    children: Post[];
+    children: Lazy<Post[]>;
 
     @Field(type => Post, { nullable: true })
     @TreeParent()
