@@ -26,7 +26,7 @@ export class PostResolver {
         const manager = getManager();
         const id = uuid62.decode(postId);
         const post = await this.postRepository.findOne({ postId: id });
-        return manager.getTreeRepository(Post).findDescendantsTree(post, { relations: ["link", "text", "votes", "author"] });
+        return manager.getTreeRepository(Post).findDescendantsTree(post, { relations: ["link", "text", "votes", "author", "parent"] });
     }
 
     _dfs(nodes, pathmap, depth, parent=null) {
@@ -106,7 +106,6 @@ export class PostResolver {
         await this.postRepository.save(post);
         post.parent = await this.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
         const saved = await this.postRepository.save(post);
-        saved.index = [...postInput.index, 0];
         saved.votes = [];
         return saved;
     }

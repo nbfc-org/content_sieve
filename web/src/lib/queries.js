@@ -30,32 +30,6 @@ const postFields = gql`
       postId
     }
     createdAt
-    index
-    author {
-      username
-    }
-    votes {
-      type
-    }
-  }
-`;
-
-const postFieldsRecursive = gql`
-  fragment PostFields on Post {
-    postId
-    content {
-      ... on Text {
-        body
-      }
-      ... on Link {
-        url
-        title
-      }
-    }
-    parent {
-      postId
-    }
-    createdAt
     author {
       username
     }
@@ -82,7 +56,7 @@ query ($postId: ID!) {
 }`;
 
 const GET_POST_RECURSIVE = gql`
-${postFieldsRecursive}
+${postFields}
 query ($postId: ID!) {
   post(postId: $postId) {
     ...PostFields
@@ -90,6 +64,12 @@ query ($postId: ID!) {
       ...PostFields
       children {
         ...PostFields
+        children {
+          ...PostFields
+          children {
+            ...PostFields
+          }
+        }
       }
     }
   }
