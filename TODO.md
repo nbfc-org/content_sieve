@@ -1,0 +1,11 @@
+- add auth
+- check typeorm for release that can unpin against local
+- reload for deeper than 3 levels
+- add tags / subs
+- nginx
+  - add routing w/o #
+  - caching?
+- sorting within a tree by different keys
+- flat / metafilter view
+- markdown editor
+  - look at tiptap again?
