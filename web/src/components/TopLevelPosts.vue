@@ -2,16 +2,13 @@
   <div>
     <div v-if="error">{{ error }}</div>
     <div class="comment-thread">
-      <!--
-      <Post @reloadPost="reloadPost" :key="`${postId}_${postsByUser.versionMap[postId]}`" :thread="thread" :postId="postId" :versionMap="postsByUser.versionMap" v-for="postId in postsByUser.postIds" />
-      -->
+      <Post @reloadPost="reloadPost" :key="`${post.postId}`" :recPost="post" :postId="post.postId" v-for="post in postsByUser" />
     </div>
   </div>
 </template>
 
 <script>
 import Post from './Post';
-import { Thread } from '../lib/posts.js';
 import { indexSort, postsByUser, POSTS_BY_USER } from '../lib/queries.js';
 
 function updateAddPost(cache, result) {
@@ -38,17 +35,16 @@ export default {
     },
     data: function(){
         return {
-            postsByUser: {
-                postIds: [],
-            },
-            thread: new Thread(),
+            postsByUser: [],
             error: null,
         };
     },
     methods: {
         reloadPost(cache, post) {
+            /*
             // this.thread.remove(post.postId);
             this.thread = new Thread();
+            */
             this.version++;
             this.$apollo.queries.postsByUser.refetch();
         },

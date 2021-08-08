@@ -72,6 +72,7 @@ export class PostResolver {
     async postsByUser(): Promise<Post[]> {
         const manager = getManager();
         const posts = await this.postRepository.find();
+        return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "votes", "author", "parent"] });
         const nodes = await manager.getTreeRepository(Post).findTrees();
         const pathmap = {};
         this._dfs(nodes, pathmap, []);

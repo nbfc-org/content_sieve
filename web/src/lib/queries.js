@@ -44,6 +44,18 @@ ${postFields}
 query {
   postsByUser {
     ...PostFields
+    children {
+      ...PostFields
+      children {
+        ...PostFields
+        children {
+          ...PostFields
+          children {
+            ...PostFields
+          }
+        }
+      }
+    }
   }
 }`;
 
@@ -141,9 +153,6 @@ const getPostRecursive = {
   },
   update(data) {
     return data.post;
-    const posts = data.postWithChildren;
-    posts.sort(indexSort);
-    return insertIntoThread(posts, this.thread, this.version);
   },
 };
 
@@ -151,6 +160,7 @@ const postsByUser = {
   query: POSTS_BY_USER,
   update(data) {
     const posts = data.postsByUser;
+    return posts;
     posts.sort(indexSort);
     return insertIntoThread(posts, this.thread, this.version);
   },
