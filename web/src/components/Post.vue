@@ -32,7 +32,6 @@
             exact
             >parent</router-link>
           </span>
-          &bull; {{ post.index }}
           &bull; {{ post.votes }}
         </p>
       </div>
@@ -150,7 +149,6 @@ export default {
                             postId: id,
                             body: content,
                             parentId: parent.postId,
-                            index: parent.index,
                         }
                     },
                     update: (cache, result) => {
@@ -191,7 +189,6 @@ export default {
                         },
                         votes: [],
                         createdAt: Date.now(),
-                        index: [...parent.index, 0],
                     },
                 },
                 */

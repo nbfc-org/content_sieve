@@ -48,9 +48,6 @@ export class Post {
     @CreateDateColumn({type: 'timestamp with time zone'})
     createdAt: Date;
 
-    @Field(type => [Int])
-    index: number[];
-
     @OneToOne(type => Link, { cascade: true, eager: true })
     @JoinColumn()
     link: Link;
