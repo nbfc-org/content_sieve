@@ -10,7 +10,6 @@ module.exports = {
     'uuid62',
     'base-x',
     'base36',
-    'symbol-tree',
   ],
   html: {
     title: pkg.productName,

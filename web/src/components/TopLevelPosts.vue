@@ -43,7 +43,6 @@ export default {
         reloadPost(cache, post) {
             /*
             // this.thread.remove(post.postId);
-            this.thread = new Thread();
             */
             this.version++;
             this.$apollo.queries.postsByUser.refetch();
