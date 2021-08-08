@@ -48,9 +48,6 @@ export class Post {
     @CreateDateColumn({type: 'timestamp with time zone'})
     createdAt: Date;
 
-    @Field(type => [Int])
-    index: number[];
-
     @OneToOne(type => Link, { cascade: true, eager: true })
     @JoinColumn()
     link: Link;
@@ -77,8 +74,9 @@ export class Post {
         this.postId = uuid62.encode(this.postId);
     }
 
+    @Field(type => [Post], { nullable: true })
     @TreeChildren()
-    children: Post[];
+    children: Lazy<Post[]>;
 
     @Field(type => Post, { nullable: true })
     @TreeParent()

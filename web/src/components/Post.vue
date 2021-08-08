@@ -32,7 +32,6 @@
             exact
             >parent</router-link>
           </span>
-          &bull; {{ post.index }}
           &bull; {{ post.votes }}
         </p>
       </div>
@@ -55,7 +54,7 @@
     <!-- Reply form end -->
   </div>
   <div class="replies">
-    <Post @reloadPost="reloadPost" :key="`${child}_${versionMap[child]}`" v-for="child in children" :thread="thread" :postId="child" :versionMap="versionMap" v-if="children" />
+    <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :thread="thread" :postId="child.postId" :recPost="child" v-if="children" />
   </div>
 </details>
 </template>
@@ -70,6 +69,7 @@ export default {
     props: [
         'thread',
         'postId',
+        'recPost',
         'versionMap',
     ],
     data: function() {
@@ -79,9 +79,15 @@ export default {
     },
     computed: {
         post: function() {
+            if (this.recPost) {
+                return this.recPost;
+            }
             return this.thread.get(this.postId);
         },
         children: function() {
+            if (this.recPost) {
+                return this.recPost.children;
+            }
             return this.thread.childIds(this.postId);
         },
     },
@@ -143,7 +149,6 @@ export default {
                             postId: id,
                             body: content,
                             parentId: parent.postId,
-                            index: parent.index,
                         }
                     },
                     update: (cache, result) => {
@@ -184,7 +189,6 @@ export default {
                         },
                         votes: [],
                         createdAt: Date.now(),
-                        index: [...parent.index, 0],
                     },
                 },
                 */

@@ -2,13 +2,12 @@
   <div>
     <div v-if="error">{{ error }}</div>
     <div class="comment-thread">
-      <Post @reloadPost="reloadPost" :key="`${postId}_${getPost.versionMap[postId]}`" :thread="thread" :postId="postId" :versionMap="getPost.versionMap" v-for="postId in getPost.postIds" />
+      <Post @reloadPost="reloadPost" :key="`${getPost.postId}`" :recPost="getPost" :postId="getPost.postId" v-if="getPost.postId" />
     </div>
   </div>
 </template>
 <script>
 import { getPost } from '../lib/queries.js';
-import { Thread } from '../lib/posts.js';
 import Post from './Post';
 
 export default {
@@ -18,9 +17,8 @@ export default {
     data: function() {
         return {
             getPost: {
-                postIds: [],
+                postId: null,
             },
-            thread: new Thread(),
             error: null,
             version: 0,
         };
@@ -30,8 +28,9 @@ export default {
     ],
     methods: {
         reloadPost(cache, post) {
+            /*
             // this.thread.remove(post.postId);
-            this.thread = new Thread();
+            */
             this.version++;
             this.$apollo.queries.getPost.refetch();
         },
