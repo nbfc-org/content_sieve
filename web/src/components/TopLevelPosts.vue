@@ -2,7 +2,9 @@
   <div>
     <div v-if="error">{{ error }}</div>
     <div class="comment-thread">
+      <!--
       <Post @reloadPost="reloadPost" :key="`${postId}_${postsByUser.versionMap[postId]}`" :thread="thread" :postId="postId" :versionMap="postsByUser.versionMap" v-for="postId in postsByUser.postIds" />
+      -->
     </div>
   </div>
 </template>

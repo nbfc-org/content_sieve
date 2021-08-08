@@ -13,6 +13,7 @@ const indexSort = (a, b) => {
   return cmp(b36(a.index), b36(b.index)) || a.createdAt - b.createdAt;
 };
 
+
 const postFields = gql`
   fragment PostFields on Post {
     postId
@@ -39,6 +40,31 @@ const postFields = gql`
   }
 `;
 
+const postFieldsRecursive = gql`
+  fragment PostFields on Post {
+    postId
+    content {
+      ... on Text {
+        body
+      }
+      ... on Link {
+        url
+        title
+      }
+    }
+    parent {
+      postId
+    }
+    createdAt
+    author {
+      username
+    }
+    votes {
+      type
+    }
+  }
+`;
+
 const POSTS_BY_USER = gql`
 ${postFields}
 query {
@@ -52,6 +78,20 @@ ${postFields}
 query ($postId: ID!) {
   postWithChildren(postId: $postId) {
     ...PostFields
+  }
+}`;
+
+const GET_POST_RECURSIVE = gql`
+${postFieldsRecursive}
+query ($postId: ID!) {
+  post(postId: $postId) {
+    ...PostFields
+    children {
+      ...PostFields
+      children {
+        ...PostFields
+      }
+    }
   }
 }`;
 
@@ -112,6 +152,21 @@ const getPost = {
   },
 };
 
+const getPostRecursive = {
+  query: GET_POST_RECURSIVE,
+  variables() {
+    return {
+      postId: this.postId,
+    };
+  },
+  update(data) {
+    return data.post;
+    const posts = data.postWithChildren;
+    posts.sort(indexSort);
+    return insertIntoThread(posts, this.thread, this.version);
+  },
+};
+
 const postsByUser = {
   query: POSTS_BY_USER,
   update(data) {
@@ -130,4 +185,4 @@ const VOTE = gql`mutation ($vote: VoteInput!) {
   }
 }`;
 
-export { getPost, indexSort, postsByUser, POSTS_BY_USER, ADD_POST, VOTE };
+export { getPost, indexSort, postsByUser, getPostRecursive, POSTS_BY_USER, ADD_POST, VOTE };

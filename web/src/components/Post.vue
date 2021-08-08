@@ -55,7 +55,7 @@
     <!-- Reply form end -->
   </div>
   <div class="replies">
-    <Post @reloadPost="reloadPost" :key="`${child}_${versionMap[child]}`" v-for="child in children" :thread="thread" :postId="child" :versionMap="versionMap" v-if="children" />
+    <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :thread="thread" :postId="child.postId" :recPost="child" v-if="children" />
   </div>
 </details>
 </template>
@@ -70,6 +70,7 @@ export default {
     props: [
         'thread',
         'postId',
+        'recPost',
         'versionMap',
     ],
     data: function() {
@@ -79,9 +80,15 @@ export default {
     },
     computed: {
         post: function() {
+            if (this.recPost) {
+                return this.recPost;
+            }
             return this.thread.get(this.postId);
         },
         children: function() {
+            if (this.recPost) {
+                return this.recPost.children;
+            }
             return this.thread.childIds(this.postId);
         },
     },

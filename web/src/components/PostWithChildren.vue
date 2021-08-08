@@ -2,12 +2,12 @@
   <div>
     <div v-if="error">{{ error }}</div>
     <div class="comment-thread">
-      <Post @reloadPost="reloadPost" :key="`${postId}_${getPost.versionMap[postId]}`" :thread="thread" :postId="postId" :versionMap="getPost.versionMap" v-for="postId in getPost.postIds" />
+      <Post @reloadPost="reloadPost" :key="`${getPostRecursive.postId}`" :recPost="getPostRecursive" :thread="thread" :postId="getPostRecursive.postId" v-if="getPostRecursive.postId" />
     </div>
   </div>
 </template>
 <script>
-import { getPost } from '../lib/queries.js';
+import { getPostRecursive } from '../lib/queries.js';
 import { Thread } from '../lib/posts.js';
 import Post from './Post';
 
@@ -17,8 +17,8 @@ export default {
     },
     data: function() {
         return {
-            getPost: {
-                postIds: [],
+            getPostRecursive: {
+                postId: null,
             },
             thread: new Thread(),
             error: null,
@@ -30,14 +30,16 @@ export default {
     ],
     methods: {
         reloadPost(cache, post) {
+            /*
             // this.thread.remove(post.postId);
             this.thread = new Thread();
+            */
             this.version++;
-            this.$apollo.queries.getPost.refetch();
+            this.$apollo.queries.getPostRecursive.refetch();
         },
     },
     apollo: {
-        getPost,
+        getPostRecursive,
     },
 };
 </script>
