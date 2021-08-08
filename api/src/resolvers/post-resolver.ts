@@ -23,10 +23,18 @@ export class PostResolver {
 
     @Query(returns => Post, { nullable: true })
     async post(@Arg("postId", type => ID) postId: string) {
-        const manager = getManager();
         const id = uuid62.decode(postId);
         const post = await this.postRepository.findOne({ postId: id });
-        return manager.getTreeRepository(Post).findDescendantsTree(post, { relations: ["link", "text", "votes", "author", "parent"] });
+
+        const repo = getManager().getTreeRepository(Post);
+        const p = await repo.findDescendantsTree(post, { relations: ["link", "text", "votes", "author", "parent"] });
+
+        // for non-root postId, the above doesn't get the top-level parent
+        const parents = await repo.findAncestors(post);
+        if (parents.length > 1) {
+            p.parent = parents[parents.length-2];
+        }
+        return p;
     }
 
     _dfs(nodes, pathmap, depth, parent=null) {
