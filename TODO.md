@@ -9,4 +9,5 @@
 - flat / metafilter view
 - markdown editor
   - look at tiptap again?
-  - https://marked.js.org/using_advanced#workers
+  - guard against redos: https://marked.js.org/using_advanced#workers
+- edit for 5 minutes

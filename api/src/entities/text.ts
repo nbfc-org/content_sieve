@@ -1,9 +1,24 @@
-import { ObjectType, ID, Field } from "type-graphql";
-import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, ManyToOne } from "typeorm";
-import { AfterLoad, getRepository } from "typeorm";
-import { createUnionType } from "type-graphql";
+import { ObjectType, Field } from "type-graphql";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
+import { BeforeInsert, BeforeUpdate } from "typeorm";
 
-import { User } from "./user.js";
+import marked from 'marked';
+
+import { JSDOM, VirtualConsole } from "jsdom";
+import createDOMPurify from "dompurify";
+
+const data = "<html><body></body></html>";
+const url = "http://example.com";
+
+const virtualConsole = new VirtualConsole();
+virtualConsole.sendTo(console, { omitJSDOMErrors: true });
+const jsdom = new JSDOM(data, {
+    url,
+    virtualConsole
+});
+
+const DOMPurify = createDOMPurify(jsdom.window);
+
 import { Post } from "./post.js";
 import { Lazy } from "../helpers.js";
 
@@ -16,6 +31,16 @@ export class Text {
     @Field()
     @Column()
     body: string;
+
+    @Field()
+    @Column()
+    rendered: string;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    async beforeInsert() {
+        this.rendered = DOMPurify.sanitize(marked(this.body));
+    }
 
     @OneToOne(() => Post, post => post.link)
     post: Lazy<Post>;
