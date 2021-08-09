@@ -120,12 +120,28 @@
   }
 
   /* Styling the reply to comment form */
+  .reply-form .editor {
+    margin: .5em 0;
+    height: 100%;
+    border: 1px solid #ccc;
+  }
+
+  .reply-form .editor textarea, .reply-form .editor div {
+    display: inline-block;
+    width: 49%;
+    height: 100%;
+    vertical-align: top;
+    box-sizing: border-box;
+  }
 
   .reply-form textarea {
-      width: 100%;
-      max-width: 100%;
-      margin-top: 15px;
-      margin-bottom: 5px;
+    border: none;
+    border-right: 1px solid #ccc;
+    outline: none;
+    background-color: #f6f6f6;
+    font-size: 14px;
+    font-family: "Monaco", courier, monospace;
+    padding: 1em;
   }
   .d-none {
       display: none;

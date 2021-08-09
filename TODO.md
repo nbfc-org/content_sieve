@@ -9,3 +9,4 @@
 - flat / metafilter view
 - markdown editor
   - look at tiptap again?
+  - https://marked.js.org/using_advanced#workers

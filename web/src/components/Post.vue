@@ -47,8 +47,8 @@
 
     <!-- Reply form start -->
     <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
-      <div id="editor">
-        <textarea v-model="newPostContent" placeholder="Reply to comment" @input="update"></textarea>
+      <div class="editor">
+        <textarea v-model="newPostContent" rows="10" placeholder="Reply to comment" @input="update"></textarea>
         <div v-html="compiledMarkdown"></div>
       </div>
       <button type="button" v-on:click="postReply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
