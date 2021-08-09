@@ -75,6 +75,10 @@
       padding: 0 20px;
       padding-left: 28px;
   }
+  .comment-body .markdown-body {
+    padding: .5em 0;
+  }
+
   .replies {
       margin-left: 28px;
   }

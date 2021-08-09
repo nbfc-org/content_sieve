@@ -40,7 +40,7 @@
 
   <div class="comment-body">
     <p v-if="post.content.url">{{ post.content.title }}</p>
-    <div v-else v-html="post.content.rendered" />
+    <div class="markdown-body" v-else v-html="post.content.rendered" />
     <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
     <button type="button" v-on:click="flag">Flag</button>
 
@@ -48,7 +48,7 @@
     <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
       <div class="editor">
         <textarea v-model="newPostContent" rows="15" placeholder="Write text or markdown here ..." @input="update"></textarea>
-        <div v-html="compiledMarkdown"></div>
+        <div class="markdown-body" v-html="compiledMarkdown"></div>
       </div>
       <button type="button" v-on:click="postReply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
       <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Cancel</button>
