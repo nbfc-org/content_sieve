@@ -19,7 +19,7 @@ const postFields = gql`
     postId
     content {
       ... on Text {
-        body
+        rendered
       }
       ... on Link {
         url
