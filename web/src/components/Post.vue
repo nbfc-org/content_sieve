@@ -86,7 +86,7 @@ export default {
     },
     computed: {
         compiledMarkdown: function() {
-            return sanitize(marked(this.newPostContent));
+            return sanitize(marked(this.newPostContent), {FORBID_TAGS: ['img']});
         },
         post: function() {
             if (this.recPost) {

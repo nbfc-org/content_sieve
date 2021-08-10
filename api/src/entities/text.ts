@@ -39,7 +39,7 @@ export class Text {
     @BeforeInsert()
     @BeforeUpdate()
     async beforeInsert() {
-        this.rendered = DOMPurify.sanitize(marked(this.body));
+        this.rendered = DOMPurify.sanitize(marked(this.body), {FORBID_TAGS: ['img']});
     }
 
     @OneToOne(() => Post, post => post.link)
