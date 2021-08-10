@@ -46,10 +46,7 @@
 
     <!-- Reply form start -->
     <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
-      <div class="editor">
-        <textarea v-model="newPostContent" rows="15" placeholder="Write text or markdown here ..." @input="update"></textarea>
-        <div class="markdown-body" v-html="compiledMarkdown"></div>
-      </div>
+      <TextEditor @saveContent="saveContent" :text="newPostContent" />
       <button type="button" v-on:click="postReply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
       <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Cancel</button>
     </div>
@@ -67,12 +64,13 @@ import { DateTime } from 'luxon';
 import { VOTE } from '../lib/queries.js';
 import { ADD_POST } from '../lib/queries.js';
 
-import marked from 'marked';
-import _ from 'lodash';
-import { sanitize } from 'dompurify';
+import TextEditor from './TextEditor.vue';
 
 export default {
     name: 'Post',
+    components: {
+        TextEditor,
+    },
     props: [
         'thread',
         'postId',
@@ -85,9 +83,6 @@ export default {
         }
     },
     computed: {
-        compiledMarkdown: function() {
-            return sanitize(marked(this.newPostContent), {FORBID_TAGS: ['img']});
-        },
         post: function() {
             if (this.recPost) {
                 return this.recPost;
@@ -143,15 +138,15 @@ export default {
         down: function(event) {
             this.vote(event, this.postId, "DOWN");
         },
+        saveContent: function(content) {
+            this.newPostContent = content;
+        },
         postReply: function(event) {
             this.addPost(event, this.post, this.newPostContent);
         },
         reloadPost: function(cache, post) {
             this.$emit('reloadPost', cache, post);
         },
-        update: _.debounce(function(e) {
-            this.newPostContent = e.target.value;
-        }, 100),
         addPost: async function(event, parent, content) {
             const id = uuid62.v4();
             try {
