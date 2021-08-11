@@ -5,9 +5,8 @@
   </div>
 </template>
 <script>
-import marked from 'marked';
 import _ from 'lodash';
-import { sanitize } from 'dompurify';
+import { renderMarkdown } from '../../../lib/validation.js';
 
 export default {
     props: [
@@ -20,7 +19,7 @@ export default {
     },
     computed: {
         compiledMarkdown: function() {
-            return sanitize(marked(this.input), {FORBID_TAGS: ['img']});
+            return renderMarkdown(this.input);
         },
     },
     methods: {

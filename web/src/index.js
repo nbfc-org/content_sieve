@@ -32,6 +32,7 @@ Vue.use(VueRouter);
 
 import TopLevelPosts from './components/TopLevelPosts.vue';
 import PostWithChildren from './components/PostWithChildren.vue';
+import NewPost from './components/NewPost.vue';
 import 'normalize.css';
 
 const routes = [
@@ -39,6 +40,10 @@ const routes = [
   { path: '/post/:postId',
     component: PostWithChildren,
     props: true,
+  },
+  {
+    path: '/new',
+    component: NewPost,
   },
   // { path: '/manage-products', alias: '/foobar', component: ManageProducts }
 ];

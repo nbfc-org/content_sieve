@@ -21,6 +21,7 @@ const DOMPurify = createDOMPurify(jsdom.window);
 
 import { Post } from "./post.js";
 import { Lazy } from "../helpers.js";
+import { renderMarkdown } from '../../../lib/validation.js';
 
 @Entity()
 @ObjectType()
@@ -39,7 +40,7 @@ export class Text {
     @BeforeInsert()
     @BeforeUpdate()
     async beforeInsert() {
-        this.rendered = DOMPurify.sanitize(marked(this.body), {FORBID_TAGS: ['img']});
+        return renderMarkdown(this.body, DOMPurify.sanitize);
     }
 
     @OneToOne(() => Post, post => post.link)
