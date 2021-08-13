@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import _ from 'lodash';
+import { debounce } from 'lodash-es';
 import { renderMarkdown } from '../../../lib/validation.js';
 
 export default {
@@ -23,7 +23,7 @@ export default {
         },
     },
     methods: {
-        update: _.debounce(function(e) {
+        update: debounce(function(e) {
             this.$emit('saveContent', e.target.value);
         }, 100),
     },
