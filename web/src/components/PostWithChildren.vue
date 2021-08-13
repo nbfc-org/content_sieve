@@ -8,7 +8,7 @@
 </template>
 <script>
 import { getPost } from '../lib/queries.js';
-import Post from './Post';
+import Post from './Post.vue';
 
 export default {
     components: {

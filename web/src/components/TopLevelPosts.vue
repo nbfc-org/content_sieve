@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Post from './Post';
+import Post from './Post.vue';
 import { indexSort, postsByUser, POSTS_BY_USER } from '../lib/queries.js';
 
 function updateAddPost(cache, result) {
