@@ -39,7 +39,7 @@
   </summary>
 
   <div class="comment-body">
-    <p v-if="post.content.url">{{ post.content.title }}</p>
+    <p v-if="post.content.url"><a :href="post.content.url">{{ post.content.title }}</a></p>
     <div class="markdown-body" v-else v-html="post.content.rendered" />
     <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
     <button type="button" v-on:click="flag">Flag</button>
