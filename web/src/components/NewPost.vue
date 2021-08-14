@@ -1,7 +1,6 @@
 <template>
   <div class="reply-form">
-    <form class="form1">
-
+    <form>
       <label :for="`${uuid}_title`">Title</label>
       <input v-model="title" :id="`${uuid}_title`" type="text">
 
@@ -9,18 +8,20 @@
       <input v-model="url" :id="`${uuid}_url`" type="text">
 
       <label :for="`${uuid}_body`">Body</label>
-      <TextEditor :id="`${uuid}_body`" :text="body" />
+      <TextEditor :id="`${uuid}_body`" @saveContent="saveContent" :text="body" />
 
       <label :for="`${uuid}_tags`">Tags</label>
       <input v-model="tags" :id="`${uuid}_tags`" type="text">
 
-      <button>Submit</button>
     </form>
+
+    <button v-on:click="submit">Submit</button>
   </div>
 </template>
 <script>
 import uuid62 from 'uuid62';
 import TextEditor from './TextEditor.vue';
+import { addPost } from '../lib/queries.js';
 import { splitTags } from '../../../lib/validation.js';
 
 export default {
@@ -38,6 +39,18 @@ export default {
             tags: '',
             body: '',
         };
+    },
+    methods: {
+        saveContent: function(content) {
+            this.body = content;
+        },
+        submit: function(event) {
+            let input = {
+                body: this.body,
+                parentId: null,
+            };
+            addPost.bind(this)(event, input);
+        },
     },
 };
 </script>

@@ -59,10 +59,8 @@
 </template>
 
 <script>
-import uuid62 from 'uuid62';
 import { DateTime } from 'luxon';
-import { VOTE } from '../lib/queries.js';
-import { ADD_POST } from '../lib/queries.js';
+import { VOTE, addPost } from '../lib/queries.js';
 
 import TextEditor from './TextEditor.vue';
 
@@ -142,65 +140,15 @@ export default {
             this.newPostContent = content;
         },
         postReply: function(event) {
-            this.addPost(event, this.post, this.newPostContent);
+            const parentId = this.postId;
+            const body = this.newPostContent;
+            addPost.bind(this)(event, { parentId, body });
+            this.newPostContent = '';
+            this.reply(event);
         },
         reloadPost: function(cache, post) {
             this.$emit('reloadPost', cache, post);
         },
-        addPost: async function(event, parent, content) {
-            const id = uuid62.v4();
-            try {
-                const new_post = await this.$apollo.mutate({
-                    mutation: ADD_POST,
-                    variables: {
-                        post: {
-                            postId: id,
-                            body: content,
-                            parentId: parent.postId,
-                        }
-                    },
-                    update: (cache, result) => {
-                        this.$emit('reloadPost', cache, parent);
-                    },
-                });
-                this.newPostContent = '';
-                this.reply(event);
-            } catch(err) {
-                // this.error = err;
-                console.error(err);
-            }
-                /*
-                // refresh all posts on mutation
-                update: (data) => {
-                this.$apollo.queries.postsByUser.refetch();
-                },
-                */
-                /*
-                update: updateAddPost.bind(this),
-                optimisticResponse: {
-                    __typename: 'Mutation',
-                    addPost: {
-                        __typename: 'Post',
-                        postId: id,
-                        parent: {
-                            __typename: 'Post',
-                            postId: parent.postId,
-                        },
-                        author: {
-                            __typename: 'User',
-                            // TODO: unhardcode this when auth exists
-                            username: "foobar",
-                        },
-                        content: {
-                            __typename: 'Text',
-                            body: content,
-                        },
-                        votes: [],
-                        createdAt: Date.now(),
-                    },
-                },
-                */
-        },
-   },
+    },
 }
 </script>

@@ -40,7 +40,7 @@ export class Text {
     @BeforeInsert()
     @BeforeUpdate()
     async beforeInsert() {
-        return renderMarkdown(this.body, DOMPurify.sanitize);
+        this.rendered = renderMarkdown(this.body, DOMPurify.sanitize);
     }
 
     @OneToOne(() => Post, post => post.link)

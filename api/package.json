@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "nohup nodemon --watch src/ --exec \"npm run compile\" --verbose -e ts </dev/null | tee /dev/null",
-    "compile": "tsc && node dist/server.js",
+    "compile": "tsc && node dist/api/src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
