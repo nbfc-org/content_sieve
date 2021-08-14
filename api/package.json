@@ -21,7 +21,7 @@
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
     "typedi": "^0.10.0",
-    "typeorm": "file:../../../src/typeorm/build/package",
+    "typeorm": "^0.2.37",
     "typeorm-typedi-extensions": "^0.4.1",
     "uuid62": "^1.0.1"
   },
