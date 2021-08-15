@@ -6,6 +6,7 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 import { Vote } from "../entities/vote.js";
 import { Post } from "../entities/post.js";
 import { Text } from "../entities/text.js";
+import { Link } from "../entities/link.js";
 import { PostInput } from "./types/post-input.js";
 import { VoteInput } from "./types/vote-input.js";
 import { Context } from "./types/context.js";
@@ -19,6 +20,7 @@ export class PostResolver {
         @InjectRepository(Vote) private readonly voteRepository: Repository<Vote>,
         @InjectRepository(Post) private readonly postRepository: Repository<Post>,
         @InjectRepository(Text) private readonly textRepository: Repository<Text>,
+        @InjectRepository(Link) private readonly linkRepository: Repository<Link>,
     ) {}
 
     @Query(returns => Post, { nullable: true })
@@ -56,19 +58,39 @@ export class PostResolver {
 
     @Mutation(returns => Post)
     async addPost(@Arg("post") postInput: PostInput, @Ctx() { user }: Context): Promise<Post> {
-        const texts = this.textRepository.create([
-            { body: postInput.body },
-        ]);
-        const post = this.postRepository.create({
+        const post_attrs = {
             postId: uuid62.decode(postInput.postId),
-            text: texts[0],
             author: user,
-        });
-        await this.postRepository.save(post);
-        post.parent = await this.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
-        const saved = await this.postRepository.save(post);
-        saved.votes = [];
-        return saved;
+        };
+
+        let post;
+        if (postInput.url) {
+            // link
+            const [ link ] = this.linkRepository.create([
+                { url: postInput.url, title: postInput.title },
+            ]);
+
+            post = this.postRepository.create({...post_attrs, link});
+            await this.postRepository.save(post);
+
+        } else if (postInput.body) {
+            // text
+            const [ text ] = this.textRepository.create([
+                { body: postInput.body },
+            ]);
+
+            post = this.postRepository.create({...post_attrs, text});
+            await this.postRepository.save(post);
+
+            if (postInput.parentId) {
+                // reply
+                post.parent = await this.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
+                await this.postRepository.save(post);
+            }
+        }
+
+        post.votes = [];
+        return post;
     }
 
     @Mutation(returns => Post)

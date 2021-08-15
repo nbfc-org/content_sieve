@@ -1,7 +1,9 @@
+- new post
+- add tags / subs
 - add auth
+  - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
 - check typeorm for release that can unpin against local
 - reload for deeper than 3 levels
-- add tags / subs
 - nginx
   - add routing w/o #
   - caching?

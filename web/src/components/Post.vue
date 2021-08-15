@@ -39,17 +39,14 @@
   </summary>
 
   <div class="comment-body">
-    <p v-if="post.content.url">{{ post.content.title }}</p>
+    <p v-if="post.content.url"><a :href="post.content.url">{{ post.content.title }}</a></p>
     <div class="markdown-body" v-else v-html="post.content.rendered" />
     <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
     <button type="button" v-on:click="flag">Flag</button>
 
     <!-- Reply form start -->
     <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
-      <div class="editor">
-        <textarea v-model="newPostContent" rows="15" placeholder="Write text or markdown here ..." @input="update"></textarea>
-        <div class="markdown-body" v-html="compiledMarkdown"></div>
-      </div>
+      <TextEditor @saveContent="saveContent" :key="`${post.postId}_${newPostContent}`" :text="newPostContent" />
       <button type="button" v-on:click="postReply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
       <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Cancel</button>
     </div>
@@ -62,17 +59,16 @@
 </template>
 
 <script>
-import uuid62 from 'uuid62';
 import { DateTime } from 'luxon';
-import { VOTE } from '../lib/queries.js';
-import { ADD_POST } from '../lib/queries.js';
+import { VOTE, addPost } from '../lib/queries.js';
 
-import marked from 'marked';
-import _ from 'lodash';
-import { sanitize } from 'dompurify';
+import TextEditor from './TextEditor.vue';
 
 export default {
     name: 'Post',
+    components: {
+        TextEditor,
+    },
     props: [
         'thread',
         'postId',
@@ -85,9 +81,6 @@ export default {
         }
     },
     computed: {
-        compiledMarkdown: function() {
-            return sanitize(marked(this.newPostContent), {FORBID_TAGS: ['img']});
-        },
         post: function() {
             if (this.recPost) {
                 return this.recPost;
@@ -143,69 +136,19 @@ export default {
         down: function(event) {
             this.vote(event, this.postId, "DOWN");
         },
-        postReply: function(event) {
-            this.addPost(event, this.post, this.newPostContent);
+        saveContent: function(content) {
+            this.newPostContent = content;
+        },
+        postReply: async function(event) {
+            const parentId = this.postId;
+            const body = this.newPostContent;
+            const new_post = await addPost.bind(this)(event, { parentId, body });
+            this.newPostContent = '';
+            this.reply(event);
         },
         reloadPost: function(cache, post) {
             this.$emit('reloadPost', cache, post);
         },
-        update: _.debounce(function(e) {
-            this.newPostContent = e.target.value;
-        }, 100),
-        addPost: async function(event, parent, content) {
-            const id = uuid62.v4();
-            try {
-                const new_post = await this.$apollo.mutate({
-                    mutation: ADD_POST,
-                    variables: {
-                        post: {
-                            postId: id,
-                            body: content,
-                            parentId: parent.postId,
-                        }
-                    },
-                    update: (cache, result) => {
-                        this.$emit('reloadPost', cache, parent);
-                    },
-                });
-                this.newPostContent = '';
-                this.reply(event);
-            } catch(err) {
-                // this.error = err;
-                console.error(err);
-            }
-                /*
-                // refresh all posts on mutation
-                update: (data) => {
-                this.$apollo.queries.postsByUser.refetch();
-                },
-                */
-                /*
-                update: updateAddPost.bind(this),
-                optimisticResponse: {
-                    __typename: 'Mutation',
-                    addPost: {
-                        __typename: 'Post',
-                        postId: id,
-                        parent: {
-                            __typename: 'Post',
-                            postId: parent.postId,
-                        },
-                        author: {
-                            __typename: 'User',
-                            // TODO: unhardcode this when auth exists
-                            username: "foobar",
-                        },
-                        content: {
-                            __typename: 'Text',
-                            body: content,
-                        },
-                        votes: [],
-                        createdAt: Date.now(),
-                    },
-                },
-                */
-        },
-   },
+    },
 }
 </script>

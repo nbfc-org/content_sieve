@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "nohup nodemon --watch src/ --exec \"npm run compile\" --verbose -e ts </dev/null | tee /dev/null",
-    "compile": "tsc && node dist/server.js",
+    "compile": "tsc && node dist/api/src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -21,7 +21,7 @@
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
     "typedi": "^0.10.0",
-    "typeorm": "file:../../../src/typeorm/build/package",
+    "typeorm": "^0.2.37",
     "typeorm-typedi-extensions": "^0.4.1",
     "uuid62": "^1.0.1"
   },

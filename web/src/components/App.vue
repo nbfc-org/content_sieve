@@ -20,4 +20,4 @@ export default {
 </script>
 
 <style src="@/styles/thread.css" />
-<style src="@/../../node_modules/github-markdown-css/github-markdown.css" />
+<style src="@/../node_modules/github-markdown-css/github-markdown.css" />

@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import base36 from 'base36';
+import uuid62 from 'uuid62';
 
 const cmp = (a, b) => {
   if (a < b) { return -1; }
@@ -87,6 +88,49 @@ mutation ($post: PostInput!) {
   }
 }`;
 
+const addPost = function(event, input) {
+  const id = uuid62.v4();
+
+  return this.$apollo.mutate({
+    mutation: ADD_POST,
+    variables: {
+      post: {
+        postId: id,
+        ...input,
+      }
+    },
+    update: (cache, result) => {
+      this.$emit('reloadPost', cache, parent);
+    },
+  });
+
+  /*
+                update: updateAddPost.bind(this),
+                optimisticResponse: {
+                    __typename: 'Mutation',
+                    addPost: {
+                        __typename: 'Post',
+                        postId: id,
+                        parent: {
+                            __typename: 'Post',
+                            postId: parent.postId,
+                        },
+                        author: {
+                            __typename: 'User',
+                            // TODO: unhardcode this when auth exists
+                            username: "foobar",
+                        },
+                        content: {
+                            __typename: 'Text',
+                            body: content,
+                        },
+                        votes: [],
+                        createdAt: Date.now(),
+                    },
+                },
+  */
+};
+
 const getPost = {
   query: GET_POST_RECURSIVE,
   variables() {
@@ -116,4 +160,4 @@ const VOTE = gql`mutation ($vote: VoteInput!) {
   }
 }`;
 
-export { getPost, indexSort, postsByUser, POSTS_BY_USER, ADD_POST, VOTE };
+export { getPost, indexSort, postsByUser, addPost, POSTS_BY_USER, VOTE };

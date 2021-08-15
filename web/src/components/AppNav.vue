@@ -10,6 +10,14 @@
           exact
           >posts</router-link>
       </li>
+      <li>
+        <router-link
+          to="/new"
+          class="nav-item nav-link"
+          active-class="active"
+          exact
+          >new</router-link>
+      </li>
     </ul>
   </nav>
 </template>
