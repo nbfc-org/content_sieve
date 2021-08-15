@@ -1,22 +1,19 @@
 <template>
-  <div class="reply-form">
-    <form>
-      <label :for="`${uuid}_title`">Title</label>
-      <input v-model="title" :id="`${uuid}_title`" type="text">
+  <form class="reply-form">
+    <label :for="`${uuid}_title`">Title</label>
+    <input v-model="title" :id="`${uuid}_title`" type="text">
 
-      <label :for="`${uuid}_url`">URL</label>
-      <input v-model="url" :id="`${uuid}_url`" type="text">
+    <label :for="`${uuid}_url`">URL</label>
+    <input v-model="url" :id="`${uuid}_url`" type="text">
 
-      <label :for="`${uuid}_body`">Body</label>
-      <TextEditor :id="`${uuid}_body`" @saveContent="saveContent" :text="body" />
+    <label :for="`${uuid}_body`">Body</label>
+    <TextEditor :id="`${uuid}_body`" @saveContent="saveContent" :text="body" />
 
-      <label :for="`${uuid}_tags`">Tags</label>
-      <input v-model="tags" :id="`${uuid}_tags`" type="text">
-
-    </form>
+    <label :for="`${uuid}_tags`">Tags</label>
+    <input v-model="tags" :id="`${uuid}_tags`" type="text">
 
     <button v-on:click="submit">Submit</button>
-  </div>
+  </form>
 </template>
 <script>
 import uuid62 from 'uuid62';
@@ -44,12 +41,13 @@ export default {
         saveContent: function(content) {
             this.body = content;
         },
-        submit: function(event) {
+        submit: async function(event) {
             let input = {
                 body: this.body,
                 parentId: null,
             };
-            addPost.bind(this)(event, input);
+            const { data: { addPost: { postId } } } = await addPost.bind(this)(event, input);
+            this.$router.push({ path: `/post/${postId}` });
         },
     },
 };

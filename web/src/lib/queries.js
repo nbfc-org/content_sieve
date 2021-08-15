@@ -88,25 +88,22 @@ mutation ($post: PostInput!) {
   }
 }`;
 
-const addPost = async function(event, input) {
+const addPost = function(event, input) {
   const id = uuid62.v4();
-  try {
-    const new_post = await this.$apollo.mutate({
-      mutation: ADD_POST,
-      variables: {
-        post: {
-          postId: id,
-          ...input,
-        }
-      },
-      update: (cache, result) => {
-        this.$emit('reloadPost', cache, parent);
-      },
-    });
-  } catch(err) {
-    // this.error = err;
-    console.error(err);
-  }
+
+  return this.$apollo.mutate({
+    mutation: ADD_POST,
+    variables: {
+      post: {
+        postId: id,
+        ...input,
+      }
+    },
+    update: (cache, result) => {
+      this.$emit('reloadPost', cache, parent);
+    },
+  });
+
   /*
                 update: updateAddPost.bind(this),
                 optimisticResponse: {

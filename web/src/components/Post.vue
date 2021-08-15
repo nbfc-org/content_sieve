@@ -139,10 +139,10 @@ export default {
         saveContent: function(content) {
             this.newPostContent = content;
         },
-        postReply: function(event) {
+        postReply: async function(event) {
             const parentId = this.postId;
             const body = this.newPostContent;
-            addPost.bind(this)(event, { parentId, body });
+            const new_post = await addPost.bind(this)(event, { parentId, body });
             this.newPostContent = '';
             this.reply(event);
         },
