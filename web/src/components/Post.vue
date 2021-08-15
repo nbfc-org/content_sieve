@@ -46,7 +46,7 @@
 
     <!-- Reply form start -->
     <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
-      <TextEditor @saveContent="saveContent" :key="`${post.postId}_${newPostContent}`" :text="newPostContent" />
+      <TextEditor @saveContent="saveContent" :key="`${post.postId}_${version}`" :text="newPostContent" />
       <button type="button" v-on:click="postReply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
       <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Cancel</button>
     </div>
@@ -78,6 +78,7 @@ export default {
     data: function() {
         return {
             newPostContent: '',
+            version: 0,
         }
     },
     computed: {
@@ -144,6 +145,7 @@ export default {
             const body = this.newPostContent;
             const new_post = await addPost.bind(this)(event, { parentId, body });
             this.newPostContent = '';
+            this.version++;
             this.reply(event);
         },
         reloadPost: function(cache, post) {
