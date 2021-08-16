@@ -29,7 +29,7 @@ export class PostResolver {
         const post = await this.postRepository.findOne({ postId: id });
 
         const repo = getManager().getTreeRepository(Post);
-        const p = await repo.findDescendantsTree(post, { relations: ["link", "text", "votes", "author", "parent"] });
+        const p = await repo.findDescendantsTree(post, { relations: ["link", "text", "votes", "tags", "author", "parent"] });
 
         // for non-root postId, the above doesn't get the top-level parent
         const parents = await repo.findAncestors(post);
@@ -42,7 +42,7 @@ export class PostResolver {
     @Query(returns => [Post])
     async postsByUser(): Promise<Post[]> {
         const manager = getManager();
-        return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "votes", "author", "parent"] });
+        return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "votes", "tags", "author", "parent"] });
         // defector: threaded only; newest, oldest, most replies, highest score
         // reddit: threaded only; best, top, new, controversial, old, q&a
         // metafilter: flat only; oldest first, no matter what
@@ -89,7 +89,6 @@ export class PostResolver {
             }
         }
 
-        post.votes = [];
         return post;
     }
 

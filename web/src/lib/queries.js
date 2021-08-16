@@ -37,6 +37,11 @@ const postFields = gql`
     votes {
       type
     }
+    tags {
+      canonical {
+        slug
+      }
+    }
   }
 `;
 

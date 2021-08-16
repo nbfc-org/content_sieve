@@ -1,9 +1,9 @@
-- new post
-- add tags / subs
 - add auth
   - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
-- check typeorm for release that can unpin against local
+- add karma / score
+- add meta-moderation of votes
 - reload for deeper than 3 levels
+- don't reload whole page on change
 - nginx
   - add routing w/o #
   - caching?

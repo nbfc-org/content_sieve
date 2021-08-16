@@ -32,6 +32,14 @@
             exact
             >parent</router-link>
           </span>
+          <span v-for="tag in post.tags">
+            &bull; <router-link
+                     :to="`/tag/${tag.canonical.slug}`"
+                     class="nav-item nav-link"
+                     active-class="active"
+                     exact
+                     >{{ tag.canonical.slug }}</router-link>
+          </span>
           &bull; {{ post.votes }}
         </p>
       </div>

@@ -1,12 +1,12 @@
 import { getRepository } from "typeorm";
 import { v4 as uuidv4 } from 'uuid';
-import uuid62 from 'uuid62';
 
 import { Vote, VoteType } from "./entities/vote.js";
 import { User } from "./entities/user.js";
 import { Post } from "./entities/post.js";
 import { Text } from "./entities/text.js";
 import { Link } from "./entities/link.js";
+import { Tag, TagText } from "./entities/tag.js";
 
 export async function seedDatabase() {
     const postRepository = getRepository(Post);
@@ -16,6 +16,9 @@ export async function seedDatabase() {
     const voteRepository = getRepository(Vote);
     const userRepository = getRepository(User);
 
+    const tagTextRepository = getRepository(TagText);
+    const tagRepository = getRepository(Tag);
+
     const defaultUser = userRepository.create({
         email: "foobar@example.com",
         username: "foobar",
@@ -23,7 +26,19 @@ export async function seedDatabase() {
     });
     await userRepository.save(defaultUser);
 
-    for (const i of [...Array(100).keys()]) {
+    const tts = tagTextRepository.create([
+        { slug: "timing" },
+        { slug: "time" },
+    ]);
+    await tagTextRepository.save(tts);
+
+    const tags = tagRepository.create([
+        { slugs: tts, canonical: tts[1] },
+    ]);
+    await tagRepository.save(tags);
+
+    const count = 5; // 100;
+    for (const i of [...Array(count).keys()]) {
         const texts = textRepository.create([
             { body: 'wat' },
         ]);
@@ -41,15 +56,18 @@ export async function seedDatabase() {
         await postRepository.save(posts);
 
         posts[1].parent = posts[0];
-        await postRepository.save(posts[1]);
 
         const votes = voteRepository.create([
             { type: VoteType.DOWN, user: defaultUser, post: posts[0] },
             { type: VoteType.UP, user: defaultUser, post: posts[1] },
         ]);
-        console.log(posts[0].postId);
-        console.log(posts[1].postId);
         await voteRepository.save(votes);
+
+        if (i > count - 3) {
+            posts[1].tags = tags;
+        }
+
+        await postRepository.save(posts[1]);
     }
 
     return {

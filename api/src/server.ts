@@ -10,6 +10,7 @@ import { Link } from "./entities/link.js";
 import { Text } from "./entities/text.js";
 import { Post } from "./entities/post.js";
 import { Vote } from "./entities/vote.js";
+import { Tag, TagText } from "./entities/tag.js";
 import { seedDatabase } from "./helpers.js";
 import { Context } from "./resolvers/types/context.js";
 
@@ -26,7 +27,7 @@ export async function bootstrap() {
             password: "wat", // and password
             port: 5432, // and port
             host: "localhost", // and host
-            entities: [User, Text, Link, Post, Vote],
+            entities: [User, Text, Link, Post, Vote, Tag, TagText],
             synchronize: true,
             logger: "advanced-console",
             logging: "all",

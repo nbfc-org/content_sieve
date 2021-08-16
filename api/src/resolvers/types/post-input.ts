@@ -19,6 +19,6 @@ export class PostInput implements Partial<Post> {
     @Field({ nullable: true })
     parentId?: string;
 
-    @Field(type => [String], { nullable: true })
-    tags?: [string];
+    @Field(type => String, { nullable: true })
+    tagString?: string;
 }
