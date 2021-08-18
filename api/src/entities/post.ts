@@ -70,7 +70,7 @@ export class Post {
     author: Lazy<User>;
 
     @Field(type => [Tag], { nullable: true })
-    @ManyToMany(() => Tag)
+    @ManyToMany(type => Tag, tag => tag.posts, { eager: true, cascade: ["insert"] })
     @JoinTable()
     tags: Tag[];
 

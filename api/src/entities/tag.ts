@@ -1,7 +1,8 @@
 import { ObjectType, Field } from "type-graphql";
-import { Column, Entity, ManyToOne, OneToOne, JoinColumn, OneToMany, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Column, Entity, ManyToOne, ManyToMany, OneToOne, JoinColumn, OneToMany, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 
 import { Lazy } from "../helpers.js";
+import { Post } from "./post.js";
 
 @Entity()
 @ObjectType()
@@ -17,6 +18,9 @@ export class Tag {
     @OneToMany(type => TagText, t => t.tag, { lazy: true })
     @Field(type => [TagText])
     slugs: Lazy<TagText[]>;
+
+    @ManyToMany(() => Post, post => post.tags)
+    posts: Lazy<Post[]>;
 }
 
 @Entity()

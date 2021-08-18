@@ -7,9 +7,12 @@ import { Vote } from "../entities/vote.js";
 import { Post } from "../entities/post.js";
 import { Text } from "../entities/text.js";
 import { Link } from "../entities/link.js";
+import { Tag, TagText } from "../entities/tag.js";
 import { PostInput } from "./types/post-input.js";
 import { VoteInput } from "./types/vote-input.js";
 import { Context } from "./types/context.js";
+
+import { splitTags } from '../../../lib/validation.js';
 
 import uuid62 from 'uuid62';
 
@@ -21,6 +24,8 @@ export class PostResolver {
         @InjectRepository(Post) private readonly postRepository: Repository<Post>,
         @InjectRepository(Text) private readonly textRepository: Repository<Text>,
         @InjectRepository(Link) private readonly linkRepository: Repository<Link>,
+        @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
+        @InjectRepository(TagText) private readonly tagTextRepository: Repository<TagText>,
     ) {}
 
     @Query(returns => Post, { nullable: true })
@@ -87,6 +92,20 @@ export class PostResolver {
                 post.parent = await this.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
                 await this.postRepository.save(post);
             }
+        }
+
+        if (postInput.tagString) {
+            const tags = [];
+            for (const slug of splitTags(postInput.tagString)) {
+                const tt = this.tagTextRepository.create({ slug });
+                await this.tagTextRepository.save(tt);
+                const tag = this.tagRepository.create({ slugs: [tt], canonical: tt });
+                await this.tagRepository.save(tag);
+                tags.push(tag);
+            }
+
+            post.tags = tags;
+            await this.postRepository.save(post);
         }
 
         return post;

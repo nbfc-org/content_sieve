@@ -2,6 +2,7 @@
   - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
 - add karma / score
 - add meta-moderation of votes
+- validate url
 - reload for deeper than 3 levels
 - don't reload whole page on change
 - nginx

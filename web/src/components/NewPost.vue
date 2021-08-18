@@ -9,8 +9,8 @@
     <label :for="`${uuid}_body`">Body</label>
     <TextEditor :id="`${uuid}_body`" @saveContent="saveContent" :text="body" />
 
-    <label :for="`${uuid}_tags`">Tags</label>
-    <input v-model="tags" :id="`${uuid}_tags`" type="text">
+    <label :for="`${uuid}_tagString`">Tags</label>
+    <input v-model="tagString" :id="`${uuid}_tagString`" type="text">
 
     <button v-on:click="submit">Submit</button>
   </form>
@@ -19,7 +19,6 @@
 import uuid62 from 'uuid62';
 import TextEditor from './TextEditor.vue';
 import { addPost } from '../lib/queries.js';
-import { splitTags } from '../../../lib/validation.js';
 
 export default {
     mounted() {
@@ -33,7 +32,7 @@ export default {
             uuid: null,
             title: '',
             url: '',
-            tags: '',
+            tagString: '',
             body: '',
         };
     },
@@ -44,6 +43,9 @@ export default {
         submit: async function(event) {
             let input = {
                 body: this.body,
+                title: this.title,
+                url: this.url,
+                tagString: this.tagString,
                 parentId: null,
             };
             const { data: { addPost: { postId } } } = await addPost.bind(this)(event, input);
