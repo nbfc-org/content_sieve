@@ -32,6 +32,7 @@ Vue.use(VueRouter);
 
 import TopLevelPosts from './components/TopLevelPosts.vue';
 import PostWithChildren from './components/PostWithChildren.vue';
+import PostsWithTag from './components/PostsWithTag.vue';
 import NewPost from './components/NewPost.vue';
 import 'normalize.css';
 
@@ -39,6 +40,10 @@ const routes = [
   { path: '/posts', alias: '/', component: TopLevelPosts },
   { path: '/post/:postId',
     component: PostWithChildren,
+    props: true,
+  },
+  { path: '/tag/:tag',
+    component: PostsWithTag,
     props: true,
   },
   {

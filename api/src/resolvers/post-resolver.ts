@@ -45,6 +45,19 @@ export class PostResolver {
     }
 
     @Query(returns => [Post])
+    async postsWithTag(@Arg("tag", type => String) tag: string): Promise<Post[]> {
+        const [t] = await this.tagRepository.find({
+            relations: ["posts"],
+            where: {
+                canonical: {
+                    slug: tag,
+                },
+            },
+        });
+        return t.posts;
+    }
+
+    @Query(returns => [Post])
     async postsByUser(): Promise<Post[]> {
         const manager = getManager();
         return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "votes", "tags", "author", "parent"] });
@@ -122,14 +135,13 @@ export class PostResolver {
             throw new Error("Invalid post ID");
         }
 
-        (await post.votes).push(
-            this.voteRepository.create({
-                post,
-                user,
-                type: voteInput.type,
-            }),
-        );
+        const vote = this.voteRepository.create({
+            post,
+            user,
+            type: voteInput.type,
+        });
 
-        return await this.postRepository.save(post);
+        await this.voteRepository.save(vote);
+        return post;
     }
 }
