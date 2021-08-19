@@ -14,3 +14,5 @@
   - look at tiptap again?
   - guard against redos: https://marked.js.org/using_advanced#workers
 - edit for 5 minutes
+- vee validate & yup
+  - https://vee-validate.logaretm.com/v4/guide/components/validation
