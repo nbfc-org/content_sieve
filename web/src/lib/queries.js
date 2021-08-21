@@ -37,6 +37,11 @@ const postFields = gql`
     votes {
       type
     }
+    tags {
+      canonical {
+        slug
+      }
+    }
   }
 `;
 
@@ -77,6 +82,14 @@ query ($postId: ID!) {
         }
       }
     }
+  }
+}`;
+
+const GET_POSTS_WITH_TAG = gql`
+${postFields}
+query ($tag: String!) {
+  postsWithTag(tag: $tag) {
+    ...PostFields
   }
 }`;
 
@@ -151,6 +164,19 @@ const postsByUser = {
   },
 };
 
+const postsWithTag = {
+  query: GET_POSTS_WITH_TAG,
+  variables() {
+    return {
+      tag: this.tag,
+    };
+  },
+  update(data) {
+    const posts = data.postsWithTag;
+    return posts;
+  },
+};
+
 const VOTE = gql`mutation ($vote: VoteInput!) {
   vote(vote: $vote) {
     postId
@@ -160,4 +186,4 @@ const VOTE = gql`mutation ($vote: VoteInput!) {
   }
 }`;
 
-export { getPost, indexSort, postsByUser, addPost, POSTS_BY_USER, VOTE };
+export { getPost, indexSort, postsByUser, postsWithTag, addPost, POSTS_BY_USER, VOTE };

@@ -7,9 +7,12 @@ import { Vote } from "../entities/vote.js";
 import { Post } from "../entities/post.js";
 import { Text } from "../entities/text.js";
 import { Link } from "../entities/link.js";
+import { Tag, TagText } from "../entities/tag.js";
 import { PostInput } from "./types/post-input.js";
 import { VoteInput } from "./types/vote-input.js";
 import { Context } from "./types/context.js";
+
+import { splitTags } from '../../../lib/validation.js';
 
 import uuid62 from 'uuid62';
 
@@ -21,6 +24,8 @@ export class PostResolver {
         @InjectRepository(Post) private readonly postRepository: Repository<Post>,
         @InjectRepository(Text) private readonly textRepository: Repository<Text>,
         @InjectRepository(Link) private readonly linkRepository: Repository<Link>,
+        @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
+        @InjectRepository(TagText) private readonly tagTextRepository: Repository<TagText>,
     ) {}
 
     @Query(returns => Post, { nullable: true })
@@ -29,7 +34,7 @@ export class PostResolver {
         const post = await this.postRepository.findOne({ postId: id });
 
         const repo = getManager().getTreeRepository(Post);
-        const p = await repo.findDescendantsTree(post, { relations: ["link", "text", "votes", "author", "parent"] });
+        const p = await repo.findDescendantsTree(post, { relations: ["link", "text", "votes", "tags", "author", "parent"] });
 
         // for non-root postId, the above doesn't get the top-level parent
         const parents = await repo.findAncestors(post);
@@ -40,9 +45,22 @@ export class PostResolver {
     }
 
     @Query(returns => [Post])
+    async postsWithTag(@Arg("tag", type => String) tag: string): Promise<Post[]> {
+        const [t] = await this.tagRepository.find({
+            relations: ["posts"],
+            where: {
+                canonical: {
+                    slug: tag,
+                },
+            },
+        });
+        return t.posts;
+    }
+
+    @Query(returns => [Post])
     async postsByUser(): Promise<Post[]> {
         const manager = getManager();
-        return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "votes", "author", "parent"] });
+        return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "votes", "tags", "author", "parent"] });
         // defector: threaded only; newest, oldest, most replies, highest score
         // reddit: threaded only; best, top, new, controversial, old, q&a
         // metafilter: flat only; oldest first, no matter what
@@ -89,7 +107,20 @@ export class PostResolver {
             }
         }
 
-        post.votes = [];
+        if (postInput.tagString) {
+            const tags = [];
+            for (const slug of splitTags(postInput.tagString)) {
+                const tt = this.tagTextRepository.create({ slug });
+                await this.tagTextRepository.save(tt);
+                const tag = this.tagRepository.create({ slugs: [tt], canonical: tt });
+                await this.tagRepository.save(tag);
+                tags.push(tag);
+            }
+
+            post.tags = tags;
+            await this.postRepository.save(post);
+        }
+
         return post;
     }
 
@@ -104,14 +135,13 @@ export class PostResolver {
             throw new Error("Invalid post ID");
         }
 
-        (await post.votes).push(
-            this.voteRepository.create({
-                post,
-                user,
-                type: voteInput.type,
-            }),
-        );
+        const vote = this.voteRepository.create({
+            post,
+            user,
+            type: voteInput.type,
+        });
 
-        return await this.postRepository.save(post);
+        await this.voteRepository.save(vote);
+        return post;
     }
 }

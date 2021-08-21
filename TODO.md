@@ -1,9 +1,10 @@
-- new post
-- add tags / subs
 - add auth
   - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
-- check typeorm for release that can unpin against local
+- add karma / score
+- add meta-moderation of votes
+- validate url
 - reload for deeper than 3 levels
+- don't reload whole page on change
 - nginx
   - add routing w/o #
   - caching?
@@ -13,3 +14,5 @@
   - look at tiptap again?
   - guard against redos: https://marked.js.org/using_advanced#workers
 - edit for 5 minutes
+- vee validate & yup
+  - https://vee-validate.logaretm.com/v4/guide/components/validation

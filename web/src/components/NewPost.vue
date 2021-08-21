@@ -1,39 +1,40 @@
 <template>
-  <form class="reply-form">
-    <label :for="`${uuid}_title`">Title</label>
-    <input v-model="title" :id="`${uuid}_title`" type="text">
+  <form @submit="submit" novalidate="true" class="reply-form newpost">
+    <p v-if="errors.length">
+      <b>Please correct the following error(s):</b>
+      <ul>
+        <li v-for="error in errors">{{ error }}</li>
+      </ul>
+    </p>
 
-    <label :for="`${uuid}_url`">URL</label>
-    <input v-model="url" :id="`${uuid}_url`" type="text">
-
-    <label :for="`${uuid}_body`">Body</label>
-    <TextEditor :id="`${uuid}_body`" @saveContent="saveContent" :text="body" />
-
-    <label :for="`${uuid}_tags`">Tags</label>
-    <input v-model="tags" :id="`${uuid}_tags`" type="text">
-
-    <button v-on:click="submit">Submit</button>
+    Give your post a
+    <input v-model="title" placeholder="title ..." type="text">
+    and make it either a single
+    <input v-model="url" placeholder="url ..." type="text">
+    or a fully composed chunk of
+    <TextEditor @saveContent="saveContent" :text="body" />
+    If you'd like, give it a list of
+    <input v-model="tagString" placeholder="tags ..." type="text">
+    and then
+    <input type="submit" value="submit" />
+    it!
   </form>
 </template>
 <script>
-import uuid62 from 'uuid62';
 import TextEditor from './TextEditor.vue';
 import { addPost } from '../lib/queries.js';
-import { splitTags } from '../../../lib/validation.js';
+import { validatePost } from '../../../lib/validation.js';
 
 export default {
-    mounted() {
-        this.uuid = uuid62.v4();
-    },
     components: {
         TextEditor,
     },
     data: function() {
         return {
-            uuid: null,
+            errors: [],
             title: '',
             url: '',
-            tags: '',
+            tagString: '',
             body: '',
         };
     },
@@ -44,61 +45,27 @@ export default {
         submit: async function(event) {
             let input = {
                 body: this.body,
+                title: this.title,
+                url: this.url,
+                tagString: this.tagString,
                 parentId: null,
             };
+
+            this.errors = validatePost(input);
+
+            if (this.errors.length) {
+                return false;
+            }
+
             const { data: { addPost: { postId } } } = await addPost.bind(this)(event, input);
             this.$router.push({ path: `/post/${postId}` });
+            event.preventDefault();
         },
     },
 };
 </script>
-<style scoped>
-form {
-  display: grid;
-  padding: 1em;
-  border: 1px solid #c1c1c1;
-  margin: 2rem auto 0 auto;
-  max-width: 600px;
-  padding: 1em;
-}
-form input {
-  border: 1px solid #9c9c9c;
-}
-form button {
-  padding: 0.7em;
-  width: 100%;
-  border: 0;
-}
-form button:hover {
-  background: gold;
-}
-
-label {
-  padding: 0.5em 0.5em 0.5em 0;
-}
-
-input {
-  padding: 0.7em;
-  margin-bottom: 0.5rem;
-}
-input:focus {
-  outline: 3px solid gold;
-}
-
-@media (min-width: 400px) {
-  form {
-    grid-template-columns: 5em 1fr;
-    grid-gap: 1em;
+<style>
+  .newpost {
+    padding: 1em;
   }
-
-  label {
-    text-align: right;
-    grid-column: 1 / 2;
-  }
-
-  input,
-  button {
-    grid-column: 2 / 3;
-  }
-}
 </style>
