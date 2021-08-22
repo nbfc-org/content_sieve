@@ -64,9 +64,10 @@ export async function seedDatabase() {
         await voteRepository.save(votes);
 
         if (i > count - 3) {
-            posts[1].tags = tags;
+            posts[0].tags = tags;
         }
 
+        await postRepository.save(posts[0]);
         await postRepository.save(posts[1]);
     }
 

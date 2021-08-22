@@ -87,8 +87,8 @@ query ($postId: ID!) {
 
 const GET_POSTS_WITH_TAG = gql`
 ${postFields}
-query ($tag: String!) {
-  postsWithTag(tag: $tag) {
+query ($tli: TopLevelInput!) {
+  postsWithTag(tli: $tli) {
     ...PostFields
   }
 }`;
@@ -168,7 +168,10 @@ const postsWithTag = {
   query: GET_POSTS_WITH_TAG,
   variables() {
     return {
-      tag: this.tag,
+      tli: {
+        tag: this.tag,
+        sortBy: "NEWEST",
+      },
     };
   },
   update(data) {

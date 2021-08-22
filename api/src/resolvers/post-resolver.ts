@@ -4,12 +4,13 @@ import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
 import { Vote } from "../entities/vote.js";
-import { Post } from "../entities/post.js";
+import { Post, SortType } from "../entities/post.js";
 import { Text } from "../entities/text.js";
 import { Link } from "../entities/link.js";
 import { Tag, TagText } from "../entities/tag.js";
 import { PostInput } from "./types/post-input.js";
 import { VoteInput } from "./types/vote-input.js";
+import { TopLevelInput } from "./types/top-level-input.js";
 import { Context } from "./types/context.js";
 
 import { splitTags } from '../../../lib/validation.js';
@@ -45,16 +46,40 @@ export class PostResolver {
     }
 
     @Query(returns => [Post])
-    async postsWithTag(@Arg("tag", type => String) tag: string): Promise<Post[]> {
-        const [t] = await this.tagRepository.find({
-            relations: ["posts"],
-            where: {
-                canonical: {
-                    slug: tag,
-                },
-            },
-        });
-        return t.posts;
+    async postsWithTag(@Arg("tli", type => TopLevelInput) tli: TopLevelInput): Promise<Post[]> {
+        const take = 5;
+        const skip = tli.page * take
+
+        let query = this.postRepository
+            .createQueryBuilder("post")
+            .where("post.parent is NULL")
+            .leftJoinAndSelect("post.author", "author")
+            .leftJoinAndSelect("post.link", "link")
+            .leftJoinAndSelect("post.text", "text")
+            .leftJoinAndSelect("post.parent", "parent")
+            .leftJoinAndSelect("post.votes", "votes");
+
+        if (tli.tag !== "all") {
+            query = query.innerJoin("post.tags", "tags")
+                .innerJoin("tag_text", "tag_text", "tags.canonical = tag_text.id")
+                .andWhere("tag_text.slug = :slug", { slug: tli.tag });
+        }
+
+        const getOrderBy = (orderBy): [string, any] => {
+            switch (orderBy) {
+                case SortType.NEWEST:
+                    return ["post.createdAt", "DESC"];
+                case SortType.OLDEST:
+                    return ["post.createdAt", "ASC"];
+                case SortType.MOST_REPLIES:
+                    return ["post.createdAt", "DESC"];
+                case SortType.HIGH_SCORE:
+                    return ["post.createdAt", "DESC"];
+            }
+        };
+
+        query = query.orderBy(...getOrderBy(tli.sortBy));
+        return query.getMany();
     }
 
     @Query(returns => [Post])
@@ -110,6 +135,7 @@ export class PostResolver {
         if (postInput.tagString) {
             const tags = [];
             for (const slug of splitTags(postInput.tagString)) {
+                // TODO: make this find or create
                 const tt = this.tagTextRepository.create({ slug });
                 await this.tagTextRepository.save(tt);
                 const tag = this.tagRepository.create({ slugs: [tt], canonical: tt });

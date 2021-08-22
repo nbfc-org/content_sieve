@@ -1,4 +1,4 @@
-import { ObjectType, ID, Field, Float, Int } from "type-graphql";
+import { ObjectType, ID, Field, Float, registerEnumType } from "type-graphql";
 import { Entity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 import { Column, JoinColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
 import { ManyToMany, JoinTable } from "typeorm";
@@ -14,6 +14,17 @@ import { Text } from "./text.js";
 import { Vote } from "./vote.js";
 import { Tag } from "./tag.js";
 import { Lazy } from "../helpers.js";
+
+export enum SortType {
+    NEWEST,
+    OLDEST,
+    MOST_REPLIES,
+    HIGH_SCORE,
+}
+
+registerEnumType(SortType, {
+    name: "SortType", // this one is mandatory
+});
 
 export const Content = createUnionType({
     name: "Content", // the name of the GraphQL union

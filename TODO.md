@@ -1,10 +1,12 @@
 - add auth
   - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
-- add karma / score
+- add paging
+- add karma / HIGH_SCORE
+- add sorting by MOST_REPLIES
 - add meta-moderation of votes
-- validate url
+- add find_or_create for new tags
 - reload for deeper than 3 levels
-- don't reload whole page on change
+- don't reload all data on change
 - nginx
   - add routing w/o #
   - caching?
