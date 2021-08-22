@@ -4,11 +4,19 @@
       <li>content sieve</li>
       <li>
         <router-link
-          to="/posts"
+          to="/tag/all"
           class="nav-item nav-link"
           active-class="active"
           exact
           >posts</router-link>
+      </li>
+      <li>
+        <router-link
+          to="/tree"
+          class="nav-item nav-link"
+          active-class="active"
+          exact
+          >full tree</router-link>
       </li>
       <li>
         <router-link

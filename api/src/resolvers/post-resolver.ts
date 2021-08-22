@@ -55,14 +55,16 @@ export class PostResolver {
             .where("post.parent is NULL")
             .leftJoinAndSelect("post.author", "author")
             .leftJoinAndSelect("post.link", "link")
+            .leftJoinAndSelect("post.tags", "tags")
+            .leftJoinAndSelect("tags.canonical", "canonical", "tags.canonical = canonical.id")
             .leftJoinAndSelect("post.text", "text")
             .leftJoinAndSelect("post.parent", "parent")
             .leftJoinAndSelect("post.votes", "votes");
 
         if (tli.tag !== "all") {
-            query = query.innerJoin("post.tags", "tags")
-                .innerJoin("tag_text", "tag_text", "tags.canonical = tag_text.id")
-                .andWhere("tag_text.slug = :slug", { slug: tli.tag });
+            query = query.leftJoin("post.tags", "sometags")
+                .leftJoin("tag_text", "sometag_text", "sometags.canonical = sometag_text.id")
+                .andWhere("sometag_text.slug = :slug", { slug: tli.tag });
         }
 
         const getOrderBy = (orderBy): [string, any] => {

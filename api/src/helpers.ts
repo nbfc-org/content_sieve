@@ -29,11 +29,13 @@ export async function seedDatabase() {
     const tts = tagTextRepository.create([
         { slug: "timing" },
         { slug: "time" },
+        { slug: "food" },
     ]);
     await tagTextRepository.save(tts);
 
     const tags = tagRepository.create([
-        { slugs: tts, canonical: tts[1] },
+        { slugs: [tts[0], tts[1]], canonical: tts[1] },
+        { slugs: [tts[2]], canonical: tts[2] },
     ]);
     await tagRepository.save(tags);
 

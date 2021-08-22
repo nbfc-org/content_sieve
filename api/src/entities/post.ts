@@ -2,7 +2,7 @@ import { ObjectType, ID, Field, Float, registerEnumType } from "type-graphql";
 import { Entity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 import { Column, JoinColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
 import { ManyToMany, JoinTable } from "typeorm";
-import { AfterInsert, AfterLoad } from "typeorm";
+import { AfterInsert, AfterLoad, BeforeInsert, BeforeUpdate } from "typeorm";
 import { createUnionType } from "type-graphql";
 import { Tree, TreeChildren, TreeParent } from "typeorm";
 

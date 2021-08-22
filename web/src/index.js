@@ -37,9 +37,14 @@ import NewPost from './components/NewPost.vue';
 import 'normalize.css';
 
 const routes = [
-  { path: '/posts', alias: '/', component: TopLevelPosts },
+  { path: '/tree', component: TopLevelPosts },
   { path: '/post/:postId',
     component: PostWithChildren,
+    props: true,
+  },
+  { path: '/tag/all',
+    alias: '/',
+    component: PostsWithTag,
     props: true,
   },
   { path: '/tag/:tag',
