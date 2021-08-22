@@ -6,18 +6,10 @@
   <summary>
     <div class="comment-heading">
       <div class="comment-voting">
-        <button type="button" v-on:click="up">
-          <span aria-hidden="true">&#9650;</span>
-          <span class="sr-only">Vote up</span>
-        </button>
-        <button type="button" v-on:click="down">
-          <span aria-hidden="true">&#9660;</span>
-          <span class="sr-only">Vote down</span>
-        </button>
       </div>
       <div class="comment-info">
         <a href="#" class="comment-author">{{ post.author.username }}</a>
-        <p class="m-0">
+        <div>
           <router-link
             :to="`/post/${post.postId}`"
             class="nav-item nav-link"
@@ -41,7 +33,7 @@
                      >{{ tag.canonical.slug }}</router-link>
           </span>
           &bull; {{ post.votes }}
-        </p>
+        </div>
       </div>
     </div>
   </summary>
@@ -50,6 +42,8 @@
     <p v-if="post.content.url"><a :href="post.content.url">{{ post.content.title }}</a></p>
     <div class="markdown-body" v-else v-html="post.content.rendered" />
     <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
+    <button type="button" v-on:click="up">Vote up</button>
+    <button type="button" v-on:click="down">Vote down</button>
     <button type="button" v-on:click="flag">Flag</button>
 
     <!-- Reply form start -->
