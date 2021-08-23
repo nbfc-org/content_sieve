@@ -4,7 +4,7 @@
     <summary>
       <div class="comment-info">
         <a v-if="!open" :href="`#${post.postId}`" class="comment-border-link" />
-        <div v-if="post.content.url"><a :href="post.content.url">{{ post.content.title }}</a></div>
+        <div class="comment-url" v-if="post.content.url"><a :href="post.content.url">{{ post.content.title }}</a></div>
         {{ post.votes.length }} votes
         by <a href="#" class="comment-author">{{ post.author.username }}</a>
         <router-link
@@ -36,10 +36,10 @@
 
     <div class="comment-body">
       <div v-if="post.content.rendered" class="markdown-body" v-html="post.content.rendered" />
-      <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
-      <button type="button" v-on:click="up">Vote up</button>
-      <button type="button" v-on:click="down">Vote down</button>
-      <button type="button" v-on:click="flag">Flag</button>
+      <button class="linky" type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
+      <button class="linky" type="button" v-on:click="up">Vote up</button>
+      <button class="linky" type="button" v-on:click="down">Vote down</button>
+      <button class="linky" type="button" v-on:click="flag">Flag</button>
 
       <!-- Reply form start -->
       <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">

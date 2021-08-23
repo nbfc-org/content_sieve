@@ -1,5 +1,5 @@
 <template>
-  <form @submit="submit" novalidate="true" class="reply-form newpost">
+  <form @submit="submit" novalidate="true" class="newpost">
     <p v-if="errors.length">
       <b>Please correct the following error(s):</b>
       <ul>
@@ -21,11 +21,13 @@
       </ul>
     </p>
 
+    <p>
     Optionally, add a whitespace / punctuation delimited list of
     <input v-model="tagString" placeholder="tags ..." type="text">
-    and then
+    </p>
+    Then
     <input type="submit" value="submit" />
-    your post.
+    your post. Thank you.
   </form>
 </template>
 <script>

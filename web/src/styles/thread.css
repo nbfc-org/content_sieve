@@ -66,13 +66,31 @@ details {
   padding: .5em 0;
 }
 
+details div.comment-url {
+  font-size: 1.2em;
+}
+
 details.comment summary {
   position: relative;
   list-style: none;
   cursor: pointer;
 }
+
 details.comment summary::-webkit-details-marker {
   display: none;
+}
+
+details.comment button.linky {
+  background:none!important;
+  border:none;
+  padding:0!important;
+  cursor:pointer;
+  text-decoration:underline;
+  font-size: .8em;
+}
+
+.reply-form {
+  margin-bottom: 2em;
 }
 
 /* Adjustment for Internet Explorer */
