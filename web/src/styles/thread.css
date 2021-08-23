@@ -38,11 +38,17 @@
   background-color: rgba(0, 0, 0, 0.1);
   background-clip: padding-box;
 }
+
 .comment-border-link:hover {
   background-color: rgba(0, 0, 0, 0.3);
 }
+
 .comment-body {
   padding-left: 1em;
+}
+
+.comment-body .markdown-body {
+  margin: .5em;
 }
 
 .replies {
@@ -58,12 +64,6 @@ details.comment summary {
 }
 details.comment summary::-webkit-details-marker {
   display: none;
-}
-details.comment[open] .comment-info::after {
-  content: "Click to hide";
-}
-details.comment:not([open]) .comment-info::after {
-  content: "Click to show";
 }
 
 /* Adjustment for Internet Explorer */
