@@ -7,17 +7,25 @@
       </ul>
     </p>
 
-    Give your post a
-    <input v-model="title" placeholder="title ..." type="text">
-    and make it either a single
-    <input v-model="url" placeholder="url ..." type="text">
-    or a fully composed chunk of
-    <TextEditor @saveContent="saveContent" :text="body" />
-    If you'd like, give it a list of
+    <p>
+      Please post either:
+      <ul>
+        <li>
+          a single <input v-model="url" placeholder="url ..." type="text"> with a
+          <input v-model="title" placeholder="title ..." type="text">
+        </li>
+        <li>
+          a fully composed chunk of
+          <TextEditor @saveContent="saveContent" :text="body" />
+        </li>
+      </ul>
+    </p>
+
+    Optionally, add a whitespace / punctuation delimited list of
     <input v-model="tagString" placeholder="tags ..." type="text">
     and then
     <input type="submit" value="submit" />
-    it!
+    your post.
   </form>
 </template>
 <script>

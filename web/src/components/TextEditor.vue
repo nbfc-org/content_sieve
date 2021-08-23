@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <textarea v-model="input" rows="15" placeholder="text or markdown ..." @input="update"></textarea>
+    <textarea v-model="input" rows="15" placeholder="plain text or markdown ..." @input="update"></textarea>
     <div class="markdown-body" v-html="compiledMarkdown"></div>
   </div>
 </template>
