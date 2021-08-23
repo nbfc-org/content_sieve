@@ -4,14 +4,6 @@
   padding: 0 1em;
   border: 1px solid transparent; /* Removes margin collapse */
 }
-.sr-only {
-  position: absolute;
-  left: -10000px;
-  top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
 
 /* Comment */
 
@@ -22,6 +14,7 @@
 .comment-info {
   font-size: .8em;
   color: rgba(0, 0, 0, 0.5);
+  margin-left: 1em;
 }
 .comment-author {
   color: rgba(0, 0, 0, 0.75);
@@ -38,12 +31,10 @@
 .comment-border-link {
   display: block;
   position: absolute;
-  top: 50px;
+  top: 0;
   left: 0;
-  width: 12px;
-  height: calc(100% - 50px);
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
+  width: 2px;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.1);
   background-clip: padding-box;
 }
@@ -51,15 +42,11 @@
   background-color: rgba(0, 0, 0, 0.3);
 }
 .comment-body {
-  padding: 0 20px;
-  padding-left: 28px;
-}
-.comment-body .markdown-body {
-  padding: .5em 0;
+  padding-left: 1em;
 }
 
 .replies {
-  margin-left: 28px;
+  margin-left: 1em;
 }
 
 /* Adjustments for toggleable comments */

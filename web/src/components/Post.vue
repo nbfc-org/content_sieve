@@ -1,8 +1,6 @@
 <template>
   <details open class="comment" :id="`comment-${post.postId}`">
-    <a :href="`#comment-${post.postId}`" class="comment-border-link">
-      <span class="sr-only">Jump to {{ post.postId }}</span>
-    </a>
+    <a :href="`#comment-${post.postId}`" class="comment-border-link" />
     <summary>
       <div class="comment-info">
         <a href="#" class="comment-author">{{ post.author.username }}</a>
