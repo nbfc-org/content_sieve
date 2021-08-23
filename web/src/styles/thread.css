@@ -48,7 +48,11 @@
 }
 
 .comment-body .markdown-body {
-  margin: .5em;
+  margin: 1em;
+}
+
+.comment-body .editor .markdown-body {
+  margin: 0;
 }
 
 .replies {
@@ -56,6 +60,11 @@
 }
 
 /* Adjustments for toggleable comments */
+
+details {
+  background-color: rgba(0, 0, 0, 0.03);
+  padding: .5em 0;
+}
 
 details.comment summary {
   position: relative;

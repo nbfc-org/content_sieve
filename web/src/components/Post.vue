@@ -3,6 +3,7 @@
     <a :href="`#${post.postId}`" class="comment-border-link" />
     <summary>
       <div class="comment-info">
+        <a v-if="!open" :href="`#${post.postId}`" class="comment-border-link" />
         <div v-if="post.content.url"><a :href="post.content.url">{{ post.content.title }}</a></div>
         {{ post.votes.length }} votes
         by <a href="#" class="comment-author">{{ post.author.username }}</a>

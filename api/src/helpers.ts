@@ -52,8 +52,8 @@ export async function seedDatabase() {
         await linkRepository.save(links);
 
         const posts = postRepository.create([
-            ...texts.map(t => { return { text: t, author: defaultUser, postId: uuidv4() }; }),
             ...links.map(l => { return { link: l, author: defaultUser, postId: uuidv4() }; }),
+            ...texts.map(t => { return { text: t, author: defaultUser, postId: uuidv4() }; }),
         ]);
         await postRepository.save(posts);
 
