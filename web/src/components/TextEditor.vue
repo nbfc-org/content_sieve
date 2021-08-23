@@ -29,3 +29,28 @@ export default {
     },
 }
 </script>
+<style scoped>
+.editor {
+  margin: .5em 0;
+  height: 100%;
+  border: 1px solid #ccc;
+}
+
+.editor textarea, .editor div {
+  display: inline-block;
+  width: 49%;
+  height: 100%;
+  vertical-align: top;
+  box-sizing: border-box;
+}
+
+.editor textarea {
+  border: none;
+  border-right: 1px solid #ccc;
+  outline: none;
+  background-color: #f6f6f6;
+  font-size: 14px;
+  font-family: "Monaco", courier, monospace;
+  padding: 1em;
+}
+</style>

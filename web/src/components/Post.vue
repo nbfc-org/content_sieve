@@ -1,12 +1,9 @@
 <template>
-<details open class="comment" :id="`comment-${post.postId}`">
-  <a :href="`#comment-${post.postId}`" class="comment-border-link">
-    <span class="sr-only">Jump to {{ post.postId }}</span>
-  </a>
-  <summary>
-    <div class="comment-heading">
-      <div class="comment-voting">
-      </div>
+  <details open class="comment" :id="`comment-${post.postId}`">
+    <a :href="`#comment-${post.postId}`" class="comment-border-link">
+      <span class="sr-only">Jump to {{ post.postId }}</span>
+    </a>
+    <summary>
       <div class="comment-info">
         <a href="#" class="comment-author">{{ post.author.username }}</a>
         <div>
@@ -35,29 +32,28 @@
           &bull; {{ post.votes }}
         </div>
       </div>
-    </div>
-  </summary>
+    </summary>
 
-  <div class="comment-body">
-    <p v-if="post.content.url"><a :href="post.content.url">{{ post.content.title }}</a></p>
-    <div class="markdown-body" v-else v-html="post.content.rendered" />
-    <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
-    <button type="button" v-on:click="up">Vote up</button>
-    <button type="button" v-on:click="down">Vote down</button>
-    <button type="button" v-on:click="flag">Flag</button>
+    <div class="comment-body">
+      <p v-if="post.content.url"><a :href="post.content.url">{{ post.content.title }}</a></p>
+      <div class="markdown-body" v-else v-html="post.content.rendered" />
+      <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
+      <button type="button" v-on:click="up">Vote up</button>
+      <button type="button" v-on:click="down">Vote down</button>
+      <button type="button" v-on:click="flag">Flag</button>
 
-    <!-- Reply form start -->
-    <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
-      <TextEditor @saveContent="saveContent" :key="`${post.postId}_${version}`" :text="newPostContent" />
-      <button type="button" v-on:click="postReply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
-      <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Cancel</button>
+      <!-- Reply form start -->
+      <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
+        <TextEditor @saveContent="saveContent" :key="`${post.postId}_${version}`" :text="newPostContent" />
+        <button type="button" v-on:click="postReply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
+        <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Cancel</button>
+      </div>
+      <!-- Reply form end -->
     </div>
-    <!-- Reply form end -->
-  </div>
-  <div class="replies">
-    <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :thread="thread" :postId="child.postId" :recPost="child" v-if="children" />
-  </div>
-</details>
+    <div class="replies">
+      <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :thread="thread" :postId="child.postId" :recPost="child" v-if="children" />
+    </div>
+  </details>
 </template>
 
 <script>
