@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import App from './components/App.vue';
+import { config } from '../../lib/config.js';
 
 Vue.config.productionTip = false;
 
@@ -23,7 +24,7 @@ const apolloProvider = new VueApollo({
   defaultClient: new ApolloClient({
     cache,
     link: new HttpLink({
-      uri: 'http://localhost:4001',
+      uri: config.web.graphql,
     }),
   })
 });

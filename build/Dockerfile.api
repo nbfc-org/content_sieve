@@ -1,0 +1,20 @@
+FROM node:16-bullseye-slim
+
+WORKDIR /usr/src/app/api
+
+COPY api/package*.json ./
+RUN npm ci
+
+WORKDIR /usr/src/app
+
+ENV NODE_ENV production
+
+COPY api api
+COPY lib lib
+
+WORKDIR /usr/src/app/api
+
+RUN npm run build
+
+EXPOSE 4001
+CMD [ "npm", "run", "prod" ]

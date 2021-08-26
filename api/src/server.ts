@@ -14,6 +14,8 @@ import { Tag, TagText } from "./entities/tag.js";
 import { seedDatabase } from "./helpers.js";
 import { Context } from "./resolvers/types/context.js";
 
+import { config } from "../../lib/config.js";
+
 // register 3rd party IOC container
 TypeORM.useContainer(Container);
 
@@ -22,11 +24,8 @@ export async function bootstrap() {
         // create TypeORM connection
         await TypeORM.createConnection({
             type: "postgres",
-            database: "type-graphql-lazy",
             username: "postgres", // fill this with your username
-            password: "wat", // and password
-            port: 5432, // and port
-            host: "localhost", // and host
+            ...config.db,
             entities: [User, Text, Link, Post, Vote, Tag, TagText],
             synchronize: true,
             logger: "advanced-console",
@@ -51,7 +50,7 @@ export async function bootstrap() {
         const server = new ApolloServer({ schema, context });
 
         // Start the server
-        const { url } = await server.listen(4001);
+        const { url } = await server.listen(config.api.port);
         console.log(`Server is running, GraphQL Playground available at ${url}`);
     } catch (err) {
         console.error(err);

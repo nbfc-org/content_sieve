@@ -2,6 +2,21 @@ services:
   web:
     build:
       context: .
-      dockerfile: build/Dockerfile.nginx
+      dockerfile: build/Dockerfile.web
     ports:
       - "8080:80"
+  api:
+    build:
+      context: .
+      dockerfile: build/Dockerfile.api
+    environment:
+      - PROD_API_PORT=4002
+      - PROD_DB_PASSWORD=wat
+    ports:
+      - "4002:4002"
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=wat
