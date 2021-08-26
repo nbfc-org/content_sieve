@@ -1,5 +1,5 @@
 <template>
-  <form @submit="submit" novalidate="true" class="reply-form newpost">
+  <form @submit="submit" novalidate="true" class="newpost">
     <p v-if="errors.length">
       <b>Please correct the following error(s):</b>
       <ul>
@@ -7,17 +7,27 @@
       </ul>
     </p>
 
-    Give your post a
-    <input v-model="title" placeholder="title ..." type="text">
-    and make it either a single
-    <input v-model="url" placeholder="url ..." type="text">
-    or a fully composed chunk of
-    <TextEditor @saveContent="saveContent" :text="body" />
-    If you'd like, give it a list of
+    <p>
+      Please post either:
+      <ul>
+        <li>
+          a single <input v-model="url" placeholder="url ..." type="text"> with a
+          <input v-model="title" placeholder="title ..." type="text">
+        </li>
+        <li>
+          a fully composed chunk of
+          <TextEditor @saveContent="saveContent" :text="body" />
+        </li>
+      </ul>
+    </p>
+
+    <p>
+    Optionally, add a whitespace / punctuation delimited list of
     <input v-model="tagString" placeholder="tags ..." type="text">
-    and then
+    </p>
+    Then
     <input type="submit" value="submit" />
-    it!
+    your post. Thank you.
   </form>
 </template>
 <script>

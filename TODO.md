@@ -1,5 +1,6 @@
 - add auth
   - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
+- fix hide/show links & padding
 - add paging
 - add karma / HIGH_SCORE
 - add sorting by MOST_REPLIES

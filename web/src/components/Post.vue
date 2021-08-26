@@ -1,29 +1,19 @@
 <template>
-<details open class="comment" :id="`comment-${post.postId}`">
-  <a :href="`#comment-${post.postId}`" class="comment-border-link">
-    <span class="sr-only">Jump to {{ post.postId }}</span>
-  </a>
-  <summary>
-    <div class="comment-heading">
-      <div class="comment-voting">
-        <button type="button" v-on:click="up">
-          <span aria-hidden="true">&#9650;</span>
-          <span class="sr-only">Vote up</span>
-        </button>
-        <button type="button" v-on:click="down">
-          <span aria-hidden="true">&#9660;</span>
-          <span class="sr-only">Vote down</span>
-        </button>
-      </div>
+  <details open class="comment" :id="post.postId" v-on:click="details">
+    <a :href="`#${post.postId}`" class="comment-border-link" />
+    <summary>
       <div class="comment-info">
-        <a href="#" class="comment-author">{{ post.author.username }}</a>
-        <p class="m-0">
-          <router-link
-            :to="`/post/${post.postId}`"
-            class="nav-item nav-link"
-            active-class="active"
-            exact
+        <a v-if="!open" :href="`#${post.postId}`" class="comment-border-link" />
+        <div class="comment-url" v-if="post.content.url"><a :href="post.content.url">{{ post.content.title }}</a></div>
+        {{ post.votes.length }} votes
+        by <a href="#" class="comment-author">{{ post.author.username }}</a>
+        <router-link
+          :to="`/post/${post.postId}`"
+          active-class="active"
+          exact
           >{{ ago(post.createdAt) }}</router-link>
+        {{ detailsInfo }}
+        <div>
           <span v-if="post.parent">
           &bull; <router-link
             :to="`/post/${post.parent.postId}`"
@@ -40,30 +30,29 @@
                      exact
                      >{{ tag.canonical.slug }}</router-link>
           </span>
-          &bull; {{ post.votes }}
-        </p>
+        </div>
       </div>
-    </div>
-  </summary>
+    </summary>
 
-  <div class="comment-body">
-    <p v-if="post.content.url"><a :href="post.content.url">{{ post.content.title }}</a></p>
-    <div class="markdown-body" v-else v-html="post.content.rendered" />
-    <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
-    <button type="button" v-on:click="flag">Flag</button>
+    <div class="comment-body">
+      <div v-if="post.content.rendered" class="markdown-body" v-html="post.content.rendered" />
+      <button class="linky" type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
+      <button class="linky" type="button" v-on:click="up">Vote up</button>
+      <button class="linky" type="button" v-on:click="down">Vote down</button>
+      <button class="linky" type="button" v-on:click="flag">Flag</button>
 
-    <!-- Reply form start -->
-    <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
-      <TextEditor @saveContent="saveContent" :key="`${post.postId}_${version}`" :text="newPostContent" />
-      <button type="button" v-on:click="postReply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
-      <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Cancel</button>
+      <!-- Reply form start -->
+      <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
+        <TextEditor @saveContent="saveContent" :key="`${post.postId}_${version}`" :text="newPostContent" />
+        <button type="button" v-on:click="postReply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
+        <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Cancel</button>
+      </div>
+      <!-- Reply form end -->
     </div>
-    <!-- Reply form end -->
-  </div>
-  <div class="replies">
-    <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :thread="thread" :postId="child.postId" :recPost="child" v-if="children" />
-  </div>
-</details>
+    <div class="replies">
+      <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :thread="thread" :postId="child.postId" :recPost="child" v-if="children" />
+    </div>
+  </details>
 </template>
 
 <script>
@@ -87,9 +76,15 @@ export default {
         return {
             newPostContent: '',
             version: 0,
+            open: true,
         }
     },
     computed: {
+        detailsInfo: function() {
+            const num = this.post.children ? this.post.children.length : 0;
+            const text = this.open ? '-' : `show ${num + 1}`;
+            return ` [${text}]`;
+        },
         post: function() {
             if (this.recPost) {
                 return this.recPost;
@@ -104,6 +99,9 @@ export default {
         },
     },
     methods: {
+        details: function(event) {
+            this.open = event.currentTarget.getAttribute('open') === null;
+        },
         ago: function(millis) {
             return DateTime.fromMillis(millis).toRelative();
         },
