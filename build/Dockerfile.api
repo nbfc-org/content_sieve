@@ -16,5 +16,4 @@ WORKDIR /usr/src/app/api
 
 RUN npm run build
 
-EXPOSE 4001
 CMD [ "npm", "run", "prod" ]

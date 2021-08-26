@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: build/Dockerfile.web
+      args:
+        - webgraphql=http://localhost:4002
     ports:
       - "8080:80"
   api:
