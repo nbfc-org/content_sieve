@@ -1,5 +1,7 @@
 - add auth
   - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
+- db migrations
+  - https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 - fix hide/show links & padding
 - add paging
 - add karma / HIGH_SCORE

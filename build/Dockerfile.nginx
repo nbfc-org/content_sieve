@@ -1,0 +1,27 @@
+FROM node:16-bullseye-slim as webbuild
+
+WORKDIR /build
+
+COPY web web
+COPY lib lib
+
+WORKDIR /build/web
+
+RUN npm i
+# RUN npm ci --only=production
+
+RUN npm run build
+
+FROM nginx:alpine
+
+WORKDIR /usr/share/nginx/html
+
+COPY --from=webbuild /build/web/dist .
+
+# COPY package*.json ./
+
+
+# COPY . .
+
+# EXPOSE 8080
+# CMD [ "node", "server.js" ]
