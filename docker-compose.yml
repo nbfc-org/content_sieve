@@ -1,0 +1,22 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: build/Dockerfile.web
+      args:
+        - webgraphql=/api
+    ports:
+      - "8080:80"
+  api:
+    build:
+      context: .
+      dockerfile: build/Dockerfile.api
+    environment:
+      - PROD_API_PORT=4002
+      - PROD_DB_PASSWORD=wat
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=wat

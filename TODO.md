@@ -1,5 +1,7 @@
 - add auth
   - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
+- db migrations
+  - https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 - fix hide/show links & padding
 - add paging
 - add karma / HIGH_SCORE
@@ -8,9 +10,7 @@
 - add find_or_create for new tags
 - reload for deeper than 3 levels
 - don't reload all data on change
-- nginx
-  - add routing w/o #
-  - caching?
+- nginx caching of graphql queries?
 - sorting within a tree by different keys
 - flat / metafilter view
 - markdown editor

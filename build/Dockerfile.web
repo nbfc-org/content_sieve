@@ -1,0 +1,27 @@
+FROM node:16-bullseye-slim as webbuild
+
+WORKDIR /build/web
+
+COPY web/package*.json ./
+RUN npm ci
+
+WORKDIR /build
+
+COPY web web
+COPY lib lib
+
+WORKDIR /build/web
+
+ARG webgraphql
+ENV POI_APP_PROD_WEB_GRAPHQL $webgraphql
+
+RUN npm run build
+
+FROM nginx:alpine
+
+WORKDIR /usr/share/nginx/html
+
+ENV NODE_ENV production
+
+COPY --from=webbuild /build/web/dist .
+COPY build/router.conf /etc/nginx/conf.d/default.conf

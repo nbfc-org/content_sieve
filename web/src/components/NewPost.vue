@@ -67,9 +67,14 @@ export default {
                 return false;
             }
 
-            const { data: { addPost: { postId } } } = await addPost.bind(this)(event, input);
-            this.$router.push({ path: `/post/${postId}` });
             event.preventDefault();
+
+            try {
+                const { data: { addPost: { postId } } } = await addPost.bind(this)(event, input);
+                this.$router.push({ path: `/post/${postId}` });
+            } catch(e) {
+                console.error(e);
+            }
         },
     },
 };

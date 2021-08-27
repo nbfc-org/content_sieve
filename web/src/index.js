@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import App from './components/App.vue';
+import { config } from '../../lib/config.js';
 
 Vue.config.productionTip = false;
 
@@ -23,7 +24,7 @@ const apolloProvider = new VueApollo({
   defaultClient: new ApolloClient({
     cache,
     link: new HttpLink({
-      uri: 'http://localhost:4001',
+      uri: config.web.graphql,
     }),
   })
 });
@@ -33,6 +34,7 @@ Vue.use(VueRouter);
 import TopLevelPosts from './components/TopLevelPosts.vue';
 import PostWithChildren from './components/PostWithChildren.vue';
 import PostsWithTag from './components/PostsWithTag.vue';
+import NotFoundComponent from './components/NotFoundComponent.vue';
 import NewPost from './components/NewPost.vue';
 import 'normalize.css';
 
@@ -55,10 +57,15 @@ const routes = [
     path: '/new',
     component: NewPost,
   },
-  // { path: '/manage-products', alias: '/foobar', component: ManageProducts }
+  {
+    path: '/:catchAll(.*)',
+    component: NotFoundComponent,
+    name: 'NotFound'
+  },
 ];
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 });
 

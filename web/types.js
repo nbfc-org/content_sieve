@@ -1,7 +1,9 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
 
-fetch(`http://localhost:4001/graphql`, {
+import { config } from '../lib/config.js';
+
+fetch(`${config.web.graphql}/graphql`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
