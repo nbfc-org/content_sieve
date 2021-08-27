@@ -10,9 +10,7 @@
 - add find_or_create for new tags
 - reload for deeper than 3 levels
 - don't reload all data on change
-- nginx
-  - add routing w/o #
-  - caching?
+- nginx caching of graphql queries?
 - sorting within a tree by different keys
 - flat / metafilter view
 - markdown editor

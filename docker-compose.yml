@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: build/Dockerfile.web
       args:
-        - webgraphql=http://localhost:4002
+        - webgraphql=/api
     ports:
       - "8080:80"
   api:
@@ -14,8 +14,6 @@ services:
     environment:
       - PROD_API_PORT=4002
       - PROD_DB_PASSWORD=wat
-    ports:
-      - "4002:4002"
     depends_on:
       - postgres
   postgres:
