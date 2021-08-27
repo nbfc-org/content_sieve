@@ -1,7 +1,7 @@
 <template>
-  <details open class="comment" :id="post.postId" v-on:click="details">
+  <details open class="comment" :id="post.postId">
     <a :href="`#${post.postId}`" class="comment-border-link" />
-    <summary>
+    <summary v-on:click="details">
       <div class="comment-info">
         <a v-if="!open" :href="`#${post.postId}`" class="comment-border-link" />
         <div class="comment-url" v-if="post.content.url"><a :href="post.content.url">{{ post.content.title }}</a></div>
@@ -100,7 +100,8 @@ export default {
     },
     methods: {
         details: function(event) {
-            this.open = event.currentTarget.getAttribute('open') === null;
+            const o = event.currentTarget.parentElement.getAttribute('open');
+            this.open = o === null;
         },
         ago: function(millis) {
             return DateTime.fromMillis(millis).toRelative();

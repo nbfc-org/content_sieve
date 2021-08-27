@@ -2,20 +2,23 @@
   - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
 - db migrations
   - https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
-- fix hide/show links & padding
+
+- add find_or_create for new tags
+
+- reconsider post button placement
 - add paging
+- flat / metafilter view
 - add karma / HIGH_SCORE
 - add sorting by MOST_REPLIES
 - add meta-moderation of votes
-- add find_or_create for new tags
 - reload for deeper than 3 levels
+
+- sorting within a tree by different keys
+- edit for 5 minutes
+
+- ssr
 - don't reload all data on change
 - nginx caching of graphql queries?
-- sorting within a tree by different keys
-- flat / metafilter view
-- markdown editor
-  - look at tiptap again?
-  - guard against redos: https://marked.js.org/using_advanced#workers
-- edit for 5 minutes
+- markdown renderer dos: https://marked.js.org/using_advanced#workers
 - vee validate & yup
   - https://vee-validate.logaretm.com/v4/guide/components/validation
