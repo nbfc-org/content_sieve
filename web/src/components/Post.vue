@@ -50,7 +50,7 @@
       <!-- Reply form end -->
     </div>
     <div class="replies">
-      <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :recPost="child" v-if="children" />
+      <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :post="child" v-if="children" />
     </div>
   </details>
 </template>
@@ -67,7 +67,7 @@ export default {
         TextEditor,
     },
     props: [
-        'recPost',
+        'post',
     ],
     data: function() {
         return {
@@ -82,14 +82,11 @@ export default {
             const text = this.open ? '-' : `show ${num + 1}`;
             return ` [${text}]`;
         },
-        post: function() {
-            return this.recPost;
-        },
         postId: function() {
-            return this.recPost.postId;
+            return this.post.postId;
         },
         children: function() {
-            return this.recPost.children;
+            return this.post.children;
         },
     },
     methods: {

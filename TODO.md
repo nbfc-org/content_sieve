@@ -16,6 +16,8 @@
 - reload for deeper than 3 levels
 - edit for 5 minutes
 
+- heading css sizes 2, 1.5, 1.25, 1, .875, .85
+
 - ssr
 - don't reload all data on change
 - nginx caching of graphql queries?
