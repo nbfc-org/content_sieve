@@ -5,15 +5,15 @@
 
 - add find_or_create for new tags
 
-- reconsider post button placement
-- add paging
 - flat / metafilter view
 - add karma / HIGH_SCORE
 - add sorting by MOST_REPLIES
+- sorting within a tree by different keys
+
+- reconsider post button placement
+- add paging
 - add meta-moderation of votes
 - reload for deeper than 3 levels
-
-- sorting within a tree by different keys
 - edit for 5 minutes
 
 - ssr

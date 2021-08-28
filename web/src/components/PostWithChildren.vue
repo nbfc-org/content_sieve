@@ -2,7 +2,7 @@
   <div>
     <div v-if="error">{{ error }}</div>
     <div class="comment-thread">
-      <Post @reloadPost="reloadPost" :key="`${getPost.postId}`" :recPost="getPost" :postId="getPost.postId" v-if="getPost.postId" />
+      <Post @reloadPost="reloadPost" :key="`${getPost.postId}`" :recPost="getPost" v-if="getPost.postId" />
     </div>
   </div>
 </template>

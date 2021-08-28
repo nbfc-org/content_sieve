@@ -50,7 +50,7 @@
       <!-- Reply form end -->
     </div>
     <div class="replies">
-      <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :thread="thread" :postId="child.postId" :recPost="child" v-if="children" />
+      <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :recPost="child" v-if="children" />
     </div>
   </details>
 </template>
@@ -67,10 +67,7 @@ export default {
         TextEditor,
     },
     props: [
-        'thread',
-        'postId',
         'recPost',
-        'versionMap',
     ],
     data: function() {
         return {
@@ -86,16 +83,13 @@ export default {
             return ` [${text}]`;
         },
         post: function() {
-            if (this.recPost) {
-                return this.recPost;
-            }
-            return this.thread.get(this.postId);
+            return this.recPost;
+        },
+        postId: function() {
+            return this.recPost.postId;
         },
         children: function() {
-            if (this.recPost) {
-                return this.recPost.children;
-            }
-            return this.thread.childIds(this.postId);
+            return this.recPost.children;
         },
     },
     methods: {
