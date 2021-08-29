@@ -1,5 +1,6 @@
 - add auth
   - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
+- user sessions
 - db migrations
   - https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 
@@ -16,7 +17,8 @@
 - reload for deeper than 3 levels
 - edit for 5 minutes
 
-- heading css sizes 2, 1.5, 1.25, 1, .875, .85
+- md heading css sizes 2, 1.5, 1.25, 1, .875, .85
+- vuetify the nav and other things
 
 - ssr
 - don't reload all data on change

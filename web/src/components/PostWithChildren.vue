@@ -10,19 +10,16 @@
       </v-btn>
     </v-btn-toggle>
     <v-btn-toggle v-model="sortBy">
-      <v-btn>NEWEST</v-btn>
-      <v-btn>OLDEST</v-btn>
-      <v-btn>most replies</v-btn>
-      <v-btn>high score</v-btn>
+      <v-btn :key="`sortTypeBtn_${s}`" v-for="s in sortTypes">{{ s }}</v-btn>
     </v-btn-toggle>
     <div class="comment-thread">
-      <Post v-if="nested" @reloadPost="reloadPost" :key="`${getPost.postId}`" :post="getPost" />
-      <Post v-else @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" />
+      <Post v-if="nested" @reloadPost="reloadPost" :key="`${getPost.postId}`" :post="getPost" :sortBy="sortBy" />
+      <Post v-else @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" :sortBy="sortBy" />
     </div>
   </div>
 </template>
 <script>
-import { getPost, flattenPost } from '../lib/queries.js';
+import { getPost, flattenPost, sortTypes, getSort } from '../lib/queries.js';
 import Post from './Post.vue';
 
 export default {
@@ -43,9 +40,18 @@ export default {
     props: [
         'postId',
     ],
+    computed: {
+        sortTypes: function() {
+            return sortTypes;
+        },
+    },
     methods: {
         flatten(post) {
-            return flattenPost(post);
+            const posts = flattenPost(post);
+            if (this.sortBy === undefined) {
+                return posts;
+            }
+            return posts.sort(getSort(this.sortBy));
         },
         reloadPost(cache, post) {
             /*

@@ -50,14 +50,14 @@
       <!-- Reply form end -->
     </div>
     <div class="replies">
-      <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :post="child" v-if="children" />
+      <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" v-if="children" />
     </div>
   </details>
 </template>
 
 <script>
 import { DateTime } from 'luxon';
-import { VOTE, addPost } from '../lib/queries.js';
+import { VOTE, addPost, getSort } from '../lib/queries.js';
 
 import TextEditor from './TextEditor.vue';
 
@@ -68,6 +68,7 @@ export default {
     },
     props: [
         'post',
+        'sortBy',
     ],
     data: function() {
         return {
@@ -78,7 +79,7 @@ export default {
     },
     computed: {
         detailsInfo: function() {
-            const num = this.post.children ? this.post.children.length : 0;
+            const num = this.children ? this.children.length : 0;
             const text = this.open ? '-' : `show ${num + 1}`;
             return ` [${text}]`;
         },
@@ -86,7 +87,11 @@ export default {
             return this.post.postId;
         },
         children: function() {
-            return this.post.children;
+            const kids = this.post.children || [];
+            if (this.sortBy === undefined) {
+                return kids;
+            }
+            return kids.sort(getSort(this.sortBy));
         },
     },
     methods: {
