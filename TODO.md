@@ -25,3 +25,4 @@
 - markdown renderer dos: https://marked.js.org/using_advanced#workers
 - vee validate & yup
   - https://vee-validate.logaretm.com/v4/guide/components/validation
+  - https://vuetifyjs.com/en/components/forms/#vee-validate
