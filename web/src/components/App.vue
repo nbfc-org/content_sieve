@@ -1,8 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app>
-      <app-nav></app-nav>
-    </v-app-bar>
+    <app-nav></app-nav>
     <v-main>
       <v-container fluid>
         <router-view></router-view>
