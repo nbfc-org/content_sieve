@@ -1,20 +1,23 @@
 - add auth
   - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
+- user sessions
 - db migrations
   - https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 
 - add find_or_create for new tags
 
-- reconsider post button placement
-- add paging
-- flat / metafilter view
+- add sorting on tag page
 - add karma / HIGH_SCORE
 - add sorting by MOST_REPLIES
+
+- reconsider post button placement
+- add paging
 - add meta-moderation of votes
 - reload for deeper than 3 levels
-
-- sorting within a tree by different keys
 - edit for 5 minutes
+
+- md heading css sizes 2, 1.5, 1.25, 1, .875, .85
+- vuetify the nav and other things
 
 - ssr
 - don't reload all data on change

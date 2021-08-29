@@ -7,6 +7,8 @@ services:
         - webgraphql=/api
     ports:
       - "8080:80"
+    depends_on:
+      - api
   api:
     build:
       context: .

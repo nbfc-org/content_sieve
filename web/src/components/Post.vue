@@ -1,5 +1,5 @@
 <template>
-  <details open class="comment" :id="post.postId">
+  <details open class="comment" :id="post.postId" v-if="post.content">
     <a :href="`#${post.postId}`" class="comment-border-link" />
     <summary v-on:click="details">
       <div class="comment-info">
@@ -50,14 +50,14 @@
       <!-- Reply form end -->
     </div>
     <div class="replies">
-      <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :thread="thread" :postId="child.postId" :recPost="child" v-if="children" />
+      <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" v-if="children" />
     </div>
   </details>
 </template>
 
 <script>
 import { DateTime } from 'luxon';
-import { VOTE, addPost } from '../lib/queries.js';
+import { VOTE, addPost, getSort } from '../lib/queries.js';
 
 import TextEditor from './TextEditor.vue';
 
@@ -67,10 +67,8 @@ export default {
         TextEditor,
     },
     props: [
-        'thread',
-        'postId',
-        'recPost',
-        'versionMap',
+        'post',
+        'sortBy',
     ],
     data: function() {
         return {
@@ -81,21 +79,19 @@ export default {
     },
     computed: {
         detailsInfo: function() {
-            const num = this.post.children ? this.post.children.length : 0;
+            const num = this.children ? this.children.length : 0;
             const text = this.open ? '-' : `show ${num + 1}`;
             return ` [${text}]`;
         },
-        post: function() {
-            if (this.recPost) {
-                return this.recPost;
-            }
-            return this.thread.get(this.postId);
+        postId: function() {
+            return this.post.postId;
         },
         children: function() {
-            if (this.recPost) {
-                return this.recPost.children;
+            const kids = this.post.children || [];
+            if (this.sortBy === undefined) {
+                return kids;
             }
-            return this.thread.childIds(this.postId);
+            return kids.sort(getSort(this.sortBy));
         },
     },
     methods: {

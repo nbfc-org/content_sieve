@@ -14,6 +14,13 @@ const indexSort = (a, b) => {
   return cmp(b36(a.index), b36(b.index)) || a.createdAt - b.createdAt;
 };
 
+const flattenPost = (post) => {
+  let kids = [];
+  if (post.children) {
+    kids = post.children;
+  }
+  return [{...post, children: []}, ...kids.map(p => flattenPost(p))].flat();
+};
 
 const postFields = gql`
   fragment PostFields on Post {
@@ -189,4 +196,47 @@ const VOTE = gql`mutation ($vote: VoteInput!) {
   }
 }`;
 
-export { getPost, indexSort, postsByUser, postsWithTag, addPost, POSTS_BY_USER, VOTE };
+// TODO: use introspection for sortBy
+/*
+  query {
+  __type(name: "SortType") {
+  name
+  enumValues {
+  name
+  }
+  }
+  }
+*/
+
+const sortTypes = [
+  "NEWEST",
+  "OLDEST",
+  "MOST_REPLIES",
+  "HIGH_SCORE",
+];
+
+const _newest = (a, b) => b.createdAt - a.createdAt;
+const _oldest = (a, b) => a.createdAt - b.createdAt;
+
+const getSort = (sortBy) => {
+  switch (sortBy) {
+  case "NEWEST":
+  case 0:
+    return _newest;
+  case "OLDEST":
+  case 1:
+    return _oldest;
+  case "MOST_REPLIES":
+  case 2:
+    return _newest; // TODO: replace this
+  case "HIGH_SCORE":
+  case 3:
+    return _newest; // TODO: replace this
+  }
+};
+
+export {
+  getPost, indexSort, postsByUser, postsWithTag,
+  addPost, POSTS_BY_USER, VOTE,
+  flattenPost, sortTypes, getSort,
+};
