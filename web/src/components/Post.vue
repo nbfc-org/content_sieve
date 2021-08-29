@@ -1,5 +1,5 @@
 <template>
-  <details open class="comment" :id="post.postId">
+  <details open class="comment" :id="post.postId" v-if="post.content">
     <a :href="`#${post.postId}`" class="comment-border-link" />
     <summary v-on:click="details">
       <div class="comment-info">

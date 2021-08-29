@@ -11,6 +11,18 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import VueApollo from "vue-apollo";
 
+import Vuetify, {
+  VBtn,
+  VBtnToggle,
+} from 'vuetify/lib';
+
+Vue.use(Vuetify, {
+  components: {
+    VBtn,
+    VBtnToggle,
+  },
+});
+
 import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import introspectionQueryResultData from '../fragmentTypes.json';
 
@@ -36,7 +48,7 @@ import PostWithChildren from './components/PostWithChildren.vue';
 import PostsWithTag from './components/PostsWithTag.vue';
 import NotFoundComponent from './components/NotFoundComponent.vue';
 import NewPost from './components/NewPost.vue';
-import 'normalize.css';
+// import 'normalize.css';
 
 const routes = [
   { path: '/tree', component: TopLevelPosts },
@@ -71,9 +83,14 @@ const router = new VueRouter({
 
 Vue.use(VueApollo);
 
+const vuetify = new Vuetify({
+  theme: { disable: true },
+});
+
 new Vue({
   el: '#app',
   router,
+  vuetify,
   apolloProvider,
   render: h => h(App),
 });

@@ -14,6 +14,13 @@ const indexSort = (a, b) => {
   return cmp(b36(a.index), b36(b.index)) || a.createdAt - b.createdAt;
 };
 
+const flattenPost = (post) => {
+  let kids = [];
+  if (post.children) {
+    kids = post.children;
+  }
+  return [{...post, children: []}, ...kids.map(p => flattenPost(p))].flat();
+};
 
 const postFields = gql`
   fragment PostFields on Post {
@@ -189,4 +196,4 @@ const VOTE = gql`mutation ($vote: VoteInput!) {
   }
 }`;
 
-export { getPost, indexSort, postsByUser, postsWithTag, addPost, POSTS_BY_USER, VOTE };
+export { getPost, indexSort, postsByUser, postsWithTag, addPost, flattenPost, POSTS_BY_USER, VOTE };
