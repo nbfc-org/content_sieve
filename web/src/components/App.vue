@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <header class="app-header">
+  <v-app>
+    <v-app-bar app>
       <app-nav></app-nav>
-    </header>
-    <main class="container">
-      <router-view></router-view>
-    </main>
-  </div>
+    </v-app-bar>
+    <v-main>
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
