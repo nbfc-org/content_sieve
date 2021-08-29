@@ -6,10 +6,9 @@
 
 - add find_or_create for new tags
 
-- flat / metafilter view
+- add sorting on tag page
 - add karma / HIGH_SCORE
 - add sorting by MOST_REPLIES
-- sorting within a tree by different keys
 
 - reconsider post button placement
 - add paging

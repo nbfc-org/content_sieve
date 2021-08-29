@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="error">{{ error }}</div>
-    <v-btn-toggle v-model="nested">
+    <v-btn-toggle mandatory v-model="nested">
       <v-btn>
         flat
       </v-btn>
@@ -9,7 +9,7 @@
         nested
       </v-btn>
     </v-btn-toggle>
-    <v-btn-toggle v-model="sortBy">
+    <v-btn-toggle mandatory v-model="sortBy">
       <v-btn :key="`sortTypeBtn_${s}`" v-for="s in sortTypes">{{ s }}</v-btn>
     </v-btn-toggle>
     <div class="comment-thread">
@@ -51,7 +51,8 @@ export default {
             if (this.sortBy === undefined) {
                 return posts;
             }
-            return posts.sort(getSort(this.sortBy));
+            const first = posts.shift();
+            return [first, ...posts.sort(getSort(this.sortBy))];
         },
         reloadPost(cache, post) {
             /*
