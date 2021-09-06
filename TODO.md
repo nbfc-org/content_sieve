@@ -16,9 +16,7 @@
 - reload for deeper than 3 levels
 - edit for 5 minutes
 
-- md heading css sizes 2, 1.5, 1.25, 1, .875, .85
-- vuetify the nav and other things
-
+- typeorm use views to handle schema changes
 - ssr
 - don't reload all data on change
 - nginx caching of graphql queries?
