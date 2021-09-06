@@ -16,6 +16,8 @@
 - reload for deeper than 3 levels
 - edit for 5 minutes
 
+- add summary mode for list / toplevel view
+
 - typeorm use views to handle schema changes
 - ssr
 - don't reload all data on change

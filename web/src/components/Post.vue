@@ -1,6 +1,9 @@
 <template>
   <v-card v-if="post.content" class="mt-2">
     <details class="comment" open>
+      <v-card-text v-if="post.content.rendered">
+        <div class="markdown-body" v-html="post.content.rendered" />
+      </v-card-text>
       <summary @click="details">
         <v-card-title v-if="post.content.url">
           <a :href="post.content.url">{{ post.content.title }}</a>
@@ -23,20 +26,7 @@
         </span>
         {{ detailsInfo }}
         </v-card-text>
-        <v-card-text v-if="post.tags.length">
-          <v-chip :key="`tag_${tag.canonical.slug}`" v-for="tag in post.tags">
-            <router-link
-              :to="`/tag/${tag.canonical.slug}`"
-              class="nav-item nav-link"
-              active-class="active"
-              exact
-              >{{ tag.canonical.slug }}</router-link>
-          </v-chip>
-        </v-card-text>
       </summary>
-      <v-card-text v-if="post.content.rendered">
-        <div class="markdown-body" v-html="post.content.rendered" />
-      </v-card-text>
       <v-card-actions>
         <v-btn
           text
@@ -71,7 +61,15 @@
           >
           Flag
         </v-btn>
-
+        <v-spacer />
+        <v-chip outlined class="ml-2" x-small :key="`tag_${tag.canonical.slug}`" v-for="tag in post.tags">
+          <router-link
+            :to="`/tag/${tag.canonical.slug}`"
+            class="nav-item nav-link"
+            active-class="active"
+            exact
+            >{{ tag.canonical.slug }}</router-link>
+        </v-chip>
       </v-card-actions>
       <v-expand-transition>
 
