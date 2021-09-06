@@ -11,3 +11,7 @@ details.comment summary {
 details.comment summary::-webkit-details-marker {
   display: none;
 }
+
+.v-card__text, .v-card__title {
+  padding: .5em !important;
+}
