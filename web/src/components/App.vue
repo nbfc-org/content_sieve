@@ -19,5 +19,5 @@ export default {
 }
 </script>
 
-<style src="@/styles/thread.css" />
+<style src="@/styles/vuetify-custom.css" />
 <style src="@/../node_modules/github-markdown-css/github-markdown.css" />

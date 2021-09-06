@@ -1,0 +1,13 @@
+.replies {
+  margin-left: 1em;
+}
+
+details.comment summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+}
+
+details.comment summary::-webkit-details-marker {
+  display: none;
+}
