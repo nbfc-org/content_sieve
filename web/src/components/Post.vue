@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="post.content">
+  <v-card v-if="post.content" class="mt-2">
     <details class="comment" open>
       <summary @click="details">
         <v-card-title v-if="post.content.url">
@@ -40,6 +40,7 @@
       <v-card-actions>
         <v-btn
           text
+          x-small
           color="teal accent-4"
           @click="openReply"
           :data-target="`comment-${post.postId}-reply-form`"
@@ -49,6 +50,7 @@
         <v-btn
           color="deep-purple lighten-2"
           text
+          x-small
           @click="up"
           >
           Vote up
@@ -56,6 +58,7 @@
         <v-btn
           color="deep-purple lighten-2"
           text
+          x-small
           @click="down"
           >
           Vote down
@@ -63,6 +66,7 @@
         <v-btn
           color="red"
           text
+          x-small
           @click="flag"
           >
           Flag
@@ -76,23 +80,25 @@
           class="transition-fast-in-fast-out v-card--reveal"
           style="height: 100%;"
           >
-          <v-card-text class="pb-0" :id="`comment-${post.postId}-reply-form`">
+          <v-card-text :id="`comment-${post.postId}-reply-form`">
             <TextEditor @saveContent="saveContent" :key="`${post.postId}_${version}`" :text="newPostContent" />
           </v-card-text>
           <v-card-actions class="pt-0">
             <v-btn
               text
+              x-small
               color="teal accent-4"
               @click="postReply"
               >
-              Submit
+              Add comment
             </v-btn>
             <v-btn
               text
-              color="teal accent-4"
+              color="red"
+              x-small
               @click="reply"
               >
-              Close
+              Close comment form
             </v-btn>
           </v-card-actions>
         </v-card>
