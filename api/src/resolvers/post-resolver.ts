@@ -137,11 +137,20 @@ export class PostResolver {
         if (postInput.tagString) {
             const tags = [];
             for (const slug of splitTags(postInput.tagString)) {
-                // TODO: make this find or create
-                const tt = this.tagTextRepository.create({ slug });
-                await this.tagTextRepository.save(tt);
-                const tag = this.tagRepository.create({ slugs: [tt], canonical: tt });
-                await this.tagRepository.save(tag);
+                let tag;
+                let tt;
+                tt = await this.tagTextRepository.findOne({slug});
+                if (tt) {
+                    tag = await this.tagRepository.findOne(
+                        { canonical: tt },
+                        { relations: ["canonical"] },
+                    );
+                } else {
+                    tt = this.tagTextRepository.create({ slug });
+                    await this.tagTextRepository.save(tt);
+                    tag = this.tagRepository.create({ slugs: [tt], canonical: tt });
+                    await this.tagRepository.save(tag);
+                }
                 tags.push(tag);
             }
 

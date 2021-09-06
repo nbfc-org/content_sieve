@@ -1,5 +1,5 @@
 import { ObjectType, Field } from "type-graphql";
-import { Column, Entity, ManyToOne, ManyToMany, OneToOne, JoinColumn, OneToMany, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Column, Entity, ManyToOne, ManyToMany, OneToOne, JoinColumn, OneToMany, PrimaryGeneratedColumn, CreateDateColumn, Unique } from "typeorm";
 
 import { Lazy } from "../helpers.js";
 import { Post } from "./post.js";
@@ -25,6 +25,7 @@ export class Tag {
 
 @Entity()
 @ObjectType()
+@Unique(["slug"])
 export class TagText {
     @PrimaryGeneratedColumn()
     readonly id: number;
@@ -36,6 +37,6 @@ export class TagText {
     @CreateDateColumn({type: 'timestamp with time zone'})
     createdAt: Date;
 
-    @ManyToOne(type => Tag, { lazy: true })
+    @ManyToOne(type => Tag, tag => tag.slugs, { lazy: true })
     tag: Lazy<Tag>;
 }

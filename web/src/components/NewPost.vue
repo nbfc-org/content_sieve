@@ -17,7 +17,7 @@
     </p>
 
     <p>
-    Optionally, add a whitespace / punctuation delimited list of
+    Optionally, add a whitespace delimited list of
     <v-text-field v-model="tagString" placeholder="tags ..." />
     </p>
     Then

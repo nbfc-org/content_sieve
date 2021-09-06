@@ -4,8 +4,6 @@
 - db migrations
   - https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 
-- add find_or_create for new tags
-
 - add sorting on tag page
 - add karma / HIGH_SCORE
 - add sorting by MOST_REPLIES
