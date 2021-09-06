@@ -11,17 +11,9 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import VueApollo from "vue-apollo";
 
-import Vuetify, {
-  VBtn,
-  VBtnToggle,
-} from 'vuetify/lib';
+import Vuetify from 'vuetify/lib';
 
-Vue.use(Vuetify, {
-  components: {
-    VBtn,
-    VBtnToggle,
-  },
-});
+Vue.use(Vuetify);
 
 import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import introspectionQueryResultData from '../fragmentTypes.json';

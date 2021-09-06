@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <textarea v-model="input" rows="15" placeholder="plain text or markdown ..." @input="update"></textarea>
+    <textarea v-model="input" ref="area" rows="8" placeholder="plain text or markdown ..." @input="update"></textarea>
     <div class="markdown-body" v-html="compiledMarkdown"></div>
   </div>
 </template>
@@ -16,6 +16,9 @@ export default {
         return {
             input: this.text,
         }
+    },
+    mounted: function() {
+        this.$refs["area"].focus();
     },
     computed: {
         compiledMarkdown: function() {

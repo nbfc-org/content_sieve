@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <header class="app-header">
-      <app-nav></app-nav>
-    </header>
-    <main class="container">
-      <router-view></router-view>
-    </main>
-  </div>
+  <v-app>
+    <app-nav></app-nav>
+    <v-main>
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
@@ -19,5 +19,6 @@ export default {
 }
 </script>
 
-<style src="@/styles/thread.css" />
+<style src="@/styles/vuetify-custom.css" />
 <style src="@/../node_modules/github-markdown-css/github-markdown.css" />
+<style src="@/styles/markdown-custom.css" />

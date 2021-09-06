@@ -1,58 +1,111 @@
 <template>
-  <details open class="comment" :id="post.postId" v-if="post.content">
-    <a :href="`#${post.postId}`" class="comment-border-link" />
-    <summary v-on:click="details">
-      <div class="comment-info">
-        <a v-if="!open" :href="`#${post.postId}`" class="comment-border-link" />
-        <div class="comment-url" v-if="post.content.url"><a :href="post.content.url">{{ post.content.title }}</a></div>
+  <v-card v-if="post.content" class="mt-2">
+    <details class="comment" open>
+      <v-card-text v-if="post.content.rendered">
+        <div class="markdown-body" v-html="post.content.rendered" />
+      </v-card-text>
+      <summary @click="details">
+        <v-card-title v-if="post.content.url">
+          <a :href="post.content.url">{{ post.content.title }}</a>
+        </v-card-title>
+        <v-card-text>
         {{ post.votes.length }} votes
         by <a href="#" class="comment-author">{{ post.author.username }}</a>
-        <router-link
+        &bull; <router-link
           :to="`/post/${post.postId}`"
           active-class="active"
           exact
           >{{ ago(post.createdAt) }}</router-link>
-        {{ detailsInfo }}
-        <div>
-          <span v-if="post.parent">
+        <span v-if="post.parent">
           &bull; <router-link
-            :to="`/post/${post.parent.postId}`"
+                   :to="`/post/${post.parent.postId}`"
+                   class="nav-item nav-link"
+                   active-class="active"
+                   exact
+                   >parent</router-link>
+        </span>
+        {{ detailsInfo }}
+        </v-card-text>
+      </summary>
+      <v-card-actions>
+        <v-btn
+          text
+          x-small
+          color="teal accent-4"
+          @click="openReply"
+          :data-target="`comment-${post.postId}-reply-form`"
+          >
+          Reply
+        </v-btn>
+        <v-btn
+          color="deep-purple lighten-2"
+          text
+          x-small
+          @click="up"
+          >
+          Vote up
+        </v-btn>
+        <v-btn
+          color="deep-purple lighten-2"
+          text
+          x-small
+          @click="down"
+          >
+          Vote down
+        </v-btn>
+        <v-btn
+          color="red"
+          text
+          x-small
+          @click="flag"
+          >
+          Flag
+        </v-btn>
+        <v-spacer />
+        <v-chip outlined class="ml-2" x-small :key="`tag_${tag.canonical.slug}`" v-for="tag in post.tags">
+          <router-link
+            :to="`/tag/${tag.canonical.slug}`"
             class="nav-item nav-link"
             active-class="active"
             exact
-            >parent</router-link>
-          </span>
-          <span v-for="tag in post.tags">
-            &bull; <router-link
-                     :to="`/tag/${tag.canonical.slug}`"
-                     class="nav-item nav-link"
-                     active-class="active"
-                     exact
-                     >{{ tag.canonical.slug }}</router-link>
-          </span>
-        </div>
-      </div>
-    </summary>
+            >{{ tag.canonical.slug }}</router-link>
+        </v-chip>
+      </v-card-actions>
+      <v-expand-transition>
 
-    <div class="comment-body">
-      <div v-if="post.content.rendered" class="markdown-body" v-html="post.content.rendered" />
-      <button class="linky" type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Reply</button>
-      <button class="linky" type="button" v-on:click="up">Vote up</button>
-      <button class="linky" type="button" v-on:click="down">Vote down</button>
-      <button class="linky" type="button" v-on:click="flag">Flag</button>
-
-      <!-- Reply form start -->
-      <div class="reply-form d-none" :id="`comment-${post.postId}-reply-form`">
-        <TextEditor @saveContent="saveContent" :key="`${post.postId}_${version}`" :text="newPostContent" />
-        <button type="button" v-on:click="postReply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Submit</button>
-        <button type="button" v-on:click="reply" data-toggle="reply-form" :data-target="`comment-${post.postId}-reply-form`">Cancel</button>
+        <v-card
+          v-if="showReply"
+          class="transition-fast-in-fast-out v-card--reveal"
+          style="height: 100%;"
+          >
+          <v-card-text :id="`comment-${post.postId}-reply-form`">
+            <TextEditor @saveContent="saveContent" :key="`${post.postId}_${version}`" :text="newPostContent" />
+          </v-card-text>
+          <v-card-actions class="pt-0">
+            <v-btn
+              text
+              x-small
+              color="teal accent-4"
+              @click="postReply"
+              >
+              Add comment
+            </v-btn>
+            <v-btn
+              text
+              color="red"
+              x-small
+              @click="reply"
+              >
+              Close comment form
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-expand-transition>
+      <div class="replies">
+        <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" v-if="children" />
       </div>
-      <!-- Reply form end -->
-    </div>
-    <div class="replies">
-      <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" v-if="children" />
-    </div>
-  </details>
+    </details>
+  </v-card>
 </template>
 
 <script>
@@ -75,12 +128,14 @@ export default {
             newPostContent: '',
             version: 0,
             open: true,
+            showReply: false,
         }
     },
     computed: {
         detailsInfo: function() {
             const num = this.children ? this.children.length : 0;
-            const text = this.open ? '-' : `show ${num + 1}`;
+            // const text = this.open ? '-' : `show ${num + 1}`;
+            const text = this.open ? 'hide all' : 'show all';
             return ` [${text}]`;
         },
         postId: function() {
@@ -102,14 +157,11 @@ export default {
         ago: function(millis) {
             return DateTime.fromMillis(millis).toRelative();
         },
+        openReply: function(event) {
+            this.showReply = true;
+        },
         reply: function(event) {
-            var target = event.target;
-            var replyForm;
-            if (target.matches("[data-toggle='reply-form']")) {
-                replyForm = document.getElementById(target.getAttribute("data-target"));
-                replyForm.classList.toggle("d-none");
-                replyForm.getElementsByTagName("textarea")[0].focus();
-            }
+            this.showReply = false;
         },
         vote: async function(event, postId, type) {
             try {

@@ -1,5 +1,5 @@
 <template>
-  <form @submit="submit" novalidate="true" class="newpost">
+  <v-form @submit.prevent="submit">
     <p v-if="errors.length">
       <b>Please correct the following error(s):</b>
       <ul>
@@ -8,27 +8,22 @@
     </p>
 
     <p>
-      Please post either:
-      <ul>
-        <li>
-          a single <input v-model="url" placeholder="url ..." type="text"> with a
-          <input v-model="title" placeholder="title ..." type="text">
-        </li>
-        <li>
-          a fully composed chunk of
-          <TextEditor @saveContent="saveContent" :text="body" />
-        </li>
-      </ul>
+      Please post either a single
+      <v-text-field v-model="url" placeholder="url ..." />
+      with a
+      <v-text-field v-model="title" placeholder="title ..." type="text" />
+      Or a fully composed chunk of
+      <TextEditor @saveContent="saveContent" :text="body" />
     </p>
 
     <p>
     Optionally, add a whitespace / punctuation delimited list of
-    <input v-model="tagString" placeholder="tags ..." type="text">
+    <v-text-field v-model="tagString" placeholder="tags ..." />
     </p>
     Then
-    <input type="submit" value="submit" />
+    <v-btn type="submit">submit</v-btn>
     your post. Thank you.
-  </form>
+  </v-form>
 </template>
 <script>
 import TextEditor from './TextEditor.vue';
@@ -79,8 +74,3 @@ export default {
     },
 };
 </script>
-<style>
-  .newpost {
-    padding: 1em;
-  }
-</style>

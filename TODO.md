@@ -16,12 +16,13 @@
 - reload for deeper than 3 levels
 - edit for 5 minutes
 
-- md heading css sizes 2, 1.5, 1.25, 1, .875, .85
-- vuetify the nav and other things
+- add summary mode for list / toplevel view
 
+- typeorm use views to handle schema changes
 - ssr
 - don't reload all data on change
 - nginx caching of graphql queries?
 - markdown renderer dos: https://marked.js.org/using_advanced#workers
 - vee validate & yup
   - https://vee-validate.logaretm.com/v4/guide/components/validation
+  - https://vuetifyjs.com/en/components/forms/#vee-validate
