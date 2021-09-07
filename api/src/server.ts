@@ -1,5 +1,9 @@
 import "reflect-metadata";
-import { ApolloServer } from "apollo-server";
+
+import express from 'express';
+import { ApolloServer } from "apollo-server-express";
+import * as jwt from 'express-jwt';
+
 import { Container } from "typedi";
 import * as TypeORM from "typeorm";
 import * as TypeGraphQL from "type-graphql";
@@ -43,15 +47,26 @@ export async function bootstrap() {
             container: Container,
         });
 
-        // TODO: unhardcode this when auth exists
-        const context: Context = { user: defaultUser };
+        const app = express();
 
         // Create GraphQL server
-        const server = new ApolloServer({ schema, context });
+        const server = new ApolloServer({
+            schema,
+            context: ({ req }) => {
+                return {
+                    req,
+                    // TODO: unhardcode this when auth exists
+                    user: defaultUser,
+                };
+            },
+        });
 
-        // Start the server
-        const { url } = await server.listen(config.api.port);
-        console.log(`Server is running, GraphQL Playground available at ${url}`);
+        await server.start();
+
+        server.applyMiddleware({ app });
+
+        await app.listen({ port: config.api.port });
+
     } catch (err) {
         console.error(err);
     }
