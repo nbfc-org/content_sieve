@@ -2,7 +2,10 @@ import "reflect-metadata";
 
 import express from 'express';
 import { ApolloServer } from "apollo-server-express";
-import * as jwt from 'express-jwt';
+
+import jwt from 'express-jwt';
+import jwksRsa from 'jwks-rsa';
+import cors from 'cors';
 
 import { Container } from "typedi";
 import * as TypeORM from "typeorm";
@@ -48,6 +51,27 @@ export async function bootstrap() {
         });
 
         const app = express();
+
+        app.use(cors());
+
+        //jwtCheck
+        const checkJwt = jwt({
+            // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint
+            secret: jwksRsa.expressJwtSecret({
+                cache: true,
+                rateLimit: true,
+                jwksRequestsPerMinute: 5,
+                jwksUri: 'https://***REMOVED***.auth0.com/.well-known/jwks.json',
+            }),
+
+            // Validate the audience and the issuer
+            audience: 'http://localhost:4001/graphql',
+            issuer: 'https://***REMOVED***.auth0.com/',
+            algorithms: [ 'RS256' ],
+            // credentialsRequired: false,
+        });
+
+        app.use(checkJwt);
 
         // Create GraphQL server
         const server = new ApolloServer({
