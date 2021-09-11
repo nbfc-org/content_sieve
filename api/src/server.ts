@@ -68,7 +68,7 @@ export async function bootstrap() {
             audience: 'http://localhost:4001/graphql',
             issuer: 'https://***REMOVED***.auth0.com/',
             algorithms: [ 'RS256' ],
-            // credentialsRequired: false,
+            credentialsRequired: false,
         });
 
         app.use(checkJwt);

@@ -1,4 +1,5 @@
 import Vue from 'vue';
+
 import VueRouter from 'vue-router';
 
 import App from './components/App.vue';
@@ -8,6 +9,7 @@ import { Auth0Plugin, getInstance } from './lib/auth0.js';
 
 Vue.use(Auth0Plugin, {
   ...config.auth0,
+  cacheLocation: 'localstorage',
   onRedirectCallback: appState => {
     router.push(
       appState && appState.targetUrl
@@ -60,7 +62,28 @@ const authLink = setContext(async (_, { headers }) => {
   }
 })
 
-const link = authLink.concat(httpLink);
+import { onError } from "apollo-link-error";
+
+const errorLink = onError(({ graphQLErrors, networkError, response, operation }) => {
+  /*
+    if (operation.operationName === "IgnoreErrorsQuery") {
+      response.errors = null;
+    }
+    */
+  if (graphQLErrors) {
+    for (let err of graphQLErrors) {
+      switch (err.extensions.code) {
+      case 'UNAUTHENTICATED':
+        console.error(err);
+      }
+    }
+  }
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
+});
+
+const link = authLink.concat(errorLink).concat(httpLink);
 
 const apolloProvider = new VueApollo({
   defaultClient: new ApolloClient({

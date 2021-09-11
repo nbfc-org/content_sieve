@@ -179,7 +179,7 @@ export default {
                 });
             } catch(err) {
                 // this.error = err;
-                console.error(err);
+                // console.error(err);
             }
             // this.$emit('dirty', event, this.postId);
         },
