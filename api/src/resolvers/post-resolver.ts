@@ -2,6 +2,7 @@ import { Resolver, Query, Arg, Mutation, Ctx, ID } from "type-graphql";
 import { Repository, getManager, In } from "typeorm";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
+import { AuthenticationError } from "apollo-server-express";
 
 import { Vote } from "../entities/vote.js";
 import { Post, SortType } from "../entities/post.js";
@@ -102,7 +103,11 @@ export class PostResolver {
     }
 
     @Mutation(returns => Post)
-    async addPost(@Arg("post") postInput: PostInput, @Ctx() { user }: Context): Promise<Post> {
+    async addPost(@Arg("post") postInput: PostInput, @Ctx() { user, req }: Context): Promise<Post> {
+
+        if (!req.user) {
+            throw new AuthenticationError('You are not logged-in.');
+        }
         const post_attrs = {
             postId: uuid62.decode(postInput.postId),
             author: user,
@@ -162,7 +167,12 @@ export class PostResolver {
     }
 
     @Mutation(returns => Post)
-    async vote(@Ctx() { user }: Context, @Arg("vote") voteInput: VoteInput): Promise<Post> {
+    async vote(@Ctx() { user, req }: Context, @Arg("vote") voteInput: VoteInput): Promise<Post> {
+        if (!req.user) {
+            throw new AuthenticationError('You are not logged-in.');
+        }
+        console.log(req.user);
+
         const post = await this.postRepository.findOne(
             { postId: uuid62.decode(voteInput.postId) },
             { relations: ["votes"] },

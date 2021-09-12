@@ -1,13 +1,31 @@
 import Vue from 'vue';
+
 import VueRouter from 'vue-router';
 
 import App from './components/App.vue';
 import { config } from '../../lib/config.js';
+import store from './lib/store.js';
+
+import { Auth0Plugin, getInstance } from './lib/auth0.js';
+
+Vue.use(Auth0Plugin, {
+  ...config.auth0,
+  cacheLocation: 'localstorage',
+  onRedirectCallback: appState => {
+    store.dispatch('postShowReply', appState);
+    router.push(
+      appState && appState.path
+        ? { path: appState.path }
+        : window.location.pathname
+    );
+  }
+});
 
 Vue.config.productionTip = false;
 
 import ApolloClient from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { setContext } from 'apollo-link-context'
 import { HttpLink } from 'apollo-link-http';
 import VueApollo from "vue-apollo";
 
@@ -24,12 +42,56 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 
 const cache = new InMemoryCache({ fragmentMatcher });
 
+const httpLink = new HttpLink({
+  uri: config.web.graphql,
+});
+
+const authLink = setContext(async (_, { headers }) => {
+  const authService = getInstance();
+  let authorizationHeader = {};
+
+  if (authService.isAuthenticated) {
+    const token = await authService.getTokenSilently();
+    authorizationHeader = {
+        authorization: `Bearer ${token}`,
+    };
+  }
+  return {
+    headers: {
+      ...headers,
+      ...authorizationHeader,
+    },
+  }
+})
+
+import { onError } from "apollo-link-error";
+
+const errorLink = onError(({ graphQLErrors, networkError, response, operation }) => {
+  /*
+    if (operation.operationName === "IgnoreErrorsQuery") {
+      response.errors = null;
+    }
+    */
+  if (graphQLErrors) {
+    for (let err of graphQLErrors) {
+      switch (err.extensions.code) {
+      case 'UNAUTHENTICATED':
+        console.error(err);
+      }
+    }
+  }
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
+});
+
+const link = authLink.concat(errorLink).concat(httpLink);
+
 const apolloProvider = new VueApollo({
   defaultClient: new ApolloClient({
     cache,
-    link: new HttpLink({
-      uri: config.web.graphql,
-    }),
+    link,
+    // connectToDevTools: true,
   })
 });
 
@@ -82,6 +144,7 @@ const vuetify = new Vuetify({
 new Vue({
   el: '#app',
   router,
+  store,
   vuetify,
   apolloProvider,
   render: h => h(App),

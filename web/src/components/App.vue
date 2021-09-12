@@ -11,11 +11,18 @@
 
 <script>
 import AppNav from './AppNav.vue';
+import { mapActions, mapGetters } from "vuex";
 
 export default {
-  components: {
-    AppNav,
-  },
+    components: {
+        AppNav,
+    },
+    methods: {
+        ...mapActions(["getSession"]),
+    },
+    created() {
+        this.getSession();
+    },
 }
 </script>
 
