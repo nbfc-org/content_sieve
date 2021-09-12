@@ -1,7 +1,8 @@
-- add auth
-  - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
 - user sessions
 - proper authors
+- migrate to keycloak
+  - https://github.com/keycloak/keycloak-quickstarts/blob/latest/applications/app-vue/src/main.js
+  - https://github.com/keycloak/keycloak-nodejs-admin-client
 - db migrations
   - https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 
