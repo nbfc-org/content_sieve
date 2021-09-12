@@ -142,10 +142,11 @@ export default {
         },
         showReplyForm: function() {
             const storePost = this.$store.getters.getPost(this.postId);
-            if (!storePost) {
-                return this.showReply;
+            if (storePost) {
+                this.showReply = storePost.showReply;
+                this.$store.dispatch('logoutSession');
             }
-            return storePost.showReply;
+            return this.showReply;
         },
         postId: function() {
             return this.post.postId;

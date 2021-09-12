@@ -1,6 +1,7 @@
 - add auth
   - https://auth0.com/docs/flows/authorization-code-flow-with-proof-key-for-code-exchange-pkce
 - user sessions
+- proper authors
 - db migrations
   - https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 
@@ -8,9 +9,9 @@
 - add karma / HIGH_SCORE
 - add sorting by MOST_REPLIES
 
-- reconsider post button placement
 - add paging
 - add meta-moderation of votes
+- move "hide all" back into "-"
 - reload for deeper than 3 levels
 - edit for 5 minutes
 
