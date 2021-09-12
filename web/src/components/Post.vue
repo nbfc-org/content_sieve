@@ -37,30 +37,32 @@
           >
           Reply
         </v-btn>
-        <v-btn
-          color="deep-purple lighten-2"
-          text
-          x-small
-          @click="up"
-          >
-          Vote up
-        </v-btn>
-        <v-btn
-          color="deep-purple lighten-2"
-          text
-          x-small
-          @click="down"
-          >
-          Vote down
-        </v-btn>
-        <v-btn
-          color="red"
-          text
-          x-small
-          @click="flag"
-          >
-          Flag
-        </v-btn>
+        <v-item-group v-if="$auth.isAuthenticated">
+          <v-btn
+            color="deep-purple lighten-2"
+            text
+            x-small
+            @click="up"
+            >
+            Vote up
+          </v-btn>
+          <v-btn
+            color="deep-purple lighten-2"
+            text
+            x-small
+            @click="down"
+            >
+            Vote down
+          </v-btn>
+          <v-btn
+            color="red"
+            text
+            x-small
+            @click="flag"
+            >
+            Flag
+          </v-btn>
+        </v-item-group>
         <v-spacer />
         <v-chip outlined class="ml-2" x-small :key="`tag_${tag.canonical.slug}`" v-for="tag in post.tags">
           <router-link
@@ -74,7 +76,7 @@
       <v-expand-transition>
 
         <v-card
-          v-if="showReply"
+          v-if="showReplyForm"
           class="transition-fast-in-fast-out v-card--reveal"
           style="height: 100%;"
           >
@@ -138,6 +140,13 @@ export default {
             const text = this.open ? 'hide all' : 'show all';
             return ` [${text}]`;
         },
+        showReplyForm: function() {
+            const storePost = this.$store.getters.getPost(this.postId);
+            if (!storePost) {
+                return this.showReply;
+            }
+            return storePost.showReply;
+        },
         postId: function() {
             return this.post.postId;
         },
@@ -158,7 +167,18 @@ export default {
             return DateTime.fromMillis(millis).toRelative();
         },
         openReply: function(event) {
-            this.showReply = true;
+            if (this.$auth.isAuthenticated) {
+                // console.log(this.$auth.user);
+                this.showReply = true;
+            } else {
+                this.$auth.loginWithRedirect({
+                    appState: {
+                        path: `/post/${this.postId}`,
+                        postId: this.postId,
+                        showReply: true,
+                    },
+                });
+            }
         },
         reply: function(event) {
             this.showReply = false;

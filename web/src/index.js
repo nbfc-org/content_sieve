@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 
 import App from './components/App.vue';
 import { config } from '../../lib/config.js';
+import store from './lib/store.js';
 
 import { Auth0Plugin, getInstance } from './lib/auth0.js';
 
@@ -11,9 +12,10 @@ Vue.use(Auth0Plugin, {
   ...config.auth0,
   cacheLocation: 'localstorage',
   onRedirectCallback: appState => {
+    store.dispatch('postShowReply', appState);
     router.push(
-      appState && appState.targetUrl
-        ? appState.targetUrl
+      appState && appState.path
+        ? { path: appState.path }
         : window.location.pathname
     );
   }
@@ -142,6 +144,7 @@ const vuetify = new Vuetify({
 new Vue({
   el: '#app',
   router,
+  store,
   vuetify,
   apolloProvider,
   render: h => h(App),

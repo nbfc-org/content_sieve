@@ -5,19 +5,23 @@
       <v-container fluid>
         <router-view></router-view>
       </v-container>
-      <v-card>
-        <!-- Check that the SDK client is not currently loading before accessing is methods -->
-      </v-card>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import AppNav from './AppNav.vue';
+import { mapActions, mapGetters } from "vuex";
 
 export default {
     components: {
         AppNav,
+    },
+    methods: {
+        ...mapActions(["getSession"]),
+    },
+    created() {
+        this.getSession();
     },
 }
 </script>

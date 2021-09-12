@@ -23,6 +23,7 @@ export default {
             this.$auth.logout({
                 returnTo: window.location.origin
             });
+            this.$store.dispatch('logoutSession');
         },
     },
 }
