@@ -5,6 +5,7 @@ services:
       dockerfile: build/Dockerfile.web
       args:
         - webgraphql=/api
+        - auth0client=${POI_APP_DEV_AUTH0_CLIENTID}
     ports:
       - "8080:80"
     depends_on:
