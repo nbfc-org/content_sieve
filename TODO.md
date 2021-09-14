@@ -1,8 +1,12 @@
-- user sessions
-- proper authors
+- typegraphql authz including roles
+  - https://github.com/MichalLytek/type-graphql/tree/master/examples/authorization
+  - https://github.com/MichalLytek/type-graphql/blob/master/examples/authorization/resolver.ts
 - migrate to keycloak
   - https://github.com/keycloak/keycloak-quickstarts/blob/latest/applications/app-vue/src/main.js
   - https://github.com/keycloak/keycloak-nodejs-admin-client
+- user sessions
+- proper authors
+
 - db migrations
   - https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 
@@ -18,6 +22,7 @@
 
 - add summary mode for list / toplevel view
 
+- character limit (reddit 40k)
 - typeorm use views to handle schema changes
 - ssr
 - don't reload all data on change

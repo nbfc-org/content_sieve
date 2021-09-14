@@ -15,7 +15,7 @@ import { PostResolver } from "./resolvers/post-resolver.js";
 import { User } from "./entities/user.js";
 import { Link } from "./entities/link.js";
 import { Text } from "./entities/text.js";
-import { Post } from "./entities/post.js";
+import { Post, TopLevelScores } from "./entities/post.js";
 import { Vote } from "./entities/vote.js";
 import { Tag, TagText } from "./entities/tag.js";
 import { seedDatabase } from "./helpers.js";
@@ -33,14 +33,19 @@ export async function bootstrap() {
             type: "postgres",
             username: "postgres", // fill this with your username
             ...config.db,
-            entities: [User, Text, Link, Post, Vote, Tag, TagText],
-            synchronize: true,
+            entities: [User, Text, Link, Post, TopLevelScores, Vote, Tag, TagText],
+
             logger: "advanced-console",
             logging: "all",
+
+            "migrations": ["migration/*.js"],
+            "cli": {
+                "migrationsDir": "migration"
+            },
             dropSchema: true,
+            synchronize: true,
             cache: true,
         });
-
         // seed database with some data
         const { defaultUser } = await seedDatabase();
 

@@ -1,8 +1,8 @@
 import { ObjectType, ID, Field, Float, registerEnumType } from "type-graphql";
-import { Entity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
-import { Column, JoinColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
+import { Entity, ViewEntity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Column, ViewColumn, JoinColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
 import { ManyToMany, JoinTable } from "typeorm";
-import { AfterInsert, AfterLoad, BeforeInsert, BeforeUpdate } from "typeorm";
+import { AfterInsert, AfterLoad, Index } from "typeorm";
 import { createUnionType } from "type-graphql";
 import { Tree, TreeChildren, TreeParent } from "typeorm";
 
@@ -14,6 +14,7 @@ import { Text } from "./text.js";
 import { Vote } from "./vote.js";
 import { Tag } from "./tag.js";
 import { Lazy } from "../helpers.js";
+import { TopLevelInput } from "../resolvers/types/top-level-input.js";
 
 export enum SortType {
     NEWEST,
@@ -39,6 +40,29 @@ export const Content = createUnionType({
         return undefined;
     },
 });
+
+@ViewEntity({
+    // materialized: true,
+    // type-graphql-lazy=# create unique index on top_level_scores (id);
+    // type-graphql-lazy=# refresh materialized view CONCURRENTLY top_level_scores ;
+    expression: `
+select "postId" as "id", score, score/pow((extract(epoch from now()) - created_epoch)/3600+2,1.8) as hn_gravity, log(greatest(abs(score), 1)) + (case when score < 0 then -1 when score > 0 then 1 else 0 end) * (created_epoch - 1630000000) / 45000 as reddit_hot from (select vote."postId", sum(case when type='down' then -1 when type='up' then 1 else 0 end) as score, extract(epoch from max(post."createdAt")) as created_epoch from vote join post on vote."postId"=post.id and post."parentId" is null group by vote."postId") as foo
+`
+})
+export class TopLevelScores {
+    @ViewColumn()
+    @Index({ unique: true })
+    id: number;
+
+    @ViewColumn()
+    score: number;
+
+    @ViewColumn()
+    hn_gravity: number;
+
+    @ViewColumn()
+    reddit_hot: number;
+}
 
 @Entity()
 @ObjectType()
