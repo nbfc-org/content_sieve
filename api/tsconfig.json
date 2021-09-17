@@ -1,12 +1,13 @@
 {
     "compilerOptions": {
         "outDir": "./dist",
-        "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "allowJs": true,
-        "target": "es6",
+        "moduleResolution": "node",
+        "module": "commonjs",
+        "target": "es2016",
     },
     "include": ["./src/**/*", "../lib/**/*"],
 }
