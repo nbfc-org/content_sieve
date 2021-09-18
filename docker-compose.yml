@@ -16,6 +16,7 @@ services:
       dockerfile: build/Dockerfile.api
     environment:
       - PROD_API_PORT=4002
+      - PROD_DB_NAME=cs
       - PROD_DB_PASSWORD=wat
     depends_on:
       - postgres
@@ -23,3 +24,5 @@ services:
     image: postgres
     environment:
       - POSTGRES_PASSWORD=wat
+    volumes:
+      - /attic/***REMOVED***data/local_content_sieve:/var/lib/postgresql/data
