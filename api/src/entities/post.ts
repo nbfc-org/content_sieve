@@ -6,7 +6,7 @@ import { AfterInsert, AfterLoad, Index } from "typeorm";
 import { createUnionType } from "type-graphql";
 import { Tree, TreeChildren, TreeParent } from "typeorm";
 
-import uuid62 from 'uuid62';
+import * as uuid62 from 'uuid62';
 
 import { User } from "./user.js";
 import { Link } from "./link.js";
