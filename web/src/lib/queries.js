@@ -44,11 +44,6 @@ const postFields = gql`
     votes {
       type
     }
-    scores {
-      score
-      hn_gravity
-      reddit_hot
-    }
     tags {
       canonical {
         slug

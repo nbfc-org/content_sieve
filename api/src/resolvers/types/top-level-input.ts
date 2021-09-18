@@ -1,4 +1,4 @@
-import { ID, InputType, Field } from "type-graphql";
+import { InputType, Field } from "type-graphql";
 
 import { SortType } from "../../entities/post.js";
 

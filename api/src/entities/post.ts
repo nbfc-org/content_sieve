@@ -2,7 +2,7 @@ import { ObjectType, ID, Field, Float, registerEnumType } from "type-graphql";
 import { Entity, ViewEntity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 import { Column, ViewColumn, JoinColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
 import { ManyToMany, JoinTable } from "typeorm";
-import { AfterInsert, AfterLoad, Index } from "typeorm";
+import { AfterInsert, AfterLoad } from "typeorm";
 import { createUnionType } from "type-graphql";
 import { Tree, TreeChildren, TreeParent } from "typeorm";
 
@@ -14,7 +14,6 @@ import { Text } from "./text.js";
 import { Vote } from "./vote.js";
 import { Tag } from "./tag.js";
 import { Lazy } from "../helpers.js";
-import { TopLevelInput } from "../resolvers/types/top-level-input.js";
 
 export enum SortType {
     NEWEST,
@@ -51,7 +50,6 @@ select "postId" as "id", score, score/pow((extract(epoch from now()) - created_e
 })
 export class TopLevelScores {
     @ViewColumn()
-    @Index({ unique: true })
     id: number;
 
     @ViewColumn()
