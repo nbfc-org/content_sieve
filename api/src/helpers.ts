@@ -8,6 +8,27 @@ import { Text } from "./entities/text.js";
 import { Link } from "./entities/link.js";
 import { Tag, TagText } from "./entities/tag.js";
 
+import { renderMarkdown } from '../../lib/validation.js';
+
+import { JSDOM, VirtualConsole } from "jsdom";
+import * as createDOMPurify from "dompurify";
+
+const data = "<html><body></body></html>";
+const url = "http://example.com";
+
+const virtualConsole = new VirtualConsole();
+virtualConsole.sendTo(console, { omitJSDOMErrors: true });
+const jsdom = new JSDOM(data, {
+    url,
+    virtualConsole
+});
+
+const DOMPurify = createDOMPurify(jsdom.window);
+
+export function renderMD(body) {
+    return renderMarkdown(body, DOMPurify.sanitize);
+}
+
 export async function seedDatabase() {
     const postRepository = getRepository(Post);
     const textRepository = getRepository(Text);

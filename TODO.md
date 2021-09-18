@@ -3,8 +3,6 @@
 - migrate to keycloak
   - https://github.com/keycloak/keycloak-quickstarts/blob/latest/applications/app-vue/src/main.js
   - https://github.com/keycloak/keycloak-nodejs-admin-client
-- db migrations
-  - https://github.com/typeorm/typeorm/blob/master/docs/migrations.md
 
 - add sorting on tag page
 - add karma / HIGH_SCORE

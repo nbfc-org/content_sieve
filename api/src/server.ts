@@ -1,14 +1,14 @@
 import "reflect-metadata";
 
-import express from 'express';
+import * as express from 'express';
 import { ApolloServer } from "apollo-server-express";
 
-import jwt from 'express-jwt';
-import jwksRsa from 'jwks-rsa';
-import cors from 'cors';
+import * as jwt from 'express-jwt';
+import * as jwksRsa from 'jwks-rsa';
+import * as cors from 'cors';
 
 import { Container } from "typedi";
-import * as TypeORM from "typeorm";
+import { createConnection, getRepository, useContainer } from "typeorm";
 import * as TypeGraphQL from "type-graphql";
 
 import { PostResolver } from "./resolvers/post-resolver.js";
@@ -19,30 +19,42 @@ import { Post } from "./entities/post.js";
 import { Vote } from "./entities/vote.js";
 import { Tag, TagText } from "./entities/tag.js";
 import { seedDatabase } from "./helpers.js";
-import { Context } from "./resolvers/types/context.js";
 
 import { config } from "../../lib/config.js";
 
 // register 3rd party IOC container
-TypeORM.useContainer(Container);
+useContainer(Container);
 
-export async function bootstrap() {
+export async function bootstrap(generate_db) {
+    let pgOpts = {};
+    if (generate_db) {
+        pgOpts = {
+            synchronize: true,
+            dropSchema: true,
+        };
+    }
+
     try {
         // create TypeORM connection
-        await TypeORM.createConnection({
+        await createConnection({
             type: "postgres",
             username: "postgres", // fill this with your username
             ...config.db,
             entities: [User, Text, Link, Post, Vote, Tag, TagText],
-            synchronize: true,
             logger: "advanced-console",
             logging: "all",
-            dropSchema: true,
-            cache: true,
+            ...pgOpts,
+            // cache: true,
         });
 
         // seed database with some data
-        const { defaultUser } = await seedDatabase();
+        let defaultUser;
+        if (generate_db) {
+            ({ defaultUser } = await seedDatabase());
+        } else {
+            const userRepository = getRepository(User);
+            defaultUser = await userRepository.findOne();
+        }
 
         // build TypeGraphQL executable schema
         const schema = await TypeGraphQL.buildSchema({
@@ -96,4 +108,4 @@ export async function bootstrap() {
     }
 }
 
-bootstrap();
+bootstrap(false);

@@ -16,7 +16,7 @@ import { Context } from "./types/context.js";
 
 import { splitTags } from '../../../lib/validation.js';
 
-import uuid62 from 'uuid62';
+import * as uuid62 from 'uuid62';
 
 @Service()
 @Resolver(Post)
