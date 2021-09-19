@@ -13,10 +13,10 @@ COPY lib lib
 WORKDIR /build/web
 
 ARG webgraphql
-ENV POI_APP_PROD_WEB_GRAPHQL $webgraphql
+ENV POI_APP_WEB_GRAPHQL $webgraphql
 
 ARG auth0client
-ENV POI_APP_PROD_AUTH0_CLIENTID $auth0client
+ENV POI_APP_AUTH0_CLIENTID $auth0client
 
 RUN npm run build
 

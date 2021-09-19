@@ -15,9 +15,9 @@ services:
       context: .
       dockerfile: build/Dockerfile.api
     environment:
-      - PROD_API_PORT=4002
-      - PROD_DB_NAME=cs
-      - PROD_DB_PASSWORD=wat
+      - API_PORT=4002
+      - API_DB_NAME=cs
+      - API_DB_PASSWORD=wat
     depends_on:
       - postgres
   postgres:
