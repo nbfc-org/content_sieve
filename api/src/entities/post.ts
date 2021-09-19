@@ -1,6 +1,6 @@
-import { ObjectType, ID, Field, Float, registerEnumType } from "type-graphql";
-import { Entity, ViewEntity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
-import { Column, ViewColumn, JoinColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
+import { ObjectType, ID, Field, Float, Int, registerEnumType } from "type-graphql";
+import { Entity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Column, JoinColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
 import { ManyToMany, JoinTable, getManager } from "typeorm";
 import { AfterInsert, AfterLoad } from "typeorm";
 import { createUnionType } from "type-graphql";
@@ -58,6 +58,9 @@ export class Post {
     @Field(type => Float)
     score: number;
 
+    @Field(type => Int)
+    replies: number;
+
     @Column({ nullable: true })
     linkId: number;
 
@@ -108,6 +111,9 @@ export class Post {
                 this.score = tls.score;
             }
         }
+        const repo = manager.getTreeRepository(Post);
+        const childrenCount = await repo.countDescendants(this);
+        this.replies = childrenCount - 1;
     }
 
     @Field(type => [Post], { nullable: true })
