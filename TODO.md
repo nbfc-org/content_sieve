@@ -1,11 +1,28 @@
-- user sessions
-- proper authors
+- typegraphql authz including roles
+  - https://github.com/MichalLytek/type-graphql/tree/master/examples/authorization
+  - https://github.com/MichalLytek/type-graphql/blob/master/examples/authorization/resolver.ts
 - migrate to keycloak
   - https://github.com/keycloak/keycloak-quickstarts/blob/latest/applications/app-vue/src/main.js
   - https://github.com/keycloak/keycloak-nodejs-admin-client
 
+```
+// defector: threaded only; newest, oldest, most replies, highest score
+// reddit: threaded only; best, top, new, controversial, old, q&a
+// metafilter: flat only; oldest first, no matter what
+// hn: threaded only; by score only
+//
+// quatratic weighting ... nth vote costs n^2
+//     weighting a vote by the "degree of separation" of the voter? (ie., friends count more)
+// hyperbolic discounting of karma acquisition
+// limiting the number of voters per item
+// new accounts can't vote until achieved a network & karma status (eg., shares, by friends, are upvoted).
+// accounts which primarily upvote/downvote outside of their network are ignored
+```
+
+- user sessions
+- proper authors
+
 - add sorting on tag page
-- add karma / HIGH_SCORE
 - add sorting by MOST_REPLIES
 
 - add paging
@@ -16,6 +33,7 @@
 
 - add summary mode for list / toplevel view
 
+- character limit (reddit 40k)
 - typeorm use views to handle schema changes
 - ssr
 - don't reload all data on change

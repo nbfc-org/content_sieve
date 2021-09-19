@@ -41,9 +41,7 @@ const postFields = gql`
     author {
       username
     }
-    votes {
-      type
-    }
+    score
     tags {
       canonical {
         slug
@@ -144,7 +142,7 @@ const addPost = function(event, input) {
                             __typename: 'Text',
                             body: content,
                         },
-                        votes: [],
+                        score: 0,
                         createdAt: Date.now(),
                     },
                 },
@@ -217,6 +215,7 @@ const sortTypes = [
 
 const _newest = (a, b) => b.createdAt - a.createdAt;
 const _oldest = (a, b) => a.createdAt - b.createdAt;
+const _score  = (a, b) => b.score - a.score;
 
 const getSort = (sortBy) => {
   switch (sortBy) {
@@ -231,7 +230,7 @@ const getSort = (sortBy) => {
     return _newest; // TODO: replace this
   case "HIGH_SCORE":
   case 3:
-    return _newest; // TODO: replace this
+    return _score;
   }
 };
 

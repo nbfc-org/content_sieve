@@ -1,5 +1,5 @@
 import { Resolver, Query, Arg, Mutation, Ctx, ID } from "type-graphql";
-import { Repository, getManager, In } from "typeorm";
+import { Repository, getManager } from "typeorm";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { AuthenticationError } from "apollo-server-express";
@@ -36,7 +36,7 @@ export class PostResolver {
         const post = await this.postRepository.findOne({ postId: id });
 
         const repo = getManager().getTreeRepository(Post);
-        const p = await repo.findDescendantsTree(post, { relations: ["link", "text", "votes", "tags", "author", "parent"] });
+        const p = await repo.findDescendantsTree(post, { relations: ["link", "text", "tags", "author", "parent"] });
 
         // for non-root postId, the above doesn't get the top-level parent
         const parents = await repo.findAncestors(post);
@@ -59,8 +59,7 @@ export class PostResolver {
             .leftJoinAndSelect("post.tags", "tags")
             .leftJoinAndSelect("tags.canonical", "canonical", "tags.canonical = canonical.id")
             .leftJoinAndSelect("post.text", "text")
-            .leftJoinAndSelect("post.parent", "parent")
-            .leftJoinAndSelect("post.votes", "votes");
+            .leftJoinAndSelect("post.parent", "parent");
 
         if (tli.tag !== "all") {
             query = query.leftJoin("post.tags", "sometags")
@@ -71,13 +70,11 @@ export class PostResolver {
         const getOrderBy = (orderBy): [string, any] => {
             switch (orderBy) {
                 case SortType.NEWEST:
+                case SortType.MOST_REPLIES:
+                case SortType.HIGH_SCORE:
                     return ["post.createdAt", "DESC"];
                 case SortType.OLDEST:
                     return ["post.createdAt", "ASC"];
-                case SortType.MOST_REPLIES:
-                    return ["post.createdAt", "DESC"];
-                case SortType.HIGH_SCORE:
-                    return ["post.createdAt", "DESC"];
             }
         };
 
@@ -88,18 +85,7 @@ export class PostResolver {
     @Query(returns => [Post])
     async postsByUser(): Promise<Post[]> {
         const manager = getManager();
-        return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "votes", "tags", "author", "parent"] });
-        // defector: threaded only; newest, oldest, most replies, highest score
-        // reddit: threaded only; best, top, new, controversial, old, q&a
-        // metafilter: flat only; oldest first, no matter what
-        // hn: threaded only; by score only
-        //
-        // quatratic weighting ... nth vote costs n^2
-        //     weighting a vote by the "degree of separation" of the voter? (ie., friends count more)
-        // hyperbolic discounting of karma acquisition
-        // limiting the number of voters per item
-        // new accounts can't vote until achived a network & karam status (eg., shares, by friends, are upvoted).
-        // accounts which primarily upvote/downvote outside of their network are ignored
+        return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "tags", "author", "parent"] });
     }
 
     @Mutation(returns => Post)
@@ -175,7 +161,6 @@ export class PostResolver {
 
         const post = await this.postRepository.findOne(
             { postId: uuid62.decode(voteInput.postId) },
-            { relations: ["votes"] },
         );
 
         if (!post) {

@@ -1,4 +1,6 @@
+[
 {
+    "name": "default",
     "type": "postgres",
     "username": "postgres",
     "host": "localhost",
@@ -12,3 +14,4 @@
         "entitiesDir": "src/entities"
     }
 }
+]
