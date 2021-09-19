@@ -25,10 +25,28 @@ services:
     depends_on:
       - postgres
   postgres:
-    image: postgres
+    image: postgres:13
     environment:
       - POSTGRES_PASSWORD=wat
     volumes:
       - /attic/***REMOVED***data/local_content_sieve:/var/lib/postgresql/data
     ports:
       - "6432:5432"
+  keycloak_db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+  keycloak:
+    image: jboss/keycloak:15.0.2
+    depends_on:
+      - keycloak_db
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: keycloak_db
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+    ports:
+      - "28080:8080"
