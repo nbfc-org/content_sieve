@@ -1,5 +1,5 @@
 import { Resolver, Query, Arg, Mutation, Ctx, ID } from "type-graphql";
-import { Repository, getManager, In } from "typeorm";
+import { Repository, getManager } from "typeorm";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { AuthenticationError } from "apollo-server-express";
@@ -36,7 +36,7 @@ export class PostResolver {
         const post = await this.postRepository.findOne({ postId: id });
 
         const repo = getManager().getTreeRepository(Post);
-        const p = await repo.findDescendantsTree(post, { relations: ["link", "text", "votes", "tags", "author", "parent"] });
+        const p = await repo.findDescendantsTree(post, { relations: ["link", "text", "tags", "author", "parent"] });
 
         // for non-root postId, the above doesn't get the top-level parent
         const parents = await repo.findAncestors(post);
@@ -59,8 +59,7 @@ export class PostResolver {
             .leftJoinAndSelect("post.tags", "tags")
             .leftJoinAndSelect("tags.canonical", "canonical", "tags.canonical = canonical.id")
             .leftJoinAndSelect("post.text", "text")
-            .leftJoinAndSelect("post.parent", "parent")
-            .leftJoinAndSelect("post.votes", "votes");
+            .leftJoinAndSelect("post.parent", "parent");
 
         if (tli.tag !== "all") {
             query = query.leftJoin("post.tags", "sometags")
@@ -88,10 +87,7 @@ export class PostResolver {
     @Query(returns => [Post])
     async postsByUser(): Promise<Post[]> {
         const manager = getManager();
-        return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "votes", "tags", "author", "parent"] });
-
-        // just for top level posts
-        // select "postId", score, created_epoch, score/pow((extract(epoch from now()) - created_epoch)/3600+2,1.8) as hn_gravity, log(greatest(abs(score), 1)) + (case when score < 0 then -1 when score > 0 then 1 else 0 end) * (created_epoch - 1630000000) / 45000 as reddit_hot from (select vote."postId", sum(case when type='down' then -1 when type='up' then 1 else 0 end) as score, extract(epoch from max(post."createdAt")) as created_epoch from vote join post on vote."postId"=post.id and post."parentId" is null group by vote."postId") as foo order by hn_gravity desc;
+        return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "tags", "author", "parent"] });
 
         // comments, wilson confidence interval
         // select baz."postId", (l - r)/under as wilson from (select bar."postId", p + 1.0 / (2.0*n) * z * z as l, z*sqrt(p*(1.0-p)/n + z*z/(4*n*n)) as r, 1.0+1.0/n*z*z as under from (select foo."postId", ups + downs as n, 1.281551565545 as z, ups / (ups + downs) as p from (select vote."postId", sum(case when type='up' then 1 else 0 end) as ups, sum(case when type='down' then 1 else 0 end) as downs from vote join post on vote."postId"=post.id and post."parentId" is not null group by vote."postId") as foo) as bar) as baz;
@@ -182,7 +178,6 @@ export class PostResolver {
 
         const post = await this.postRepository.findOne(
             { postId: uuid62.decode(voteInput.postId) },
-            { relations: ["votes"] },
         );
 
         if (!post) {

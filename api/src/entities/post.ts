@@ -1,7 +1,7 @@
 import { ObjectType, ID, Field, Float, registerEnumType } from "type-graphql";
 import { Entity, ViewEntity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 import { Column, ViewColumn, JoinColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
-import { ManyToMany, JoinTable } from "typeorm";
+import { ManyToMany, JoinTable, getManager } from "typeorm";
 import { AfterInsert, AfterLoad } from "typeorm";
 import { createUnionType } from "type-graphql";
 import { Tree, TreeChildren, TreeParent } from "typeorm";
@@ -76,6 +76,9 @@ export class Post {
     @Field(type => Content)
     content: typeof Content;
 
+    @Field(type => Float)
+    score: number;
+
     @Column({ nullable: true })
     linkId: number;
 
@@ -112,6 +115,15 @@ export class Post {
     async afterLoad() {
         this.content = this.text || this.link;
         this.postId = uuid62.encode(this.postId);
+        this.score = 0;
+        if (!this.parent) {
+            const manager = getManager();
+            // TODO: move this to shared memory
+            const tls = await manager.findOne(TopLevelScores, { id: this.id });
+            if (tls) {
+                this.score = tls.score;
+            }
+        }
     }
 
     @Field(type => [Post], { nullable: true })

@@ -41,9 +41,7 @@ const postFields = gql`
     author {
       username
     }
-    votes {
-      type
-    }
+    score
     tags {
       canonical {
         slug
@@ -144,7 +142,7 @@ const addPost = function(event, input) {
                             __typename: 'Text',
                             body: content,
                         },
-                        votes: [],
+                        score: 0,
                         createdAt: Date.now(),
                     },
                 },

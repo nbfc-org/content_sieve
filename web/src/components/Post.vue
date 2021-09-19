@@ -9,7 +9,7 @@
           <a :href="post.content.url">{{ post.content.title }}</a>
         </v-card-title>
         <v-card-text>
-        {{ post.votes.length }} votes
+        {{ post.score }} points
         by <a href="#" class="comment-author">{{ post.author.username }}</a>
         &bull; <router-link
           :to="`/post/${post.postId}`"
