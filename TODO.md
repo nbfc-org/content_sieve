@@ -5,6 +5,9 @@
   - https://github.com/keycloak/keycloak-quickstarts/blob/latest/applications/app-vue/src/main.js
   - https://github.com/keycloak/keycloak-nodejs-admin-client
 
+- user sessions
+- proper authors coming from auth service
+
 ```
 // defector: threaded only; newest, oldest, most replies, highest score
 // reddit: threaded only; best, top, new, controversial, old, q&a
@@ -18,9 +21,6 @@
 // new accounts can't vote until achieved a network & karma status (eg., shares, by friends, are upvoted).
 // accounts which primarily upvote/downvote outside of their network are ignored
 ```
-
-- user sessions
-- proper authors coming from auth service
 
 - add sorting on PostsWithTag page
 

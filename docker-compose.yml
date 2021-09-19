@@ -26,3 +26,5 @@ services:
       - POSTGRES_PASSWORD=wat
     volumes:
       - /attic/***REMOVED***data/local_content_sieve:/var/lib/postgresql/data
+    ports:
+      - "6432:5432"
