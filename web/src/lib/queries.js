@@ -215,6 +215,7 @@ const sortTypes = [
 
 const _newest = (a, b) => b.createdAt - a.createdAt;
 const _oldest = (a, b) => a.createdAt - b.createdAt;
+const _score  = (a, b) => b.score - a.score;
 
 const getSort = (sortBy) => {
   switch (sortBy) {
@@ -229,7 +230,7 @@ const getSort = (sortBy) => {
     return _newest; // TODO: replace this
   case "HIGH_SCORE":
   case 3:
-    return _newest; // TODO: replace this
+    return _score;
   }
 };
 

@@ -70,13 +70,11 @@ export class PostResolver {
         const getOrderBy = (orderBy): [string, any] => {
             switch (orderBy) {
                 case SortType.NEWEST:
+                case SortType.MOST_REPLIES:
+                case SortType.HIGH_SCORE:
                     return ["post.createdAt", "DESC"];
                 case SortType.OLDEST:
                     return ["post.createdAt", "ASC"];
-                case SortType.MOST_REPLIES:
-                    return ["post.createdAt", "DESC"];
-                case SortType.HIGH_SCORE:
-                    return ["post.createdAt", "DESC"];
             }
         };
 
@@ -88,21 +86,6 @@ export class PostResolver {
     async postsByUser(): Promise<Post[]> {
         const manager = getManager();
         return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "tags", "author", "parent"] });
-
-        // comments, wilson confidence interval
-        // select baz."postId", (l - r)/under as wilson from (select bar."postId", p + 1.0 / (2.0*n) * z * z as l, z*sqrt(p*(1.0-p)/n + z*z/(4*n*n)) as r, 1.0+1.0/n*z*z as under from (select foo."postId", ups + downs as n, 1.281551565545 as z, ups / (ups + downs) as p from (select vote."postId", sum(case when type='up' then 1 else 0 end) as ups, sum(case when type='down' then 1 else 0 end) as downs from vote join post on vote."postId"=post.id and post."parentId" is not null group by vote."postId") as foo) as bar) as baz;
-
-        // defector: threaded only; newest, oldest, most replies, highest score
-        // reddit: threaded only; best, top, new, controversial, old, q&a
-        // metafilter: flat only; oldest first, no matter what
-        // hn: threaded only; by score only
-        //
-        // quatratic weighting ... nth vote costs n^2
-        //     weighting a vote by the "degree of separation" of the voter? (ie., friends count more)
-        // hyperbolic discounting of karma acquisition
-        // limiting the number of voters per item
-        // new accounts can't vote until achived a network & karma status (eg., shares, by friends, are upvoted).
-        // accounts which primarily upvote/downvote outside of their network are ignored
     }
 
     @Mutation(returns => Post)

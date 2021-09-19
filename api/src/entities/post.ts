@@ -62,6 +62,23 @@ export class TopLevelScores {
     reddit_hot: number;
 }
 
+@ViewEntity({
+    // materialized: true,
+    // type-graphql-lazy=# create unique index on comment_scores (id);
+    // type-graphql-lazy=# refresh materialized view CONCURRENTLY comment_scores ;
+    // wilson confidence interval: https://medium.com/hacking-and-gonzo/how-reddit-ranking-algorithms-work-ef111e33d0d9
+    expression: `
+select baz."postId" as "id", (l - r)/under as wilson from (select bar."postId", p + 1.0 / (2.0*n) * z * z as l, z*sqrt(p*(1.0-p)/n + z*z/(4*n*n)) as r, 1.0+1.0/n*z*z as under from (select foo."postId", ups + downs as n, 1.281551565545 as z, ups / (ups + downs) as p from (select vote."postId", sum(case when type='up' then 1 else 0 end) as ups, sum(case when type='down' then 1 else 0 end) as downs from vote join post on vote."postId"=post.id and post."parentId" is not null group by vote."postId") as foo) as bar) as baz
+`
+})
+export class CommentScores {
+    @ViewColumn()
+    id: number;
+
+    @ViewColumn()
+    wilson: number;
+}
+
 @Entity()
 @ObjectType()
 @Tree("closure-table")
@@ -116,9 +133,14 @@ export class Post {
         this.content = this.text || this.link;
         this.postId = uuid62.encode(this.postId);
         this.score = 0;
-        if (!this.parent) {
-            const manager = getManager();
-            // TODO: move this to shared memory
+        const manager = getManager();
+        // TODO: move this to shared memory
+        if (this.parent) {
+            const tls = await manager.findOne(CommentScores, { id: this.id });
+            if (tls) {
+                this.score = tls.wilson;
+            }
+        } else {
             const tls = await manager.findOne(TopLevelScores, { id: this.id });
             if (tls) {
                 this.score = tls.score;
