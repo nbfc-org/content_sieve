@@ -42,6 +42,7 @@ const postFields = gql`
       username
     }
     score
+    replies
     tags {
       canonical {
         slug
@@ -143,6 +144,7 @@ const addPost = function(event, input) {
                             body: content,
                         },
                         score: 0,
+                        replies: 0,
                         createdAt: Date.now(),
                     },
                 },
@@ -213,9 +215,10 @@ const sortTypes = [
   "HIGH_SCORE",
 ];
 
-const _newest = (a, b) => b.createdAt - a.createdAt;
-const _oldest = (a, b) => a.createdAt - b.createdAt;
-const _score  = (a, b) => b.score - a.score;
+const _newest  = (a, b) => b.createdAt - a.createdAt;
+const _oldest  = (a, b) => a.createdAt - b.createdAt;
+const _score   = (a, b) => b.score - a.score;
+const _replies = (a, b) => b.replies - a.replies;
 
 const getSort = (sortBy) => {
   switch (sortBy) {
@@ -227,7 +230,7 @@ const getSort = (sortBy) => {
     return _oldest;
   case "MOST_REPLIES":
   case 2:
-    return _newest; // TODO: replace this
+    return _replies;
   case "HIGH_SCORE":
   case 3:
     return _score;

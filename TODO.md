@@ -20,10 +20,9 @@
 ```
 
 - user sessions
-- proper authors
+- proper authors coming from auth service
 
-- add sorting on tag page
-- add sorting by MOST_REPLIES
+- add sorting on PostsWithTag page
 
 - add paging
 - add meta-moderation of votes

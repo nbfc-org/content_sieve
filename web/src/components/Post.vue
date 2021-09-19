@@ -16,6 +16,7 @@
           active-class="active"
           exact
           >{{ ago(post.createdAt) }}</router-link>
+        &bull; {{ post.replies }} replies
         <span v-if="post.parent">
           &bull; <router-link
                    :to="`/post/${post.parent.postId}`"
@@ -135,8 +136,7 @@ export default {
     },
     computed: {
         detailsInfo: function() {
-            const num = this.children ? this.children.length : 0;
-            // const text = this.open ? '-' : `show ${num + 1}`;
+            // const text = this.open ? '-' : `show ${this.post.replies + 1}`;
             const text = this.open ? 'hide all' : 'show all';
             return ` [${text}]`;
         },
