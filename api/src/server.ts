@@ -75,12 +75,15 @@ export async function bootstrap(generate_db) {
                 cache: true,
                 rateLimit: true,
                 jwksRequestsPerMinute: 5,
-                jwksUri: 'https://***REMOVED***.auth0.com/.well-known/jwks.json',
+                // jwksUri: 'https://***REMOVED***.auth0.com/.well-known/jwks.json',
+                jwksUri: 'http://localhost:28080/auth/realms/content-sieve-dev/protocol/openid-connect/certs',
             }),
 
             // Validate the audience and the issuer
-            audience: 'http://localhost:4001/graphql',
-            issuer: 'https://***REMOVED***.auth0.com/',
+            // audience: 'http://localhost:4001/graphql',
+            audience: 'account',
+            // issuer: 'https://***REMOVED***.auth0.com/',
+            issuer: 'http://localhost:28080/auth/realms/content-sieve-dev',
             algorithms: [ 'RS256' ],
             credentialsRequired: false,
         });

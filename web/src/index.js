@@ -21,6 +21,24 @@ Vue.use(Auth0Plugin, {
   }
 });
 
+import VueKeyCloak from '@dsb-norge/vue-keycloak-js';
+Vue.use(VueKeyCloak, {
+  config: {
+    url: 'http://localhost:28080/auth/',
+    realm: 'content-sieve-dev',
+    clientId: 'content-sieve-local-vue'
+  },
+  init: {
+    onLoad: 'check-sso',
+  },
+});
+/*
+import keycloak from './lib/keycloak.js';
+Vue.$keycloak
+  // .init({ onLoad: 'login-required', checkLoginIframe: false });
+  .init({ onLoad: 'check-sso', checkLoginIframe: false });
+*/
+
 Vue.config.productionTip = false;
 
 import ApolloClient from 'apollo-client';
@@ -50,8 +68,11 @@ const authLink = setContext(async (_, { headers }) => {
   const authService = getInstance();
   let authorizationHeader = {};
 
-  if (authService.isAuthenticated) {
-    const token = await authService.getTokenSilently();
+  // if (authService.isAuthenticated) {
+    // const token = await authService.getTokenSilently();
+  const kc = Vue.prototype.$keycloak;
+  if (kc && kc.authenticated) {
+    const token = kc.token;
     authorizationHeader = {
         authorization: `Bearer ${token}`,
     };
@@ -61,8 +82,8 @@ const authLink = setContext(async (_, { headers }) => {
       ...headers,
       ...authorizationHeader,
     },
-  }
-})
+  };
+});
 
 import { onError } from "apollo-link-error";
 
