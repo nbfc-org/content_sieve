@@ -17,102 +17,102 @@
           exact
           >{{ ago(post.createdAt) }}</router-link>
             &bull; {{ post.replies }} replies
-    <span v-if="post.parent">
-    &bull; <router-link
-:to="`/post/${post.parent.postId}`"
-class="nav-item nav-link"
-active-class="active"
-exact
-    >parent</router-link>
-    </span>
-    {{ detailsInfo }}
-</v-card-text>
-    </summary>
-    <v-card-actions>
-    <v-btn
-text
-x-small
-color="teal accent-4"
-@click="openReply"
-:data-target="`comment-${post.postId}-reply-form`"
-    >
-    Reply
-</v-btn>
-    <v-item-group v-if="$keycloak.ready && $keycloak.authenticated">
-    <v-btn
-color="deep-purple lighten-2"
-text
-x-small
-@click="up"
-    >
-    Vote up
-</v-btn>
-    <v-btn
-color="deep-purple lighten-2"
-text
-x-small
-@click="down"
-    >
-    Vote down
-</v-btn>
-    <v-btn
-color="red"
-text
-x-small
-@click="flag"
-    >
-    Flag
-</v-btn>
-    </v-item-group>
-    <v-spacer />
-    <v-chip outlined class="ml-2" x-small :key="`tag_${tag.canonical.slug}`" v-for="tag in post.tags">
-    <router-link
-:to="`/tag/${tag.canonical.slug}`"
-class="nav-item nav-link"
-active-class="active"
-exact
-    >{{ tag.canonical.slug }}</router-link>
-    </v-chip>
-    </v-card-actions>
-    <v-expand-transition>
+        <span v-if="post.parent">
+          &bull; <router-link
+                   :to="`/post/${post.parent.postId}`"
+                   class="nav-item nav-link"
+                   active-class="active"
+                   exact
+                   >parent</router-link>
+        </span>
+        {{ detailsInfo }}
+        </v-card-text>
+      </summary>
+      <v-card-actions>
+        <v-btn
+          text
+          x-small
+          color="teal accent-4"
+          @click="openReply"
+          :data-target="`comment-${post.postId}-reply-form`"
+          >
+          Reply
+        </v-btn>
+        <v-item-group v-if="$keycloak.ready && $keycloak.authenticated">
+          <v-btn
+            color="deep-purple lighten-2"
+            text
+            x-small
+            @click="up"
+            >
+            Vote up
+          </v-btn>
+          <v-btn
+            color="deep-purple lighten-2"
+            text
+            x-small
+            @click="down"
+            >
+            Vote down
+          </v-btn>
+          <v-btn
+            color="red"
+            text
+            x-small
+            @click="flag"
+            >
+            Flag
+          </v-btn>
+        </v-item-group>
+        <v-spacer />
+        <v-chip outlined class="ml-2" x-small :key="`tag_${tag.canonical.slug}`" v-for="tag in post.tags">
+          <router-link
+            :to="`/tag/${tag.canonical.slug}`"
+            class="nav-item nav-link"
+            active-class="active"
+            exact
+            >{{ tag.canonical.slug }}</router-link>
+        </v-chip>
+      </v-card-actions>
+      <v-expand-transition>
 
-    <v-card
-v-if="showReplyForm"
-class="transition-fast-in-fast-out v-card--reveal"
-style="height: 100%;"
-    >
-    <v-card-text :id="`comment-${post.postId}-reply-form`">
-    <TextEditor @saveContent="saveContent" :key="`${post.postId}_${version}`" :text="newPostContent" />
-    </v-card-text>
-    <v-card-actions class="pt-0">
-    <v-btn
-text
-x-small
-color="teal accent-4"
-@click="postReply"
-    >
-    Add comment
-</v-btn>
-    <v-btn
-text
-color="red"
-x-small
-@click="reply"
-    >
-    Close comment form
-</v-btn>
-    </v-card-actions>
-    </v-card>
-    </v-expand-transition>
-    <div class="replies">
-    <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" v-if="children" />
-    </div>
+        <v-card
+          v-if="showReplyForm"
+          class="transition-fast-in-fast-out v-card--reveal"
+          style="height: 100%;"
+          >
+          <v-card-text :id="`comment-${post.postId}-reply-form`">
+            <TextEditor @saveContent="saveContent" :key="`${post.postId}_${version}`" :text="newPostContent" />
+          </v-card-text>
+          <v-card-actions class="pt-0">
+            <v-btn
+              text
+              x-small
+              color="teal accent-4"
+              @click="postReply"
+              >
+              Add comment
+            </v-btn>
+            <v-btn
+              text
+              color="red"
+              x-small
+              @click="reply"
+              >
+              Close comment form
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-expand-transition>
+      <div class="replies">
+        <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" v-if="children" />
+      </div>
     </details>
-    </v-card>
-    </template>
+  </v-card>
+</template>
 
-    <script>
-    import { DateTime } from 'luxon';
+<script>
+import { DateTime } from 'luxon';
 import { VOTE, addPost, getSort } from '../lib/queries.js';
 
 import TextEditor from './TextEditor.vue';
