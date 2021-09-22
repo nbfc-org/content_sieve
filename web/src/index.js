@@ -1,10 +1,9 @@
 import Vue from 'vue';
 
-import VueRouter from 'vue-router';
-
 import App from './components/App.vue';
 import { config } from '../../lib/config.js';
 import store from './lib/store.js';
+import router from './lib/router.js';
 
 import VueKeyCloak from '@dsb-norge/vue-keycloak-js';
 Vue.use(VueKeyCloak, {
@@ -86,46 +85,6 @@ const apolloProvider = new VueApollo({
     link,
     // connectToDevTools: true,
   })
-});
-
-Vue.use(VueRouter);
-
-import TopLevelPosts from './components/TopLevelPosts.vue';
-import PostWithChildren from './components/PostWithChildren.vue';
-import PostsWithTag from './components/PostsWithTag.vue';
-import NotFoundComponent from './components/NotFoundComponent.vue';
-import NewPost from './components/NewPost.vue';
-// import 'normalize.css';
-
-const routes = [
-  { path: '/tree', component: TopLevelPosts },
-  { path: '/post/:postId',
-    component: PostWithChildren,
-    props: true,
-  },
-  { path: '/tag/all',
-    alias: '/',
-    component: PostsWithTag,
-    props: true,
-  },
-  { path: '/tag/:tag',
-    component: PostsWithTag,
-    props: true,
-  },
-  {
-    path: '/new',
-    component: NewPost,
-  },
-  {
-    path: '/:catchAll(.*)',
-    component: NotFoundComponent,
-    name: 'NotFound'
-  },
-];
-
-const router = new VueRouter({
-  mode: 'history',
-  routes
 });
 
 Vue.use(VueApollo);
