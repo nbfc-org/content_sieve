@@ -1,9 +1,6 @@
 - typegraphql authz including roles
   - https://github.com/MichalLytek/type-graphql/tree/master/examples/authorization
   - https://github.com/MichalLytek/type-graphql/blob/master/examples/authorization/resolver.ts
-- migrate to keycloak
-  - https://github.com/keycloak/keycloak-quickstarts/blob/latest/applications/app-vue/src/main.js
-  - https://github.com/keycloak/keycloak-nodejs-admin-client
 
 - user sessions
 - proper authors coming from auth service

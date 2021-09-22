@@ -6,7 +6,6 @@ services:
       args:
         - nodeenv=${NODE_ENV}
         - webgraphql=/api
-        - auth0client=${POI_APP_DEV_AUTH0_CLIENTID}
     environment:
       - NODE_ENV
     ports:

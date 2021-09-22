@@ -6,38 +6,13 @@ import App from './components/App.vue';
 import { config } from '../../lib/config.js';
 import store from './lib/store.js';
 
-import { Auth0Plugin, getInstance } from './lib/auth0.js';
-
-Vue.use(Auth0Plugin, {
-  ...config.auth0,
-  cacheLocation: 'localstorage',
-  onRedirectCallback: appState => {
-    store.dispatch('postShowReply', appState);
-    router.push(
-      appState && appState.path
-        ? { path: appState.path }
-        : window.location.pathname
-    );
-  }
-});
-
 import VueKeyCloak from '@dsb-norge/vue-keycloak-js';
 Vue.use(VueKeyCloak, {
-  config: {
-    url: 'http://localhost:28080/auth/',
-    realm: 'content-sieve-dev',
-    clientId: 'content-sieve-local-vue'
-  },
+  config: config.keycloak,
   init: {
     onLoad: 'check-sso',
   },
 });
-/*
-import keycloak from './lib/keycloak.js';
-Vue.$keycloak
-  // .init({ onLoad: 'login-required', checkLoginIframe: false });
-  .init({ onLoad: 'check-sso', checkLoginIframe: false });
-*/
 
 Vue.config.productionTip = false;
 
@@ -65,11 +40,8 @@ const httpLink = new HttpLink({
 });
 
 const authLink = setContext(async (_, { headers }) => {
-  const authService = getInstance();
   let authorizationHeader = {};
 
-  // if (authService.isAuthenticated) {
-    // const token = await authService.getTokenSilently();
   const kc = Vue.prototype.$keycloak;
   if (kc && kc.authenticated) {
     const token = kc.token;

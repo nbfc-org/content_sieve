@@ -18,9 +18,6 @@ ENV POI_APP_NODE_ENV $nodeenv
 ARG webgraphql
 ENV POI_APP_WEB_GRAPHQL $webgraphql
 
-ARG auth0client
-ENV POI_APP_AUTH0_CLIENTID $auth0client
-
 RUN npm run build_prod
 
 FROM nginx:alpine

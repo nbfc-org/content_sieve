@@ -18,7 +18,6 @@
     "email": "n/a"
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "^1.17.1",
     "@dsb-norge/vue-keycloak-js": "^2.0.1-beta",
     "apollo-boost": "^0.4.9",
     "apollo-link-context": "^1.0.20",
