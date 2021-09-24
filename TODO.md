@@ -5,20 +5,6 @@
 - proper authors coming from auth service
 - user sessions
 
-```
-// defector: threaded only; newest, oldest, most replies, highest score
-// reddit: threaded only; best, top, new, controversial, old, q&a
-// metafilter: flat only; oldest first, no matter what
-// hn: threaded only; by score only
-//
-// quatratic weighting ... nth vote costs n^2
-//     weighting a vote by the "degree of separation" of the voter? (ie., friends count more)
-// hyperbolic discounting of karma acquisition
-// limiting the number of voters per item
-// new accounts can't vote until achieved a network & karma status (eg., shares, by friends, are upvoted).
-// accounts which primarily upvote/downvote outside of their network are ignored
-```
-
 - add sorting on PostsWithTag page
 
 - add paging
@@ -38,3 +24,17 @@
 - vee validate & yup
   - https://vee-validate.logaretm.com/v4/guide/components/validation
   - https://vuetifyjs.com/en/components/forms/#vee-validate
+
+```
+// defector: threaded only; newest, oldest, most replies, highest score
+// reddit: threaded only; best, top, new, controversial, old, q&a
+// metafilter: flat only; oldest first, no matter what
+// hn: threaded only; by score only
+//
+// quatratic weighting ... nth vote costs n^2
+//     weighting a vote by the "degree of separation" of the voter? (ie., friends count more)
+// hyperbolic discounting of karma acquisition
+// limiting the number of voters per item
+// new accounts can't vote until achieved a network & karma status (eg., shares, by friends, are upvoted).
+// accounts which primarily upvote/downvote outside of their network are ignored
+```

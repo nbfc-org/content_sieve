@@ -51,7 +51,9 @@ router.beforeEach((to, from, next) => {
     // Get the actual url of the app, it's needed for Keycloak
     const basePath = window.location.toString();
     const kc = Vue.prototype.$keycloak;
-    if (kc.ready && !kc.authenticated) {
+    if (kc.ready && kc.authenticated) {
+      next();
+    } else if (kc.ready && !kc.authenticated) {
       // The page is protected and the user is not authenticated. Force a login.
       kc.login({ redirectUri: basePath.slice(0, -1) + to.path });
       /*
