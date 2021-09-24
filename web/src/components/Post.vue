@@ -125,13 +125,14 @@ export default {
     props: [
         'post',
         'sortBy',
+        'showReply',
     ],
     data: function() {
         return {
             newPostContent: '',
             version: 0,
             open: true,
-            showReply: false,
+            showReplyForm: this.showReply,
         }
     },
     computed: {
@@ -139,14 +140,6 @@ export default {
             // const text = this.open ? '-' : `show ${this.post.replies + 1}`;
             const text = this.open ? 'hide all' : 'show all';
             return ` [${text}]`;
-        },
-        showReplyForm: function() {
-            const storePost = this.$store.getters.getPost(this.postId);
-            if (storePost) {
-                this.showReply = storePost.showReply;
-                this.$store.dispatch('logoutSession');
-            }
-            return this.showReply;
         },
         postId: function() {
             return this.post.postId;
@@ -169,23 +162,14 @@ export default {
         },
         openReply: function(event) {
             if (this.$keycloak.authenticated) {
-                this.showReply = true;
+                this.showReplyForm = true;
             } else {
                 const basePath = window.location.toString();
-                // TODO: showReply/appState for keycloak
-                this.$keycloak.login({ redirectUri: `${window.location.origin}/post/${this.postId}` });
-                return;
-                this.$auth.loginWithRedirect({
-                    appState: {
-                        path: `/post/${this.postId}`,
-                        postId: this.postId,
-                        showReply: true,
-                    },
-                });
+                this.$keycloak.login({ redirectUri: `${window.location.origin}/post/${this.postId}?showReply=true` });
             }
         },
         reply: function(event) {
-            this.showReply = false;
+            this.showReplyForm = false;
         },
         vote: async function(event, postId, type) {
             try {

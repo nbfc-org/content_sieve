@@ -2,8 +2,8 @@
   - https://github.com/MichalLytek/type-graphql/tree/master/examples/authorization
   - https://github.com/MichalLytek/type-graphql/blob/master/examples/authorization/resolver.ts
 
-- user sessions
 - proper authors coming from auth service
+- user sessions
 
 ```
 // defector: threaded only; newest, oldest, most replies, highest score

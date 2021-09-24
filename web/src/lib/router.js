@@ -13,7 +13,10 @@ const routes = [
   { path: '/tree', component: TopLevelPosts },
   { path: '/post/:postId',
     component: PostWithChildren,
-    props: true,
+    props: route => ({
+      showReply: route.query.showReply === 'true',
+      postId: route.params.postId,
+    }),
   },
   { path: '/tag/all',
     alias: '/',
