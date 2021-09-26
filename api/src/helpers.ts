@@ -95,9 +95,7 @@ export async function seedDatabase() {
     const tagRepository = getRepository(Tag);
 
     const defaultUser = userRepository.create({
-        email: "foobar@example.com",
         username: "foobar",
-        password: "s3cr3tp4ssw0rd",
     });
     await userRepository.save(defaultUser);
 

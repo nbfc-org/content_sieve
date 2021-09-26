@@ -20,6 +20,9 @@
 
 - add summary mode for list / toplevel view
 
+- materialized views
+  - https://dba.stackexchange.com/a/191195
+
 - character limit (reddit 40k)
 - typeorm use views to handle schema changes
 - ssr
