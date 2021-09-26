@@ -12,7 +12,7 @@ import { createConnection, getRepository, useContainer } from "typeorm";
 import * as TypeGraphQL from "type-graphql";
 
 import { PostResolver } from "./resolvers/post-resolver.js";
-import { User } from "./entities/user.js";
+import { User, Jwt } from "./entities/user.js";
 import { Link } from "./entities/link.js";
 import { Text } from "./entities/text.js";
 import { Post } from "./entities/post.js";
@@ -41,7 +41,7 @@ export async function bootstrap(generate_db) {
             type: "postgres",
             username: "postgres", // fill this with your username
             ...config.db,
-            entities: [User, Text, Link, Post, Vote,
+            entities: [User, Jwt, Text, Link, Post, Vote,
                        TopLevelScores, CommentScores,
                        Tag, TagText],
             logger: "advanced-console",
@@ -93,8 +93,6 @@ export async function bootstrap(generate_db) {
             context: ({ req }) => {
                 return {
                     req,
-                    // TODO: unhardcode this when auth exists
-                    user: defaultUser,
                 };
             },
         });

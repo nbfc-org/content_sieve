@@ -116,8 +116,7 @@ const addPost = function(event, input) {
                         },
                         author: {
                             __typename: 'User',
-                            // TODO: unhardcode this when auth exists
-                            username: "foobar",
+                            username: "foobar", // TODO: get this from jwt
                         },
                         content: {
                             __typename: 'Text',

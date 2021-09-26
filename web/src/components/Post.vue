@@ -10,7 +10,7 @@
         </v-card-title>
         <v-card-text>
         {{ post.score }} points
-        by <a href="#" class="comment-author">{{ post.author.username }}</a>
+        by {{ post.author.username }}
         &bull; <router-link
           :to="`/post/${post.postId}`"
           active-class="active"
