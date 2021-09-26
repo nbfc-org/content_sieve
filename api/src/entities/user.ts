@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { PrimaryGeneratedColumn, Column, Entity, OneToMany } from "typeorm";
+import { getManager, PrimaryColumn, PrimaryGeneratedColumn, Column, Entity, OneToMany, ManyToOne } from "typeorm";
 
 import { Post } from "./post.js";
 import { Lazy } from "../helpers.js";
@@ -35,20 +35,69 @@ const example_jwt = {
     preferred_username: 'iej1zood',
 };
 
-// iss, sub, azp, preferred_username
+export const findOrCreateUser = async (jwt) => {
+    const manager = getManager();
+    const repo = manager.getRepository(User);
+    const jrepo = manager.getRepository(Jwt);
+
+    let user = await repo.findOne({
+        username: jwt.preferred_username,
+    });
+
+    if (!user) {
+        user = repo.create({
+            username: jwt.preferred_username,
+        });
+        await repo.save(user);
+
+        const j = jrepo.create({
+            sub: jwt.sub,
+            iss: jwt.iss,
+            azp: jwt.azp,
+            username: user.username,
+            user,
+        });
+        await jrepo.save(j);
+    }
+    return user;
+};
+
+@ObjectType()
+@Entity()
+export class Jwt {
+    @PrimaryColumn('uuid')
+    sub: string;
+
+    @Column()
+    iss: string;
+
+    @Column()
+    azp: string;
+
+    @Column()
+    username: string;
+
+    @Field(type => User)
+    @ManyToOne(type => User, { lazy: true })
+    user: Lazy<User>;
+}
 
 @ObjectType()
 @Entity()
 export class User {
-  @Field(type => ID)
-  @PrimaryGeneratedColumn()
-  readonly id: number;
+    @Field(type => ID)
+    @PrimaryGeneratedColumn()
+    readonly id: number;
 
-  @Field()
-  @Column({ unique: true})
-  username: string;
+    @Field()
+    @Column({ unique: true})
+    username: string;
 
-  @OneToMany(type => Post, post => post.author, { lazy: true })
-  @Field(type => [Post])
-  posts: Lazy<Post[]>;
+    @OneToMany(type => Post, post => post.author, { lazy: true })
+    @Field(type => [Post])
+    posts: Lazy<Post[]>;
+
+    @OneToMany(type => Jwt, jwt => jwt.user, { lazy: true })
+    @Field(type => [Post])
+    jwts: Lazy<Post[]>;
 }

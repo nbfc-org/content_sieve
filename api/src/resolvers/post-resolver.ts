@@ -8,6 +8,7 @@ import { Vote } from "../entities/vote.js";
 import { Post, SortType } from "../entities/post.js";
 import { Text } from "../entities/text.js";
 import { Link } from "../entities/link.js";
+import { findOrCreateUser } from "../entities/user.js";
 import { Tag, TagText } from "../entities/tag.js";
 import { PostInput } from "./types/post-input.js";
 import { VoteInput } from "./types/vote-input.js";
@@ -84,11 +85,14 @@ export class PostResolver {
     }
 
     @Mutation(returns => Post)
-    async addPost(@Arg("post") postInput: PostInput, @Ctx() { user, req }: Context): Promise<Post> {
+    async addPost(@Arg("post") postInput: PostInput, @Ctx() { req }: Context): Promise<Post> {
 
         if (!req.user) {
             throw new AuthenticationError('You are not logged-in.');
         }
+
+        const user = await findOrCreateUser(req.user);
+
         const post_attrs = {
             postId: uuid62.decode(postInput.postId),
             author: user,
@@ -150,10 +154,12 @@ export class PostResolver {
     }
 
     @Mutation(returns => Post)
-    async vote(@Ctx() { user, req }: Context, @Arg("vote") voteInput: VoteInput): Promise<Post> {
+    async vote(@Ctx() { req }: Context, @Arg("vote") voteInput: VoteInput): Promise<Post> {
         if (!req.user) {
             throw new AuthenticationError('You are not logged-in.');
         }
+
+        const user = await findOrCreateUser(req.user);
 
         const post = await this.postRepository.findOne(
             { postId: uuid62.decode(voteInput.postId) },
