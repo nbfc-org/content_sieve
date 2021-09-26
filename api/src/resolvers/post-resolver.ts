@@ -83,12 +83,6 @@ export class PostResolver {
         return query.getMany();
     }
 
-    @Query(returns => [Post])
-    async postsByUser(): Promise<Post[]> {
-        const manager = getManager();
-        return manager.getTreeRepository(Post).findTrees({ relations: ["link", "text", "tags", "author", "parent"] });
-    }
-
     @Mutation(returns => Post)
     async addPost(@Arg("post") postInput: PostInput, @Ctx() { user, req }: Context): Promise<Post> {
 

@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import TopLevelPosts from '../components/TopLevelPosts.vue';
 import PostWithChildren from '../components/PostWithChildren.vue';
 import PostsWithTag from '../components/PostsWithTag.vue';
 import NotFoundComponent from '../components/NotFoundComponent.vue';
@@ -10,7 +9,6 @@ import NewPost from '../components/NewPost.vue';
 Vue.use(VueRouter);
 
 const routes = [
-  { path: '/tree', component: TopLevelPosts },
   { path: '/post/:postId',
     component: PostWithChildren,
     props: route => ({
