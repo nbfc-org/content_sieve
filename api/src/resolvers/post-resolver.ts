@@ -14,6 +14,8 @@ import { VoteInput } from "./types/vote-input.js";
 import { TopLevelInput } from "./types/top-level-input.js";
 import { Context } from "./types/context.js";
 
+import { invalidateCache } from "../helpers.js";
+
 import { splitTags } from '../../../lib/validation.js';
 
 import * as uuid62 from 'uuid62';
@@ -148,6 +150,8 @@ export class PostResolver {
             await this.postRepository.save(post);
         }
 
+        invalidateCache(post);
+
         return post;
     }
 
@@ -156,7 +160,6 @@ export class PostResolver {
         if (!req.user) {
             throw new AuthenticationError('You are not logged-in.');
         }
-        console.log(req.user);
 
         const post = await this.postRepository.findOne(
             { postId: uuid62.decode(voteInput.postId) },
@@ -173,6 +176,9 @@ export class PostResolver {
         });
 
         await this.voteRepository.save(vote);
+
+        invalidateCache(post);
+
         return post;
     }
 }

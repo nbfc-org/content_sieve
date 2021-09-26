@@ -14,6 +14,8 @@ import { renderMarkdown } from '../../lib/validation.js';
 import { JSDOM, VirtualConsole } from "jsdom";
 import * as createDOMPurify from "dompurify";
 
+import * as cacheManager from "cache-manager";
+
 const data = "<html><body></body></html>";
 const url = "http://example.com";
 
@@ -30,23 +32,54 @@ export function renderMD(body) {
     return renderMarkdown(body, DOMPurify.sanitize);
 }
 
+// TODO: move this to shared memory
+const memoryCache = cacheManager.caching({
+    store: 'memory',
+    max: 10000,
+    // ttl: 10, /*seconds*/
+});
+
 export async function getSlowPostData(post) {
-    // TODO: move this to shared memory
     let score = 0;
+    let replies = 0;
+    try {
+        const data = await memoryCache.wrap(post.postId, function() {
+            return getSlowPostDataFromDB(post);
+        });
+        ({ score, replies} = data);
+    } catch (err) {
+        console.error(err);
+    }
+    return { score, replies };
+}
+
+export async function invalidateCache(post) {
+    const repo = getManager().getTreeRepository(Post);
+    const parents = await repo.findAncestors(post);
+    for (const p of parents) {
+        memoryCache.del(p.postId, function(err) {
+            console.error(err);
+        });
+    }
+}
+
+async function getSlowPostDataFromDB(post) {
+    let score = 0;
+    const manager = getManager();
     if (post.parent) {
-        const tls = await getManager().findOne(CommentScores, { id: post.id });
+        const tls = await manager.findOne(CommentScores, { id: post.id });
         if (tls) {
             score = tls.wilson;
         }
     } else {
-        const tls = await getManager().findOne(TopLevelScores, { id: post.id });
+        const tls = await manager.findOne(TopLevelScores, { id: post.id });
         if (tls) {
             score = tls.score;
         }
     }
-    const repo = getManager().getTreeRepository(Post);
+    const repo = manager.getTreeRepository(Post);
     const childrenCount = await repo.countDescendants(post);
-    const replies = childrenCount - 1;
+    const replies = childrenCount > 0 ? childrenCount - 1 : 0;
     return { score, replies };
 }
 
