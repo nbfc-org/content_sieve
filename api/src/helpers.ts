@@ -58,7 +58,9 @@ export async function invalidateCache(post) {
     const parents = await repo.findAncestors(post);
     for (const p of parents) {
         memoryCache.del(p.postId, function(err) {
-            console.error(err);
+            if (err) {
+                console.error(err);
+            }
         });
     }
 }

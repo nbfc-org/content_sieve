@@ -1,4 +1,4 @@
-import { Resolver, Query, Arg, Mutation, Ctx, ID } from "type-graphql";
+import { Resolver, Query, Authorized, Arg, Mutation, Ctx, ID } from "type-graphql";
 import { Repository, getManager } from "typeorm";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
@@ -84,12 +84,9 @@ export class PostResolver {
         return query.getMany();
     }
 
+    @Authorized()
     @Mutation(returns => Post)
     async addPost(@Arg("post") postInput: PostInput, @Ctx() { req }: Context): Promise<Post> {
-
-        if (!req.user) {
-            throw new AuthenticationError('You are not logged-in.');
-        }
 
         const user = await findOrCreateUser(req.user);
 
@@ -153,11 +150,9 @@ export class PostResolver {
         return post;
     }
 
+    @Authorized()
     @Mutation(returns => Post)
     async vote(@Ctx() { req }: Context, @Arg("vote") voteInput: VoteInput): Promise<Post> {
-        if (!req.user) {
-            throw new AuthenticationError('You are not logged-in.');
-        }
 
         const user = await findOrCreateUser(req.user);
 
