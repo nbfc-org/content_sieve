@@ -1,8 +1,3 @@
-- typegraphql authz including roles
-  - https://github.com/MichalLytek/type-graphql/tree/master/examples/authorization
-  - https://github.com/MichalLytek/type-graphql/blob/master/examples/authorization/resolver.ts
-  - https://typegraphql.com/docs/authorization.html
-
 - user sessions
 
 - scrape top of hn / mefi into cs

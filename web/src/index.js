@@ -66,10 +66,13 @@ const errorLink = onError(({ graphQLErrors, networkError, response, operation })
     */
   if (graphQLErrors) {
     for (let err of graphQLErrors) {
+      console.error(err);
+      /*
       switch (err.extensions.code) {
       case 'UNAUTHENTICATED':
         console.error(err);
       }
+      */
     }
   }
   if (networkError) {

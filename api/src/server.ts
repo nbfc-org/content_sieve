@@ -20,6 +20,7 @@ import { TopLevelScores, CommentScores } from "./entities/views.js";
 import { Vote } from "./entities/vote.js";
 import { Tag, TagText } from "./entities/tag.js";
 import { seedDatabase } from "./helpers.js";
+import { customAuthChecker } from "./authz.js";
 
 import { config } from "../../lib/config.js";
 
@@ -62,6 +63,8 @@ export async function bootstrap(generate_db) {
         const schema = await TypeGraphQL.buildSchema({
             resolvers: [PostResolver],
             container: Container,
+            authChecker: customAuthChecker,
+            // authMode: "null", // silent
         });
 
         const app = express();
