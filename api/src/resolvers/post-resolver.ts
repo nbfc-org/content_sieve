@@ -77,7 +77,6 @@ export class PostResolver {
                     return ["post.createdAt", "ASC"];
             }
         };
-
         query = query.orderBy(...getOrderBy(tli.sortBy));
         return query.getMany();
     }

@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+import { getRepository, getManager } from "typeorm";
 import { v4 as uuidv4 } from 'uuid';
 
 import { Vote, VoteType } from "./entities/vote.js";
@@ -7,6 +7,7 @@ import { Post } from "./entities/post.js";
 import { Text } from "./entities/text.js";
 import { Link } from "./entities/link.js";
 import { Tag, TagText } from "./entities/tag.js";
+import { TopLevelScores, CommentScores } from "./entities/views.js";
 
 import { renderMarkdown } from '../../lib/validation.js';
 
@@ -27,6 +28,26 @@ const DOMPurify = createDOMPurify(jsdom.window);
 
 export function renderMD(body) {
     return renderMarkdown(body, DOMPurify.sanitize);
+}
+
+export async function getSlowPostData(post) {
+    // TODO: move this to shared memory
+    let score = 0;
+    if (post.parent) {
+        const tls = await getManager().findOne(CommentScores, { id: post.id });
+        if (tls) {
+            score = tls.wilson;
+        }
+    } else {
+        const tls = await getManager().findOne(TopLevelScores, { id: post.id });
+        if (tls) {
+            score = tls.score;
+        }
+    }
+    const repo = getManager().getTreeRepository(Post);
+    const childrenCount = await repo.countDescendants(post);
+    const replies = childrenCount - 1;
+    return { score, replies };
 }
 
 export async function seedDatabase() {

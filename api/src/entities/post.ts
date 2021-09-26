@@ -1,7 +1,7 @@
 import { ObjectType, ID, Field, Float, Int, registerEnumType } from "type-graphql";
 import { Entity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 import { Column, JoinColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
-import { ManyToMany, JoinTable, getManager } from "typeorm";
+import { ManyToMany, JoinTable } from "typeorm";
 import { AfterInsert, AfterLoad } from "typeorm";
 import { createUnionType } from "type-graphql";
 import { Tree, TreeChildren, TreeParent } from "typeorm";
@@ -13,8 +13,7 @@ import { Link } from "./link.js";
 import { Text } from "./text.js";
 import { Vote } from "./vote.js";
 import { Tag } from "./tag.js";
-import { Lazy } from "../helpers.js";
-import { TopLevelScores, CommentScores } from "./views.js";
+import { Lazy, getSlowPostData } from "../helpers.js";
 
 export enum SortType {
     NEWEST,
@@ -97,24 +96,10 @@ export class Post {
     async afterLoad() {
         this.content = this.text || this.link;
         this.postId = uuid62.encode(this.postId);
-        this.score = 0;
-        const manager = getManager();
-        // TODO: move this to shared memory
-        if (this.parent) {
-            const tls = await manager.findOne(CommentScores, { id: this.id });
-            if (tls) {
-                this.score = tls.wilson;
-            }
-        } else {
-            const tls = await manager.findOne(TopLevelScores, { id: this.id });
-            if (tls) {
-                this.score = tls.score;
-            }
-        }
-        const repo = manager.getTreeRepository(Post);
-        const childrenCount = await repo.countDescendants(this);
-        this.replies = childrenCount - 1;
-    }
+        const { score, replies } = await getSlowPostData(this);
+        this.score = score;
+        this.replies = replies;
+   }
 
     @Field(type => [Post], { nullable: true })
     @TreeChildren()

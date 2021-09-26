@@ -1,13 +1,18 @@
 - typegraphql authz including roles
   - https://github.com/MichalLytek/type-graphql/tree/master/examples/authorization
   - https://github.com/MichalLytek/type-graphql/blob/master/examples/authorization/resolver.ts
+  - https://typegraphql.com/docs/authorization.html
 
 - proper authors coming from auth service
 - user sessions
 
+- scrape top of hn / mefi into cs
+
 - add sorting on PostsWithTag page
 
 - add paging
+  - https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#using-pagination
+  - https://www.howtographql.com/vue-apollo/9-pagination/
 - add meta-moderation of votes
 - move "hide all" back into "-"
 - reload for deeper than 3 levels
