@@ -1,24 +1,16 @@
 import Vue from 'vue';
 
-import VueRouter from 'vue-router';
-
 import App from './components/App.vue';
 import { config } from '../../lib/config.js';
 import store from './lib/store.js';
+import router from './lib/router.js';
 
-import { Auth0Plugin, getInstance } from './lib/auth0.js';
-
-Vue.use(Auth0Plugin, {
-  ...config.auth0,
-  cacheLocation: 'localstorage',
-  onRedirectCallback: appState => {
-    store.dispatch('postShowReply', appState);
-    router.push(
-      appState && appState.path
-        ? { path: appState.path }
-        : window.location.pathname
-    );
-  }
+import VueKeyCloak from '@dsb-norge/vue-keycloak-js';
+Vue.use(VueKeyCloak, {
+  config: config.keycloak,
+  init: {
+    onLoad: 'check-sso',
+  },
 });
 
 Vue.config.productionTip = false;
@@ -47,11 +39,11 @@ const httpLink = new HttpLink({
 });
 
 const authLink = setContext(async (_, { headers }) => {
-  const authService = getInstance();
   let authorizationHeader = {};
 
-  if (authService.isAuthenticated) {
-    const token = await authService.getTokenSilently();
+  const kc = Vue.prototype.$keycloak;
+  if (kc && kc.authenticated) {
+    const token = kc.token;
     authorizationHeader = {
         authorization: `Bearer ${token}`,
     };
@@ -61,8 +53,8 @@ const authLink = setContext(async (_, { headers }) => {
       ...headers,
       ...authorizationHeader,
     },
-  }
-})
+  };
+});
 
 import { onError } from "apollo-link-error";
 
@@ -93,46 +85,6 @@ const apolloProvider = new VueApollo({
     link,
     // connectToDevTools: true,
   })
-});
-
-Vue.use(VueRouter);
-
-import TopLevelPosts from './components/TopLevelPosts.vue';
-import PostWithChildren from './components/PostWithChildren.vue';
-import PostsWithTag from './components/PostsWithTag.vue';
-import NotFoundComponent from './components/NotFoundComponent.vue';
-import NewPost from './components/NewPost.vue';
-// import 'normalize.css';
-
-const routes = [
-  { path: '/tree', component: TopLevelPosts },
-  { path: '/post/:postId',
-    component: PostWithChildren,
-    props: true,
-  },
-  { path: '/tag/all',
-    alias: '/',
-    component: PostsWithTag,
-    props: true,
-  },
-  { path: '/tag/:tag',
-    component: PostsWithTag,
-    props: true,
-  },
-  {
-    path: '/new',
-    component: NewPost,
-  },
-  {
-    path: '/:catchAll(.*)',
-    component: NotFoundComponent,
-    name: 'NotFound'
-  },
-];
-
-const router = new VueRouter({
-  mode: 'history',
-  routes
 });
 
 Vue.use(VueApollo);

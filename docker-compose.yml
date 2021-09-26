@@ -4,8 +4,10 @@ services:
       context: .
       dockerfile: build/Dockerfile.web
       args:
+        - nodeenv=${NODE_ENV}
         - webgraphql=/api
-        - auth0client=${POI_APP_DEV_AUTH0_CLIENTID}
+    environment:
+      - NODE_ENV
     ports:
       - "8080:80"
     depends_on:
@@ -15,14 +17,37 @@ services:
       context: .
       dockerfile: build/Dockerfile.api
     environment:
-      - PROD_API_PORT=4002
-      - PROD_DB_NAME=cs
-      - PROD_DB_PASSWORD=wat
+      - API_PORT=4002
+      - API_DB_NAME=cs
+      - API_DB_PASSWORD=wat
+      - NODE_ENV
     depends_on:
       - postgres
   postgres:
-    image: postgres
+    image: postgres:13
     environment:
       - POSTGRES_PASSWORD=wat
     volumes:
       - /attic/***REMOVED***data/local_content_sieve:/var/lib/postgresql/data
+    ports:
+      - "6432:5432"
+  keycloak_db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    volumes:
+      - /attic/***REMOVED***data/local_keycloak:/var/lib/postgresql/data
+  keycloak:
+    image: jboss/keycloak:15.0.2
+    depends_on:
+      - keycloak_db
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: keycloak_db
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+    ports:
+      - "28080:8080"

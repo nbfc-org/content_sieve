@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+import { getRepository, getManager } from "typeorm";
 import { v4 as uuidv4 } from 'uuid';
 
 import { Vote, VoteType } from "./entities/vote.js";
@@ -7,11 +7,14 @@ import { Post } from "./entities/post.js";
 import { Text } from "./entities/text.js";
 import { Link } from "./entities/link.js";
 import { Tag, TagText } from "./entities/tag.js";
+import { TopLevelScores, CommentScores } from "./entities/views.js";
 
 import { renderMarkdown } from '../../lib/validation.js';
 
 import { JSDOM, VirtualConsole } from "jsdom";
 import * as createDOMPurify from "dompurify";
+
+import * as cacheManager from "cache-manager";
 
 const data = "<html><body></body></html>";
 const url = "http://example.com";
@@ -27,6 +30,57 @@ const DOMPurify = createDOMPurify(jsdom.window);
 
 export function renderMD(body) {
     return renderMarkdown(body, DOMPurify.sanitize);
+}
+
+// TODO: move this to shared memory
+const memoryCache = cacheManager.caching({
+    store: 'memory',
+    max: 10000,
+    // ttl: 10, /*seconds*/
+});
+
+export async function getSlowPostData(post) {
+    let score = 0;
+    let replies = 0;
+    try {
+        const data = await memoryCache.wrap(post.postId, function() {
+            return getSlowPostDataFromDB(post);
+        });
+        ({ score, replies} = data);
+    } catch (err) {
+        console.error(err);
+    }
+    return { score, replies };
+}
+
+export async function invalidateCache(post) {
+    const repo = getManager().getTreeRepository(Post);
+    const parents = await repo.findAncestors(post);
+    for (const p of parents) {
+        memoryCache.del(p.postId, function(err) {
+            console.error(err);
+        });
+    }
+}
+
+async function getSlowPostDataFromDB(post) {
+    let score = 0;
+    const manager = getManager();
+    if (post.parent) {
+        const tls = await manager.findOne(CommentScores, { id: post.id });
+        if (tls) {
+            score = tls.wilson;
+        }
+    } else {
+        const tls = await manager.findOne(TopLevelScores, { id: post.id });
+        if (tls) {
+            score = tls.score;
+        }
+    }
+    const repo = manager.getTreeRepository(Post);
+    const childrenCount = await repo.countDescendants(post);
+    const replies = childrenCount > 0 ? childrenCount - 1 : 0;
+    return { score, replies };
 }
 
 export async function seedDatabase() {

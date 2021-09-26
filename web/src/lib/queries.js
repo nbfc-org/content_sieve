@@ -51,26 +51,6 @@ const postFields = gql`
   }
 `;
 
-const POSTS_BY_USER = gql`
-${postFields}
-query {
-  postsByUser {
-    ...PostFields
-    children {
-      ...PostFields
-      children {
-        ...PostFields
-        children {
-          ...PostFields
-          children {
-            ...PostFields
-          }
-        }
-      }
-    }
-  }
-}`;
-
 const GET_POST_RECURSIVE = gql`
 ${postFields}
 query ($postId: ID!) {
@@ -163,14 +143,6 @@ const getPost = {
   },
 };
 
-const postsByUser = {
-  query: POSTS_BY_USER,
-  update(data) {
-    const posts = data.postsByUser;
-    return posts;
-  },
-};
-
 const postsWithTag = {
   query: GET_POSTS_WITH_TAG,
   variables() {
@@ -238,7 +210,7 @@ const getSort = (sortBy) => {
 };
 
 export {
-  getPost, indexSort, postsByUser, postsWithTag,
-  addPost, POSTS_BY_USER, VOTE,
+  getPost, indexSort, postsWithTag,
+  addPost, VOTE,
   flattenPost, sortTypes, getSort,
 };

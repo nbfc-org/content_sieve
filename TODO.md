@@ -1,30 +1,18 @@
 - typegraphql authz including roles
   - https://github.com/MichalLytek/type-graphql/tree/master/examples/authorization
   - https://github.com/MichalLytek/type-graphql/blob/master/examples/authorization/resolver.ts
-- migrate to keycloak
-  - https://github.com/keycloak/keycloak-quickstarts/blob/latest/applications/app-vue/src/main.js
-  - https://github.com/keycloak/keycloak-nodejs-admin-client
+  - https://typegraphql.com/docs/authorization.html
 
-```
-// defector: threaded only; newest, oldest, most replies, highest score
-// reddit: threaded only; best, top, new, controversial, old, q&a
-// metafilter: flat only; oldest first, no matter what
-// hn: threaded only; by score only
-//
-// quatratic weighting ... nth vote costs n^2
-//     weighting a vote by the "degree of separation" of the voter? (ie., friends count more)
-// hyperbolic discounting of karma acquisition
-// limiting the number of voters per item
-// new accounts can't vote until achieved a network & karma status (eg., shares, by friends, are upvoted).
-// accounts which primarily upvote/downvote outside of their network are ignored
-```
-
-- user sessions
 - proper authors coming from auth service
+- user sessions
+
+- scrape top of hn / mefi into cs
 
 - add sorting on PostsWithTag page
 
 - add paging
+  - https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#using-pagination
+  - https://www.howtographql.com/vue-apollo/9-pagination/
 - add meta-moderation of votes
 - move "hide all" back into "-"
 - reload for deeper than 3 levels
@@ -41,3 +29,17 @@
 - vee validate & yup
   - https://vee-validate.logaretm.com/v4/guide/components/validation
   - https://vuetifyjs.com/en/components/forms/#vee-validate
+
+```
+// defector: threaded only; newest, oldest, most replies, highest score
+// reddit: threaded only; best, top, new, controversial, old, q&a
+// metafilter: flat only; oldest first, no matter what
+// hn: threaded only; by score only
+//
+// quatratic weighting ... nth vote costs n^2
+//     weighting a vote by the "degree of separation" of the voter? (ie., friends count more)
+// hyperbolic discounting of karma acquisition
+// limiting the number of voters per item
+// new accounts can't vote until achieved a network & karma status (eg., shares, by friends, are upvoted).
+// accounts which primarily upvote/downvote outside of their network are ignored
+```

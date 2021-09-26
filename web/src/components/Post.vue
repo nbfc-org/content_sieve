@@ -16,7 +16,7 @@
           active-class="active"
           exact
           >{{ ago(post.createdAt) }}</router-link>
-        &bull; {{ post.replies }} replies
+            &bull; {{ post.replies }} replies
         <span v-if="post.parent">
           &bull; <router-link
                    :to="`/post/${post.parent.postId}`"
@@ -38,7 +38,7 @@
           >
           Reply
         </v-btn>
-        <v-item-group v-if="$auth.isAuthenticated">
+        <v-item-group v-if="$keycloak.ready && $keycloak.authenticated">
           <v-btn
             color="deep-purple lighten-2"
             text
@@ -125,13 +125,14 @@ export default {
     props: [
         'post',
         'sortBy',
+        'showReply',
     ],
     data: function() {
         return {
             newPostContent: '',
             version: 0,
             open: true,
-            showReply: false,
+            showReplyForm: this.showReply,
         }
     },
     computed: {
@@ -139,14 +140,6 @@ export default {
             // const text = this.open ? '-' : `show ${this.post.replies + 1}`;
             const text = this.open ? 'hide all' : 'show all';
             return ` [${text}]`;
-        },
-        showReplyForm: function() {
-            const storePost = this.$store.getters.getPost(this.postId);
-            if (storePost) {
-                this.showReply = storePost.showReply;
-                this.$store.dispatch('logoutSession');
-            }
-            return this.showReply;
         },
         postId: function() {
             return this.post.postId;
@@ -168,21 +161,15 @@ export default {
             return DateTime.fromMillis(millis).toRelative();
         },
         openReply: function(event) {
-            if (this.$auth.isAuthenticated) {
-                // console.log(this.$auth.user);
-                this.showReply = true;
+            if (this.$keycloak.authenticated) {
+                this.showReplyForm = true;
             } else {
-                this.$auth.loginWithRedirect({
-                    appState: {
-                        path: `/post/${this.postId}`,
-                        postId: this.postId,
-                        showReply: true,
-                    },
-                });
+                const basePath = window.location.toString();
+                this.$keycloak.login({ redirectUri: `${window.location.origin}/post/${this.postId}?showReply=true` });
             }
         },
         reply: function(event) {
-            this.showReply = false;
+            this.showReplyForm = false;
         },
         vote: async function(event, postId, type) {
             try {
