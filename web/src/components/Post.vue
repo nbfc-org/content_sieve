@@ -29,39 +29,41 @@
         </v-card-text>
       </summary>
       <v-card-actions>
-        <v-btn
-          text
-          x-small
-          color="teal accent-4"
-          @click="openReply"
-          :data-target="`comment-${post.postId}-reply-form`"
-          >
-          Reply
-        </v-btn>
+        <v-item-group>
+          <v-btn
+            x-small
+            outlined
+            color="teal"
+            @click="openReply"
+            :data-target="`comment-${post.postId}-reply-form`"
+            >
+            <v-icon left dark>mdi-reply</v-icon>Reply
+          </v-btn>&nbsp;
+        </v-item-group>
         <v-item-group v-if="$keycloak.ready && $keycloak.authenticated">
           <v-btn
-            color="deep-purple lighten-2"
-            text
+            color="deep-purple"
             x-small
+            outlined
             @click="up"
             >
-            Vote up
+            <v-icon left dark>mdi-arrow-up</v-icon>Up
           </v-btn>
           <v-btn
-            color="deep-purple lighten-2"
-            text
+            color="deep-purple"
             x-small
+            outlined
             @click="down"
             >
-            Vote down
+            <v-icon left dark>mdi-arrow-down</v-icon>Down
           </v-btn>
           <v-btn
             color="red"
-            text
             x-small
+            outlined
             @click="flag"
             >
-            Flag
+            <v-icon left dark>mdi-flag</v-icon>Flag
           </v-btn>
         </v-item-group>
         <v-spacer />
@@ -86,20 +88,20 @@
           </v-card-text>
           <v-card-actions class="pt-0">
             <v-btn
-              text
               x-small
-              color="teal accent-4"
+              outlined
+              color="teal"
               @click="postReply"
               >
-              Add comment
+              <v-icon left dark>mdi-plus-box</v-icon>Add reply
             </v-btn>
             <v-btn
-              text
-              color="red"
               x-small
+              outlined
+              color="red"
               @click="reply"
               >
-              Close comment form
+              <v-icon left dark>mdi-close</v-icon>Close reply
             </v-btn>
           </v-card-actions>
         </v-card>

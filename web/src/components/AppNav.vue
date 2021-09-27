@@ -1,5 +1,6 @@
 <template>
   <v-app-bar app dense>
+    <v-app-bar-nav-icon />
     <v-toolbar-title>
       <v-btn to="/" exact>content sieve</v-btn>
     </v-toolbar-title>

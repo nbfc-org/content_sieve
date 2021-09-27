@@ -1,5 +1,7 @@
 import Vue from 'vue';
 
+import '@mdi/font/css/materialdesignicons.css';
+
 import App from './components/App.vue';
 import { config } from '../../lib/config.js';
 import store from './lib/store.js';

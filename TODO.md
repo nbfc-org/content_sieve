@@ -1,9 +1,14 @@
-- user sessions
+- user sessions / settings
+- add user page w/ info & settings
+
+- digital ocean / terraform / cloudflare
+- authenticated origin CA / origin pulls
 
 - scrape top of hn / mefi into cs
 
 - add sorting on PostsWithTag page
 - add summary mode for list / toplevel view
+- via css, make top level post obvious
 
 - add paging
   - https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#using-pagination
@@ -45,6 +50,9 @@ target: Object { postId: "3WfHRmvVV08TAoa8MnVnGI", title:
 - nginx caching of graphql queries?
 
 - edit for 5 minutes
+
+- vuetify themes?
+- app nav bar / drawer
 
 - materialized views
   - https://dba.stackexchange.com/a/191195
