@@ -1,4 +1,4 @@
-import { MaxLength, IsUrl } from "class-validator";
+import { MaxLength } from "class-validator";
 import { ID, InputType, Field } from "type-graphql";
 
 import { Post } from "../../entities/post.js";
@@ -19,7 +19,6 @@ export class PostInput implements Partial<Post> {
 
     @Field({ nullable: true })
     @MaxLength(2048)
-    @IsUrl()
     url?: string;
 
     @Field({ nullable: true })
