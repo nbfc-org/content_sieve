@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from "type-graphql";
 import { getManager, PrimaryColumn, PrimaryGeneratedColumn, Column, Entity, OneToMany, ManyToOne } from "typeorm";
 
-import { Post } from "./post.js";
+import { Post, SortType } from "./post.js";
 import { Lazy } from "../helpers.js";
 
 const example_jwt = {
@@ -83,6 +83,12 @@ export class Jwt {
 }
 
 @ObjectType()
+export class UserSettings {
+    @Field()
+    sortType: SortType;
+}
+
+@ObjectType()
 @Entity()
 export class User {
     @Field(type => ID)
@@ -92,6 +98,10 @@ export class User {
     @Field()
     @Column({ unique: true})
     username: string;
+
+    @Field(type => UserSettings)
+    @Column({ type: "jsonb", default: {} })
+    settings: UserSettings;
 
     @OneToMany(type => Post, post => post.author, { lazy: true })
     @Field(type => [Post])
