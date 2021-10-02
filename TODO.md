@@ -1,6 +1,9 @@
 - user sessions / settings
 - add user page w/ info & settings
 
+- admin mode / hide posts
+- add meta-moderation of votes
+
 - digital ocean / terraform / cloudflare
 - authenticated origin CA / origin pulls
 
@@ -8,13 +11,14 @@
 
 - add sorting on PostsWithTag page
 - add summary mode for list / toplevel view
-- via css, make top level post obvious
 
+- via css, make top level post obvious
+- move "hide all" back into "-"
+
+- reload for deeper than 4 levels
 - add paging
   - https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#using-pagination
   - https://www.howtographql.com/vue-apollo/9-pagination/
-- add meta-moderation of votes
-- move "hide all" back into "-"
 
 - vee validate & yup
   - https://vee-validate.logaretm.com/v4/guide/components/validation
@@ -44,7 +48,6 @@ property: "title"
 target: Object { postId: "3WfHRmvVV08TAoa8MnVnGI", title:
 ```
 
-- reload for deeper than 4 levels
 - look at client side query caching
 - don't reload all data on change
 - nginx caching of graphql queries?

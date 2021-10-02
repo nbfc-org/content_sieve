@@ -12,6 +12,8 @@ import { createConnection, getRepository, useContainer } from "typeorm";
 import * as TypeGraphQL from "type-graphql";
 
 import { PostResolver } from "./resolvers/post-resolver.js";
+import { UserResolver } from "./resolvers/user-resolver.js";
+
 import { User, Jwt } from "./entities/user.js";
 import { Link } from "./entities/link.js";
 import { Text } from "./entities/text.js";
