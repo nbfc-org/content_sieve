@@ -52,14 +52,6 @@ export async function bootstrap(generate_db) {
             ...pgOpts,
             // cache: true,
         });
-        // seed database with some data
-        let defaultUser;
-        if (generate_db) {
-            ({ defaultUser } = await seedDatabase());
-        } else {
-            const userRepository = getRepository(User);
-            defaultUser = await userRepository.findOne();
-        }
 
         // build TypeGraphQL executable schema
         const schema = await TypeGraphQL.buildSchema({
