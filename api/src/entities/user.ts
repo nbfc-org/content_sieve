@@ -84,14 +84,16 @@ export class Jwt {
 
 @ObjectType()
 export class UserSettings {
-    @Field()
-    sortType: SortType;
+    @Field({ nullable: true })
+    sortType?: SortType;
+
+    @Field({ nullable: true })
+    nested?: Boolean;
 }
 
 @ObjectType()
 @Entity()
 export class User {
-    @Field(type => ID)
     @PrimaryGeneratedColumn()
     readonly id: number;
 
@@ -108,6 +110,5 @@ export class User {
     posts: Lazy<Post[]>;
 
     @OneToMany(type => Jwt, jwt => jwt.user, { lazy: true })
-    @Field(type => [Post])
     jwts: Lazy<Post[]>;
 }

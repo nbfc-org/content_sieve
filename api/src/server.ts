@@ -55,7 +55,10 @@ export async function bootstrap(generate_db) {
 
         // build TypeGraphQL executable schema
         const schema = await TypeGraphQL.buildSchema({
-            resolvers: [PostResolver],
+            resolvers: [
+                PostResolver,
+                UserResolver,
+            ],
             container: Container,
             authChecker: customAuthChecker,
             // authMode: "null", // silent

@@ -79,6 +79,24 @@ query ($tli: TopLevelInput!) {
   }
 }`;
 
+const GET_OWN_USER_INFO = gql`
+query {
+  getOwnUser {
+    username
+    settings {
+      nested
+      sortType
+    }
+  }
+}`;
+
+const getOwnUserInfo = {
+  query: GET_OWN_USER_INFO,
+  update(data) {
+    return data.user;
+  },
+};
+
 const ADD_POST = gql`
 ${postFields}
 mutation ($post: PostInput!) {
@@ -211,5 +229,6 @@ const getSort = (sortBy) => {
 export {
   getPost, indexSort, postsWithTag,
   addPost, VOTE,
+  getOwnUserInfo,
   flattenPost, sortTypes, getSort,
 };

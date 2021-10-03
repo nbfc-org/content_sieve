@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-import { getPost, flattenPost, sortTypes, getSort } from '../lib/queries.js';
+import { getPost, getOwnUserInfo, flattenPost, sortTypes, getSort } from '../lib/queries.js';
 import Post from './Post.vue';
 
 export default {
@@ -65,6 +65,7 @@ export default {
     },
     apollo: {
         getPost,
+        getOwnUserInfo,
     },
 };
 </script>
