@@ -1,14 +1,7 @@
 <template>
   <div>
     <div v-if="error">{{ error }}</div>
-    <v-btn-toggle mandatory v-model="nested">
-      <v-btn>
-        flat
-      </v-btn>
-      <v-btn>
-        nested
-      </v-btn>
-    </v-btn-toggle>
+    <v-switch v-model="nested" inset label="Nested" />
     <v-btn-toggle mandatory v-model="sortBy">
       <v-btn :key="`sortTypeBtn_${s}`" v-for="s in sortTypes">{{ s }}</v-btn>
     </v-btn-toggle>
@@ -21,6 +14,7 @@
 <script>
 import { getPost, getOwnUserInfo, flattenPost, sortTypes, getSort } from '../lib/queries.js';
 import Post from './Post.vue';
+import { mapState } from 'vuex';
 
 export default {
     components: {
@@ -33,7 +27,6 @@ export default {
             },
             error: null,
             version: 0,
-            nested: 1,
             sortBy: 0,
         };
     },
@@ -44,6 +37,26 @@ export default {
     computed: {
         sortTypes: function() {
             return sortTypes;
+        },
+        ...mapState({
+            settings: state => {
+                const { user } = state.session;
+                if (!user) { return {}; }
+                return user.settings;
+            },
+        }),
+        nested: {
+            get() {
+                return this.settings.nested;
+            },
+            set(nested) {
+                const settings = { ...this.settings, nested: Boolean(nested) };
+                delete settings.__typename;
+                this.$store.dispatch('saveSettings', {
+                    kc: this.$keycloak,
+                    settings,
+                });
+            },
         },
     },
     methods: {
@@ -65,7 +78,6 @@ export default {
     },
     apollo: {
         getPost,
-        getOwnUserInfo,
     },
 };
 </script>

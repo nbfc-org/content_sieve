@@ -3,6 +3,10 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+import { apolloClient } from './apollo.js';
+
+import { getOwnUserInfo, saveSettings } from './queries.js';
+
 const sessionKeys = ['posts'];
 
 const loadFromSession = (key, context) => {
@@ -33,8 +37,28 @@ export default new Vuex.Store({
       const posts = state.session.posts;
       return posts && posts[postId] ? posts[postId] : undefined;
     },
+    // const storePost = this.$store.getters.getPost(this.postId);
   },
   actions: {
+    async loadUser(context, { kc }) {
+      if (kc.authenticated) {
+        const response = await apolloClient.query(getOwnUserInfo);
+        const data = response.data.getOwnUser;
+        context.commit('set', { key: 'user', data });
+      }
+    },
+    async saveSettings(context, { kc, settings }) {
+      if (kc.authenticated) {
+        try {
+          const { user } = context.state.session;
+          storeToSession('user', context, { ...user, settings });
+          await saveSettings(apolloClient, settings);
+        } catch(err) {
+          // this.error = err;
+          console.error(err);
+        }
+      }
+    },
     postShowReply(context, { postId, showReply }) {
       const posts = loadFromSession('posts', context);
       posts[postId] = { showReply };
@@ -47,7 +71,8 @@ export default new Vuex.Store({
     },
     logoutSession(context) {
       context.commit('logoutSession');
-    }
+    },
+
   },
   mutations: {
     set(state, {key, data}) {

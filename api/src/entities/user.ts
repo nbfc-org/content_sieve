@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, InputType, ObjectType } from "type-graphql";
 import { getManager, PrimaryColumn, PrimaryGeneratedColumn, Column, Entity, OneToMany, ManyToOne } from "typeorm";
 
 import { Post, SortType } from "./post.js";
@@ -82,7 +82,8 @@ export class Jwt {
     user: Lazy<User>;
 }
 
-@ObjectType()
+@ObjectType({ isAbstract: true })
+@InputType({ isAbstract: true })
 export class UserSettings {
     @Field({ nullable: true })
     sortType?: SortType;

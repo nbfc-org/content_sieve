@@ -185,6 +185,24 @@ const VOTE = gql`mutation ($vote: VoteInput!) {
   }
 }`;
 
+const SAVE_SETTINGS = gql`mutation ($settings: UserSettingsInput!) {
+  saveSettings(settings: $settings) {
+    username
+  }
+}`;
+
+const saveSettings = function(apolloClient, settings) {
+  return apolloClient.mutate({
+    mutation: SAVE_SETTINGS,
+    variables: {
+      settings
+    },
+    update: (cache, result) => {
+      // this.$emit('reloadPost', cache, result.data.vote);
+    },
+  });
+};
+
 // TODO: use introspection for sortBy
 /*
   query {
@@ -228,7 +246,7 @@ const getSort = (sortBy) => {
 
 export {
   getPost, indexSort, postsWithTag,
-  addPost, VOTE,
+  addPost, VOTE, saveSettings,
   getOwnUserInfo,
   flattenPost, sortTypes, getSort,
 };
