@@ -7,7 +7,7 @@ import { apolloClient } from './apollo.js';
 
 import { getOwnUserInfo, saveSettings } from './queries.js';
 
-const sessionKeys = ['posts'];
+const sessionKeys = ['user'];
 
 const loadFromSession = (key, context) => {
   const s = sessionStorage.getItem(key);
@@ -41,6 +41,7 @@ export default new Vuex.Store({
   },
   actions: {
     async loadUser(context, { kc }) {
+      loadFromSession('user', context);
       if (kc.authenticated) {
         const response = await apolloClient.query(getOwnUserInfo);
         const data = response.data.getOwnUser;
@@ -48,10 +49,10 @@ export default new Vuex.Store({
       }
     },
     async saveSettings(context, { kc, settings }) {
+      const { user } = context.state.session;
+      storeToSession('user', context, { ...user, settings });
       if (kc.authenticated) {
         try {
-          const { user } = context.state.session;
-          storeToSession('user', context, { ...user, settings });
           await saveSettings(apolloClient, settings);
         } catch(err) {
           // this.error = err;
