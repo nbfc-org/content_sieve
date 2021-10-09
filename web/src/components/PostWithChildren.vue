@@ -1,12 +1,12 @@
 <template>
   <div>
     <div v-if="error">{{ error }}</div>
-    <v-switch v-model="nested" inset label="Nested" />
+    <Settings />
     <v-radio-group mandatory v-model="sortBy">
       <v-radio :key="`sortTypeBtn_${s}`" v-for="s in sortTypes" :value="s" :label="s" />
     </v-radio-group>
     <div class="comment-thread">
-      <Post v-if="nested" @reloadPost="reloadPost" :key="`${getPost.postId}`" :post="getPost" :sortBy="sortBy" :showReply="showReply" />
+      <Post v-if="settings.nested" @reloadPost="reloadPost" :key="`${getPost.postId}`" :post="getPost" :sortBy="sortBy" :showReply="showReply" />
       <Post v-else @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" :sortBy="sortBy" :showReply="showReply" />
     </div>
   </div>
@@ -14,11 +14,13 @@
 <script>
 import { getPost, getOwnUserInfo, flattenPost, sortTypes, getSort } from '../lib/queries.js';
 import Post from './Post.vue';
+import Settings from './Settings.vue';
 import { mapState } from 'vuex';
 
 export default {
     components: {
         Post,
+        Settings,
     },
     data: function() {
         return {
@@ -45,19 +47,6 @@ export default {
                 return user.settings;
             },
         }),
-        nested: {
-            get() {
-                return this.settings.nested;
-            },
-            set(nested) {
-                const settings = { ...this.settings, nested: Boolean(nested) };
-                delete settings.__typename;
-                this.$store.dispatch('saveSettings', {
-                    kc: this.$keycloak,
-                    settings,
-                });
-            },
-        },
     },
     methods: {
         flatten(post) {
