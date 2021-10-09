@@ -2,9 +2,9 @@
   <div>
     <div v-if="error">{{ error }}</div>
     <v-switch v-model="nested" inset label="Nested" />
-    <v-btn-toggle mandatory v-model="sortBy">
-      <v-btn :key="`sortTypeBtn_${s}`" v-for="s in sortTypes">{{ s }}</v-btn>
-    </v-btn-toggle>
+    <v-radio-group mandatory v-model="sortBy">
+      <v-radio :key="`sortTypeBtn_${s}`" v-for="s in sortTypes" :value="s" :label="s" />
+    </v-radio-group>
     <div class="comment-thread">
       <Post v-if="nested" @reloadPost="reloadPost" :key="`${getPost.postId}`" :post="getPost" :sortBy="sortBy" :showReply="showReply" />
       <Post v-else @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" :sortBy="sortBy" :showReply="showReply" />
