@@ -2,17 +2,14 @@
   <div>
     <div v-if="error">{{ error }}</div>
     <Settings />
-    <v-radio-group mandatory v-model="sortBy">
-      <v-radio :key="`sortTypeBtn_${s}`" v-for="s in sortTypes" :value="s" :label="s" />
-    </v-radio-group>
     <div class="comment-thread">
-      <Post v-if="settings.nested" @reloadPost="reloadPost" :key="`${getPost.postId}`" :post="getPost" :sortBy="sortBy" :showReply="showReply" />
-      <Post v-else @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" :sortBy="sortBy" :showReply="showReply" />
+      <Post v-if="settings.nested" @reloadPost="reloadPost" :key="`${getPost.postId}`" :post="getPost" :sortBy="settings.sortType" :showReply="showReply" />
+      <Post v-else @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" :sortBy="settings.sortType" :showReply="showReply" />
     </div>
   </div>
 </template>
 <script>
-import { getPost, getOwnUserInfo, flattenPost, sortTypes, getSort } from '../lib/queries.js';
+import { getPost, getOwnUserInfo, flattenPost, getSort } from '../lib/queries.js';
 import Post from './Post.vue';
 import Settings from './Settings.vue';
 import { mapState } from 'vuex';
@@ -29,7 +26,6 @@ export default {
             },
             error: null,
             version: 0,
-            sortBy: 0,
         };
     },
     props: [
@@ -37,9 +33,6 @@ export default {
         'showReply',
     ],
     computed: {
-        sortTypes: function() {
-            return sortTypes;
-        },
         ...mapState({
             settings: state => {
                 const { user } = state.session;
@@ -51,11 +44,11 @@ export default {
     methods: {
         flatten(post) {
             const posts = flattenPost(post);
-            if (this.sortBy === undefined) {
+            if (this.settings.sortType === undefined) {
                 return posts;
             }
             const first = posts.shift();
-            return [first, ...posts.sort(getSort(this.sortBy))];
+            return [first, ...posts.sort(getSort(this.settings.sortType))];
         },
         reloadPost(cache, post) {
             /*
