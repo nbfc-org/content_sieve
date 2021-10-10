@@ -1,5 +1,5 @@
 import { ObjectType, Field, registerEnumType } from "type-graphql";
-import { Column, Entity, ManyToOne, Unique, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Column, Entity, OneToMany, ManyToOne, Unique, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 
 import { User } from "./user.js";
 import { Post } from "./post.js";
@@ -35,13 +35,18 @@ export class Vote {
     @CreateDateColumn()
     date: Date;
 
-    @Field(type => User)
     @ManyToOne(type => User, { lazy: true })
     user: Lazy<User>;
 
-    @ManyToOne(type => Post, { lazy: true })
+    @Field(type => Post, { nullable: true })
+    @ManyToOne(type => Post, { eager: true })
     post: Lazy<Post>;
 
+    @Field(type => Vote, { nullable: true })
     @ManyToOne(type => Vote, { lazy: true })
     meta: Lazy<Vote>;
+
+    @Field(type => [Vote], { nullable: true })
+    @OneToMany(type => Vote, vote => vote.meta, { lazy: true })
+    votes: Lazy<Vote[]>;
 }

@@ -185,6 +185,26 @@ const VOTE = gql`mutation ($vote: VoteInput!) {
   }
 }`;
 
+const GET_VOTES = gql`
+${postFields}
+query {
+  votes {
+    type
+    date
+    post {
+      ...PostFields
+    }
+  }
+}`;
+
+const getVotes = {
+  query: GET_VOTES,
+  update(data) {
+    return data.votes;
+  },
+};
+
+
 const SAVE_SETTINGS = gql`mutation ($settings: UserSettingsInput!) {
   saveSettings(settings: $settings) {
     username
@@ -246,7 +266,8 @@ const getSort = (sortBy) => {
 
 export {
   getPost, indexSort, postsWithTag,
-  addPost, VOTE, saveSettings,
+  addPost, saveSettings,
+  VOTE, getVotes,
   getOwnUserInfo,
   flattenPost, sortTypes, getSort,
 };

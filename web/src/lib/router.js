@@ -6,6 +6,7 @@ import PostsWithTag from '../components/PostsWithTag.vue';
 import NotFoundComponent from '../components/NotFoundComponent.vue';
 import NewPost from '../components/NewPost.vue';
 import Settings from '../components/Settings.vue';
+import MetaVote from '../components/MetaVote.vue';
 
 Vue.use(VueRouter);
 
@@ -29,6 +30,13 @@ const routes = [
   { path: '/user/settings',
     component: Settings,
     props: true,
+  },
+  { path: '/user/metavote',
+    component: MetaVote,
+    props: true,
+    meta: {
+      isAuthenticated: true
+    },
   },
   {
     path: '/new',
