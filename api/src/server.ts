@@ -12,6 +12,8 @@ import { createConnection, getRepository, useContainer } from "typeorm";
 import * as TypeGraphQL from "type-graphql";
 
 import { PostResolver } from "./resolvers/post-resolver.js";
+import { UserResolver } from "./resolvers/user-resolver.js";
+
 import { User, Jwt } from "./entities/user.js";
 import { Link } from "./entities/link.js";
 import { Text } from "./entities/text.js";
@@ -50,18 +52,13 @@ export async function bootstrap(generate_db) {
             ...pgOpts,
             // cache: true,
         });
-        // seed database with some data
-        let defaultUser;
-        if (generate_db) {
-            ({ defaultUser } = await seedDatabase());
-        } else {
-            const userRepository = getRepository(User);
-            defaultUser = await userRepository.findOne();
-        }
 
         // build TypeGraphQL executable schema
         const schema = await TypeGraphQL.buildSchema({
-            resolvers: [PostResolver],
+            resolvers: [
+                PostResolver,
+                UserResolver,
+            ],
             container: Container,
             authChecker: customAuthChecker,
             // authMode: "null", // silent

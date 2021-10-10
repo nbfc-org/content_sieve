@@ -7,6 +7,7 @@
     <v-spacer/>
     <v-toolbar-items>
       <v-btn v-if="$keycloak.ready && $keycloak.authenticated" to="/new" small exact>new post</v-btn>
+      <v-btn to="/user/settings" small exact>Settings</v-btn>
       <v-btn v-if="$keycloak.ready && $keycloak.authenticated" small exact @click="logout">Log out</v-btn>
       <v-btn v-if="$keycloak.ready && !$keycloak.authenticated" small exact @click="login">Log in</v-btn>
     </v-toolbar-items>

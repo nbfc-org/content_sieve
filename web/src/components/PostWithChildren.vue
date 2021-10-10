@@ -1,26 +1,16 @@
 <template>
   <div>
     <div v-if="error">{{ error }}</div>
-    <v-btn-toggle mandatory v-model="nested">
-      <v-btn>
-        flat
-      </v-btn>
-      <v-btn>
-        nested
-      </v-btn>
-    </v-btn-toggle>
-    <v-btn-toggle mandatory v-model="sortBy">
-      <v-btn :key="`sortTypeBtn_${s}`" v-for="s in sortTypes">{{ s }}</v-btn>
-    </v-btn-toggle>
     <div class="comment-thread">
-      <Post v-if="nested" @reloadPost="reloadPost" :key="`${getPost.postId}`" :post="getPost" :sortBy="sortBy" :showReply="showReply" />
-      <Post v-else @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" :sortBy="sortBy" :showReply="showReply" />
+      <Post v-if="settings.nested" @reloadPost="reloadPost" :key="`${getPost.postId}`" :post="getPost" :sortBy="settings.sortType" :showReply="showReply" />
+      <Post v-else @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" :sortBy="settings.sortType" :showReply="showReply" />
     </div>
   </div>
 </template>
 <script>
-import { getPost, flattenPost, sortTypes, getSort } from '../lib/queries.js';
+import { getPost, getOwnUserInfo, flattenPost, getSort } from '../lib/queries.js';
 import Post from './Post.vue';
+import { mapState } from 'vuex';
 
 export default {
     components: {
@@ -33,8 +23,6 @@ export default {
             },
             error: null,
             version: 0,
-            nested: 1,
-            sortBy: 0,
         };
     },
     props: [
@@ -42,18 +30,22 @@ export default {
         'showReply',
     ],
     computed: {
-        sortTypes: function() {
-            return sortTypes;
-        },
+        ...mapState({
+            settings: state => {
+                const { user } = state.session;
+                if (!user) { return {}; }
+                return user.settings;
+            },
+        }),
     },
     methods: {
         flatten(post) {
             const posts = flattenPost(post);
-            if (this.sortBy === undefined) {
+            if (this.settings.sortType === undefined) {
                 return posts;
             }
             const first = posts.shift();
-            return [first, ...posts.sort(getSort(this.sortBy))];
+            return [first, ...posts.sort(getSort(this.settings.sortType))];
         },
         reloadPost(cache, post) {
             /*
