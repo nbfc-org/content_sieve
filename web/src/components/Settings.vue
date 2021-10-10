@@ -1,10 +1,12 @@
 <template>
-  <div>
-    <v-switch v-model="nested" inset label="Nested" />
+  <v-form>
+    <h3>Comment Settings</h3>
+    <v-switch v-model="nested" inset label="Nested?" />
+    <h4>Sort Order</h4>
     <v-radio-group mandatory v-model="sortType">
       <v-radio :key="`sortTypeBtn_${s}`" v-for="s in sortTypes" :value="s" :label="s" />
     </v-radio-group>
-  </div>
+  </v-form>
 </template>
 <script>
 

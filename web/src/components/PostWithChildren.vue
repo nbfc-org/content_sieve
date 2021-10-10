@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="error">{{ error }}</div>
-    <Settings />
     <div class="comment-thread">
       <Post v-if="settings.nested" @reloadPost="reloadPost" :key="`${getPost.postId}`" :post="getPost" :sortBy="settings.sortType" :showReply="showReply" />
       <Post v-else @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" :sortBy="settings.sortType" :showReply="showReply" />
@@ -11,13 +10,11 @@
 <script>
 import { getPost, getOwnUserInfo, flattenPost, getSort } from '../lib/queries.js';
 import Post from './Post.vue';
-import Settings from './Settings.vue';
 import { mapState } from 'vuex';
 
 export default {
     components: {
         Post,
-        Settings,
     },
     data: function() {
         return {
