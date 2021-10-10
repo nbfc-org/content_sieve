@@ -4,14 +4,12 @@ import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { AuthenticationError } from "apollo-server-express";
 
-import { Vote } from "../entities/vote.js";
 import { Post, SortType } from "../entities/post.js";
 import { Text } from "../entities/text.js";
 import { Link } from "../entities/link.js";
 import { findOrCreateUser } from "../entities/user.js";
 import { Tag, TagText } from "../entities/tag.js";
 import { PostInput } from "./types/post-input.js";
-import { VoteInput } from "./types/vote-input.js";
 import { TopLevelInput } from "./types/top-level-input.js";
 import { Context } from "./types/context.js";
 
@@ -25,7 +23,6 @@ import * as uuid62 from 'uuid62';
 @Resolver(Post)
 export class PostResolver {
     constructor(
-        @InjectRepository(Vote) private readonly voteRepository: Repository<Vote>,
         @InjectRepository(Post) private readonly postRepository: Repository<Post>,
         @InjectRepository(Text) private readonly textRepository: Repository<Text>,
         @InjectRepository(Link) private readonly linkRepository: Repository<Link>,
@@ -144,33 +141,6 @@ export class PostResolver {
             post.tags = tags;
             await this.postRepository.save(post);
         }
-
-        invalidateCache(post);
-
-        return post;
-    }
-
-    @Authorized()
-    @Mutation(returns => Post)
-    async vote(@Ctx() { req }: Context, @Arg("vote") voteInput: VoteInput): Promise<Post> {
-
-        const user = await findOrCreateUser(req.user);
-
-        const post = await this.postRepository.findOne(
-            { postId: uuid62.decode(voteInput.postId) },
-        );
-
-        if (!post) {
-            throw new Error("Invalid post ID");
-        }
-
-        const vote = this.voteRepository.create({
-            post,
-            user,
-            type: voteInput.type,
-        });
-
-        await this.voteRepository.save(vote);
 
         invalidateCache(post);
 

@@ -13,6 +13,7 @@ import * as TypeGraphQL from "type-graphql";
 
 import { PostResolver } from "./resolvers/post-resolver.js";
 import { UserResolver } from "./resolvers/user-resolver.js";
+import { VoteResolver } from "./resolvers/vote-resolver.js";
 
 import { User, Jwt } from "./entities/user.js";
 import { Link } from "./entities/link.js";
@@ -58,6 +59,7 @@ export async function bootstrap(generate_db) {
             resolvers: [
                 PostResolver,
                 UserResolver,
+                VoteResolver,
             ],
             container: Container,
             authChecker: customAuthChecker,
