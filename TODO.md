@@ -1,6 +1,3 @@
-- user sessions / settings
-- add user page w/ info & settings
-
 - admin mode / hide posts
 - add meta-moderation of votes
 
@@ -63,6 +60,7 @@ target: Object { postId: "3WfHRmvVV08TAoa8MnVnGI", title:
 - typeorm use views to handle schema changes
 - ssr
 - markdown renderer dos: https://marked.js.org/using_advanced#workers
+- user sessions
 
 ```
 // defector: threaded only; newest, oldest, most replies, highest score
