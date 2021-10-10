@@ -31,6 +31,12 @@ export class VoteResolver {
     */
 
     @Authorized()
+    @Query(returns => [Vote])
+    async votes(@Ctx() { req }: Context): Promise<Vote[]> {
+        return this.voteRepository.find();
+    }
+
+    @Authorized()
     @Mutation(returns => Post)
     async vote(@Ctx() { req }: Context, @Arg("vote") voteInput: VoteInput): Promise<Post> {
 

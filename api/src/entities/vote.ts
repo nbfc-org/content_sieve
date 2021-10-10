@@ -11,7 +11,6 @@ export enum VoteType {
     FLAG = "flag",
     SAVE = "save",
     HIDE = "hide",
-    META = "meta",
 }
 
 registerEnumType(VoteType, {
