@@ -1,16 +1,17 @@
 import { ObjectType, Field, registerEnumType } from "type-graphql";
-import { Column, Index, Entity, ManyToOne, Unique, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Column, Entity, ManyToOne, Unique, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 
 import { User } from "./user.js";
 import { Post } from "./post.js";
 import { Lazy } from "../helpers.js";
 
 export enum VoteType {
-    UP = "up",
+    UP   = "up",
     DOWN = "down",
     FLAG = "flag",
     SAVE = "save",
     HIDE = "hide",
+    META = "meta",
 }
 
 registerEnumType(VoteType, {
@@ -41,4 +42,7 @@ export class Vote {
 
     @ManyToOne(type => Post, { lazy: true })
     post: Lazy<Post>;
+
+    @ManyToOne(type => Vote, { lazy: true })
+    meta: Lazy<Vote>;
 }

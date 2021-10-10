@@ -1,4 +1,7 @@
+- bug: in unnested mode, showReply applies to all
+
 - admin mode / hide posts
+
 - add meta-moderation of votes
 
 - digital ocean / terraform / cloudflare
