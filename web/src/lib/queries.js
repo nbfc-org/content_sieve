@@ -191,12 +191,14 @@ query {
   votes {
     type
     date
+    voteId
     post {
       ...PostFields
     }
     meta {
       type
       date
+      voteId
       post {
         ...PostFields
       }
