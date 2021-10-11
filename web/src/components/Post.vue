@@ -41,30 +41,9 @@
           </v-btn>&nbsp;
         </v-item-group>
         <v-item-group v-if="$keycloak.ready && $keycloak.authenticated">
-          <v-btn
-            color="deep-purple"
-            x-small
-            outlined
-            @click="up"
-            >
-            <v-icon left dark>mdi-arrow-up</v-icon>Up
-          </v-btn>
-          <v-btn
-            color="deep-purple"
-            x-small
-            outlined
-            @click="down"
-            >
-            <v-icon left dark>mdi-arrow-down</v-icon>Down
-          </v-btn>
-          <v-btn
-            color="red"
-            x-small
-            outlined
-            @click="flag"
-            >
-            <v-icon left dark>mdi-flag</v-icon>Flag
-          </v-btn>
+          <VoteButton :postId="post.postId" which="up" />
+          <VoteButton :postId="post.postId" which="down" />
+          <VoteButton :postId="post.postId" which="flag" />
         </v-item-group>
         <v-spacer />
         <v-chip outlined class="ml-2" x-small :key="`tag_${tag.canonical.slug}`" v-for="tag in post.tags">
@@ -115,14 +94,16 @@
 
 <script>
 import { DateTime } from 'luxon';
-import { VOTE, addPost, getSort } from '../lib/queries.js';
+import { addPost, getSort } from '../lib/queries.js';
 
 import TextEditor from './TextEditor.vue';
+import VoteButton from './VoteButton.vue';
 
 export default {
     name: 'Post',
     components: {
         TextEditor,
+        VoteButton,
     },
     props: [
         'post',
@@ -172,35 +153,6 @@ export default {
         },
         reply: function(event) {
             this.showReplyForm = false;
-        },
-        vote: async function(event, postId, type) {
-            try {
-                const w = await this.$apollo.mutate({
-                    mutation: VOTE,
-                    variables: {
-                        vote: {
-                            postId,
-                            type,
-                        }
-                    },
-                    update: (cache, result) => {
-                        this.$emit('reloadPost', cache, result.data.vote);
-                    },
-                });
-            } catch(err) {
-                // this.error = err;
-                // console.error(err);
-            }
-            // this.$emit('dirty', event, this.postId);
-        },
-        flag: function(event) {
-            this.vote(event, this.postId, "FLAG");
-        },
-        up: function(event) {
-            this.vote(event, this.postId, "UP");
-        },
-        down: function(event) {
-            this.vote(event, this.postId, "DOWN");
         },
         saveContent: function(content) {
             this.newPostContent = content;

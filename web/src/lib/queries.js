@@ -194,6 +194,13 @@ query {
     post {
       ...PostFields
     }
+    meta {
+      type
+      date
+      post {
+        ...PostFields
+      }
+    }
   }
 }`;
 

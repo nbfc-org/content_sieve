@@ -4,14 +4,23 @@
     :items="getVotes"
     :items-per-page="5"
     class="elevation-1"
-  ></v-data-table>
+    >
+    <template v-slot:item.vote="{ item }">
+      <VoteButton :postId="item.post.postId" which="up" />
+      <VoteButton :postId="item.post.postId" which="down" />
+    </template>
+  </v-data-table>
 </template>
 <script>
 
 import { mapState } from 'vuex';
 import { getVotes } from '../lib/queries.js';
+import VoteButton from './VoteButton.vue';
 
 export default {
+    components: {
+        VoteButton,
+    },
     computed: {
     },
     data: function() {
@@ -23,6 +32,8 @@ export default {
                 { text: 'Post ID', value: 'post.postId' },
                 { text: 'Text', value: 'post.content.rendered' },
                 { text: 'URL', value: 'post.content.url' },
+                { text: 'Meta', value: 'meta.type' },
+                { text: 'Vote', value: 'vote' },
             ],
         };
     },
