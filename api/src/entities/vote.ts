@@ -50,7 +50,7 @@ export class Vote {
     @ManyToOne(type => Post, { eager: true })
     post: Lazy<Post>;
 
-    @Field(type => Vote, { nullable: true })
+    // @Field(type => Vote, { nullable: true })
     @ManyToOne(type => Vote, { lazy: true })
     meta: Lazy<Vote>;
 
@@ -61,6 +61,8 @@ export class Vote {
     @AfterLoad()
     @AfterInsert()
     async afterLoad() {
-        this.voteId = uuid62.encode(this.voteId);
+        if (this.voteId) {
+            this.voteId = uuid62.encode(this.voteId);
+        }
     }
 }

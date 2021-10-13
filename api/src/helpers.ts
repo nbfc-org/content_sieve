@@ -68,7 +68,7 @@ export async function invalidateCache(post) {
 async function getSlowPostDataFromDB(post) {
     let score = 0;
     const manager = getManager();
-    if (post.parent) {
+    if (post.parentId) {
         const tls = await manager.findOne(CommentScores, { id: post.id });
         if (tls) {
             score = tls.wilson;

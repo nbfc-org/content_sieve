@@ -178,10 +178,7 @@ const postsWithTag = {
 
 const VOTE = gql`mutation ($vote: VoteInput!) {
   vote(vote: $vote) {
-    postId
-    votes {
-      type
-    }
+    voteId
   }
 }`;
 
@@ -194,14 +191,6 @@ query {
     voteId
     post {
       ...PostFields
-    }
-    meta {
-      type
-      date
-      voteId
-      post {
-        ...PostFields
-      }
     }
   }
 }`;

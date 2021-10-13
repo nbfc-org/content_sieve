@@ -6,8 +6,15 @@
     class="elevation-1"
     >
     <template v-slot:item.vote="{ item }">
-      <VoteButton :postId="item.post.postId" which="up" />
-      <VoteButton :postId="item.post.postId" which="down" />
+      <VoteButton :voteId="item.voteId" which="up" />
+      <VoteButton :voteId="item.voteId" which="down" />
+    </template>
+    <template v-slot:item.post.postId="{ item }">
+      <router-link
+          :to="`/post/${item.post.postId}`"
+          active-class="active"
+          exact
+        >{{ item.post.postId }}</router-link>
     </template>
   </v-data-table>
 </template>
@@ -33,7 +40,6 @@ export default {
                 { text: 'Post ID', value: 'post.postId' },
                 { text: 'Text', value: 'post.content.rendered' },
                 { text: 'URL', value: 'post.content.url' },
-                { text: 'Meta', value: 'meta.voteId' },
                 { text: 'Vote', value: 'vote' },
             ],
         };

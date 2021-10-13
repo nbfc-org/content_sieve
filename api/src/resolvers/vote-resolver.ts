@@ -1,7 +1,7 @@
 import { Resolver, Query, Authorized, Arg, Mutation, Ctx, ID } from "type-graphql";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { Repository } from "typeorm";
+import { Repository, IsNull, Not } from "typeorm";
 
 import { Vote } from "../entities/vote.js";
 import { VoteInput } from "./types/vote-input.js";
@@ -33,33 +33,47 @@ export class VoteResolver {
     @Authorized()
     @Query(returns => [Vote])
     async votes(@Ctx() { req }: Context): Promise<Vote[]> {
-        return this.voteRepository.find();
+        return this.voteRepository.find({
+            where: {
+                post: Not(IsNull()),
+            },
+        });
     }
 
     @Authorized()
-    @Mutation(returns => Post)
-    async vote(@Ctx() { req }: Context, @Arg("vote") voteInput: VoteInput): Promise<Post> {
+    @Mutation(returns => Vote)
+    async vote(@Ctx() { req }: Context, @Arg("vote") voteInput: VoteInput): Promise<Vote> {
 
         const user = await findOrCreateUser(req.user);
 
-        const post = await this.postRepository.findOne(
-            { postId: uuid62.decode(voteInput.postId) },
-        );
+        const is_meta = !!voteInput.voteId;
+        let associations = {};
+        let post;
 
-        if (!post) {
-            throw new Error("Invalid post ID");
+        if (is_meta) {
+            const vote = await this.voteRepository.findOneOrFail(
+                { voteId: uuid62.decode(voteInput.voteId) },
+            );
+            associations = { meta: vote };
+        } else {
+            post = await this.postRepository.findOneOrFail(
+                { postId: uuid62.decode(voteInput.postId) },
+            );
+            associations = { post };
         }
 
         const vote = this.voteRepository.create({
-            post,
+            ...associations,
             user,
             type: voteInput.type,
         });
 
         await this.voteRepository.save(vote);
 
-        invalidateCache(post);
+        if (!is_meta) {
+            invalidateCache(post);
+        }
 
-        return post;
+        return this.voteRepository.findOneOrFail(vote.id);
     }
 }

@@ -41,9 +41,9 @@
           </v-btn>&nbsp;
         </v-item-group>
         <v-item-group v-if="$keycloak.ready && $keycloak.authenticated">
-          <VoteButton :postId="post.postId" which="up" />
-          <VoteButton :postId="post.postId" which="down" />
-          <VoteButton :postId="post.postId" which="flag" />
+          <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="up" />
+          <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="down" />
+          <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="flag" />
         </v-item-group>
         <v-spacer />
         <v-chip outlined class="ml-2" x-small :key="`tag_${tag.canonical.slug}`" v-for="tag in post.tags">

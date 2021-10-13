@@ -1,4 +1,5 @@
 - bug: in unnested mode, showReply applies to all
+- handle JWT expiry
 
 - admin mode / hide posts
 

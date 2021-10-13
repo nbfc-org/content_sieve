@@ -15,6 +15,7 @@ import { VOTE } from '../lib/queries.js';
 export default {
     props: [
         'postId',
+        'voteId',
         'which',
     ],
     computed: {
@@ -27,13 +28,14 @@ export default {
         },
     },
     methods: {
-        vote: async function(event, postId, type) {
+        vote: async function(event, postId, voteId, type) {
             try {
                 const w = await this.$apollo.mutate({
                     mutation: VOTE,
                     variables: {
                         vote: {
                             postId,
+                            voteId,
                             type,
                         }
                     },
@@ -47,7 +49,7 @@ export default {
             }
         },
         click: function(event) {
-            this.vote(event, this.postId, this.which.toUpperCase());
+            this.vote(event, this.postId, this.voteId, this.which.toUpperCase());
         },
     },
 };

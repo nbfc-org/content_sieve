@@ -105,7 +105,11 @@ export class Post {
     @TreeChildren()
     children: Lazy<Post[]>;
 
+    @Column({ type: "int", nullable: true })
+    parentId: string;
+
     @Field(type => Post, { nullable: true })
+    @JoinColumn({ name: "parentId" })
     @TreeParent()
     parent: Post;
 }
