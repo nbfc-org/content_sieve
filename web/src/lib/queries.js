@@ -43,6 +43,7 @@ const postFields = gql`
     }
     score
     replies
+    depth
     tags {
       canonical {
         slug
@@ -134,7 +135,7 @@ const addPost = function(event, input) {
                         },
                         author: {
                             __typename: 'User',
-                            username: "foobar", // TODO: get this from jwt
+                            username: "foobar",
                         },
                         content: {
                             __typename: 'Text',
