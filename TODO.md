@@ -1,5 +1,8 @@
 - bug: in unnested mode, showReply applies to all
 
+- calculate karma from scores & meta votes & vote wilson score
+- make meta voting not admin
+
 - handle JWT expiry
 - look at client side query caching
 

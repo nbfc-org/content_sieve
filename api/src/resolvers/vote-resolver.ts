@@ -30,7 +30,7 @@ export class VoteResolver {
     }
     */
 
-    @Authorized()
+    @Authorized(['admin'])
     @Query(returns => [Vote])
     async votes(@Ctx() { req }: Context): Promise<Vote[]> {
         return this.voteRepository.find({
