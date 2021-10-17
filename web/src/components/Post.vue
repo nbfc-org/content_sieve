@@ -30,7 +30,7 @@
         </v-card-text>
       </summary>
       <v-card-actions>
-        <v-item-group>
+        <v-item-group v-if="!justOnePost">
           <v-btn
             x-small
             outlined
@@ -55,6 +55,16 @@
             exact
             >{{ tag.canonical.slug }}</router-link>
         </v-chip>
+      </v-card-actions>
+      <v-card-actions v-if="hasMore">
+        <v-btn
+          x-small
+          outlined
+          color="teal"
+          @click="loadIt"
+          >
+          <v-icon left dark>mdi-download-circle</v-icon>Load More
+        </v-btn>
       </v-card-actions>
       <v-expand-transition>
 
@@ -87,7 +97,7 @@
         </v-card>
       </v-expand-transition>
       <div class="replies">
-        <Post @reloadPost="reloadPost" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" v-if="children" />
+        <Post @reloadPost="reloadPost" @loadMore="loadMore" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" v-if="children" />
       </div>
     </details>
   </v-card>
@@ -99,6 +109,7 @@ import { addPost, getSort } from '../lib/queries.js';
 
 import TextEditor from './TextEditor.vue';
 import VoteButton from './VoteButton.vue';
+import { mapState } from 'vuex';
 
 export default {
     name: 'Post',
@@ -110,6 +121,7 @@ export default {
         'post',
         'sortBy',
         'showReply',
+        'topLevel',
     ],
     data: function() {
         return {
@@ -117,9 +129,17 @@ export default {
             version: 0,
             open: true,
             showReplyForm: this.showReply,
+            justOnePost: this.topLevel || false
         }
     },
     computed: {
+        ...mapState({
+            settings: state => {
+                const { user } = state.session;
+                if (!user) { return {}; }
+                return user.settings;
+            },
+        }),
         detailsInfo: function() {
             // const text = this.open ? '-' : `show ${this.post.replies + 1}`;
             const text = this.open ? 'hide all' : 'show all';
@@ -127,6 +147,12 @@ export default {
         },
         postId: function() {
             return this.post.postId;
+        },
+        hasMore: function() {
+            return !this.justOnePost && this.post.replies > 0 && !this.childrenLength;
+        },
+        childrenLength: function() {
+            return this.post.nested_kids_length || this.children.length;
         },
         children: function() {
             const kids = this.post.children || [];
@@ -168,6 +194,12 @@ export default {
         },
         reloadPost: function(cache, post) {
             this.$emit('reloadPost', cache, post);
+        },
+        loadMore: function(postId) {
+            this.$emit('loadMore', postId);
+        },
+        loadIt: function() {
+            this.$emit('loadMore', this.postId);
         },
     },
 }

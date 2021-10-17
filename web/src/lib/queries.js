@@ -19,7 +19,7 @@ const flattenPost = (post) => {
   if (post.children) {
     kids = post.children;
   }
-  return [{...post, children: []}, ...kids.map(p => flattenPost(p))].flat();
+  return [{...post, children: [], nested_kids_length: kids.length}, ...kids.map(p => flattenPost(p))].flat();
 };
 
 const postFields = gql`
@@ -65,6 +65,18 @@ query ($postId: ID!) {
           ...PostFields
           children {
             ...PostFields
+            children {
+              ...PostFields
+              children {
+                ...PostFields
+                children {
+                  ...PostFields
+                  children {
+                    ...PostFields
+                  }
+                }
+              }
+            }
           }
         }
       }
