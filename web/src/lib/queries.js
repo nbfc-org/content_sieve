@@ -19,7 +19,7 @@ const flattenPost = (post) => {
   if (post.children) {
     kids = post.children;
   }
-  return [{...post, children: []}, ...kids.map(p => flattenPost(p))].flat();
+  return [{...post, children: [], nested_kids_length: kids.length}, ...kids.map(p => flattenPost(p))].flat();
 };
 
 const postFields = gql`
@@ -43,6 +43,7 @@ const postFields = gql`
     }
     score
     replies
+    depth
     tags {
       canonical {
         slug
@@ -64,6 +65,18 @@ query ($postId: ID!) {
           ...PostFields
           children {
             ...PostFields
+            children {
+              ...PostFields
+              children {
+                ...PostFields
+                children {
+                  ...PostFields
+                  children {
+                    ...PostFields
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -134,7 +147,7 @@ const addPost = function(event, input) {
                         },
                         author: {
                             __typename: 'User',
-                            username: "foobar", // TODO: get this from jwt
+                            username: "foobar",
                         },
                         content: {
                             __typename: 'Text',
@@ -178,12 +191,30 @@ const postsWithTag = {
 
 const VOTE = gql`mutation ($vote: VoteInput!) {
   vote(vote: $vote) {
-    postId
-    votes {
-      type
+    voteId
+  }
+}`;
+
+const GET_VOTES = gql`
+${postFields}
+query {
+  votes {
+    type
+    date
+    voteId
+    post {
+      ...PostFields
     }
   }
 }`;
+
+const getVotes = {
+  query: GET_VOTES,
+  update(data) {
+    return data.votes;
+  },
+};
+
 
 const SAVE_SETTINGS = gql`mutation ($settings: UserSettingsInput!) {
   saveSettings(settings: $settings) {
@@ -246,7 +277,8 @@ const getSort = (sortBy) => {
 
 export {
   getPost, indexSort, postsWithTag,
-  addPost, VOTE, saveSettings,
+  addPost, saveSettings,
+  VOTE, getVotes,
   getOwnUserInfo,
   flattenPost, sortTypes, getSort,
 };

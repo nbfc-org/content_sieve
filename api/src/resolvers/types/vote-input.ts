@@ -5,9 +5,13 @@ import { VoteType } from "../../entities/vote.js";
 
 @InputType()
 export class VoteInput {
-    @Field(type => ID)
+    @Field(type => ID, { nullable: true })
     @MaxLength(32)
-    postId: string;
+    postId?: string;
+
+    @Field(type => ID, { nullable: true })
+    @MaxLength(32)
+    voteId?: string;
 
     @Field(type => VoteType)
     type: VoteType;

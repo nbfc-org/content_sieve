@@ -6,10 +6,11 @@
     </v-toolbar-title>
     <v-spacer/>
     <v-toolbar-items>
-      <v-btn v-if="$keycloak.ready && $keycloak.authenticated" to="/new" small exact>new post</v-btn>
+      <v-btn v-if="authed()" to="/new" small exact>New Post</v-btn>
+      <v-btn v-if="isAdmin()" to="/user/metavote" small exact>Meta Vote</v-btn>
       <v-btn to="/user/settings" small exact>Settings</v-btn>
-      <v-btn v-if="$keycloak.ready && $keycloak.authenticated" small exact @click="logout">Log out</v-btn>
-      <v-btn v-if="$keycloak.ready && !$keycloak.authenticated" small exact @click="login">Log in</v-btn>
+      <v-btn v-if="authed()" small exact @click="logout">Log out</v-btn>
+      <v-btn v-if="!authed()" small exact @click="login">Log in</v-btn>
     </v-toolbar-items>
   </v-app-bar>
 </template>
@@ -17,6 +18,12 @@
 <script>
 export default {
     methods: {
+        authed() {
+            return this.$keycloak.ready && this.$keycloak.authenticated;
+        },
+        isAdmin() {
+            return this.authed() && this.$keycloak.hasResourceRole('admin');
+        },
         login() {
             const basePath = window.location.toString();
             this.$keycloak.login({ redirectUri: basePath });

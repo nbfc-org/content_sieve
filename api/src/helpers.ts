@@ -41,16 +41,17 @@ const memoryCache = cacheManager.caching({
 
 export async function getSlowPostData(post) {
     let score = 0;
-    let replies = 0;
+    let replies = -1;
+    let depth = -1;
     try {
         const data = await memoryCache.wrap(post.postId, function() {
             return getSlowPostDataFromDB(post);
         });
-        ({ score, replies} = data);
+        ({ score, replies, depth} = data);
     } catch (err) {
         console.error(err);
     }
-    return { score, replies };
+    return { score, replies, depth };
 }
 
 export async function invalidateCache(post) {
@@ -68,7 +69,7 @@ export async function invalidateCache(post) {
 async function getSlowPostDataFromDB(post) {
     let score = 0;
     const manager = getManager();
-    if (post.parent) {
+    if (post.parentId) {
         const tls = await manager.findOne(CommentScores, { id: post.id });
         if (tls) {
             score = tls.wilson;
@@ -82,7 +83,9 @@ async function getSlowPostDataFromDB(post) {
     const repo = manager.getTreeRepository(Post);
     const childrenCount = await repo.countDescendants(post);
     const replies = childrenCount > 0 ? childrenCount - 1 : 0;
-    return { score, replies };
+
+    const depth = await repo.countAncestors(post);
+    return { score, replies, depth: depth - 1 };
 }
 
 export async function seedDatabase() {

@@ -1,5 +1,12 @@
+- bug: in unnested mode, showReply applies to all
+
+- calculate karma from scores & meta votes & vote wilson score
+- make meta voting not admin
+
+- handle JWT expiry
+- look at client side query caching
+
 - admin mode / hide posts
-- add meta-moderation of votes
 
 - digital ocean / terraform / cloudflare
 - authenticated origin CA / origin pulls
@@ -12,7 +19,6 @@
 - via css, make top level post obvious
 - move "hide all" back into "-"
 
-- reload for deeper than 4 levels
 - add paging
   - https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#using-pagination
   - https://www.howtographql.com/vue-apollo/9-pagination/
@@ -45,7 +51,6 @@ property: "title"
 target: Object { postId: "3WfHRmvVV08TAoa8MnVnGI", title:
 ```
 
-- look at client side query caching
 - don't reload all data on change
 - nginx caching of graphql queries?
 
@@ -54,6 +59,7 @@ target: Object { postId: "3WfHRmvVV08TAoa8MnVnGI", title:
 - vuetify themes?
 - app nav bar / drawer
 
+- query caching in the db using typegraphql
 - materialized views
   - https://dba.stackexchange.com/a/191195
 

@@ -60,6 +60,9 @@ export class Post {
     @Field(type => Int)
     replies: number;
 
+    @Field(type => Int)
+    depth: number;
+
     @Column({ nullable: true })
     linkId: number;
 
@@ -79,7 +82,7 @@ export class Post {
     text: Text;
 
     @Field(type => [Vote], { nullable: true })
-    @OneToMany(type => Vote, vote => vote.post, { eager: true, cascade: ["insert"] })
+    @OneToMany(type => Vote, vote => vote.post, { lazy: true, cascade: ["insert"] })
     votes: Lazy<Vote[]>;
 
     @Field(type => User)
@@ -96,16 +99,21 @@ export class Post {
     async afterLoad() {
         this.content = this.text || this.link;
         this.postId = uuid62.encode(this.postId);
-        const { score, replies } = await getSlowPostData(this);
+        const { score, replies, depth } = await getSlowPostData(this);
         this.score = score;
         this.replies = replies;
+        this.depth = depth;
    }
 
     @Field(type => [Post], { nullable: true })
     @TreeChildren()
     children: Lazy<Post[]>;
 
+    @Column({ type: "int", nullable: true })
+    parentId: string;
+
     @Field(type => Post, { nullable: true })
+    @JoinColumn({ name: "parentId" })
     @TreeParent()
     parent: Post;
 }
