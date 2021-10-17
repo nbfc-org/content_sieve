@@ -60,6 +60,9 @@ export class Post {
     @Field(type => Int)
     replies: number;
 
+    @Field(type => Int)
+    depth: number;
+
     @Column({ nullable: true })
     linkId: number;
 
@@ -96,9 +99,10 @@ export class Post {
     async afterLoad() {
         this.content = this.text || this.link;
         this.postId = uuid62.encode(this.postId);
-        const { score, replies } = await getSlowPostData(this);
+        const { score, replies, depth } = await getSlowPostData(this);
         this.score = score;
         this.replies = replies;
+        this.depth = depth;
    }
 
     @Field(type => [Post], { nullable: true })

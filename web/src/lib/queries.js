@@ -19,7 +19,7 @@ const flattenPost = (post) => {
   if (post.children) {
     kids = post.children;
   }
-  return [{...post, children: []}, ...kids.map(p => flattenPost(p))].flat();
+  return [{...post, children: [], nested_kids_length: kids.length}, ...kids.map(p => flattenPost(p))].flat();
 };
 
 const postFields = gql`
@@ -43,6 +43,7 @@ const postFields = gql`
     }
     score
     replies
+    depth
     tags {
       canonical {
         slug
@@ -64,6 +65,18 @@ query ($postId: ID!) {
           ...PostFields
           children {
             ...PostFields
+            children {
+              ...PostFields
+              children {
+                ...PostFields
+                children {
+                  ...PostFields
+                  children {
+                    ...PostFields
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -134,7 +147,7 @@ const addPost = function(event, input) {
                         },
                         author: {
                             __typename: 'User',
-                            username: "foobar", // TODO: get this from jwt
+                            username: "foobar",
                         },
                         content: {
                             __typename: 'Text',

@@ -2,8 +2,8 @@
   <div>
     <div v-if="error">{{ error }}</div>
     <div class="comment-thread">
-      <Post v-if="settings.nested" @reloadPost="reloadPost" :key="`${getPost.postId}`" :post="getPost" :sortBy="settings.sortType" :showReply="showReply" />
-      <Post v-else @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" :sortBy="settings.sortType" :showReply="showReply" />
+      <Post v-if="settings.nested" @reloadPost="reloadPost" @loadMore="loadMore" :key="`${getPost.postId}`" :post="getPost" :sortBy="settings.sortType" :showReply="showReply" />
+      <Post v-else @reloadPost="reloadPost" @loadMore="loadMore" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" :sortBy="settings.sortType" :showReply="showReply" />
     </div>
   </div>
 </template>
@@ -53,6 +53,30 @@ export default {
             */
             this.version++;
             this.$apollo.queries.getPost.refetch();
+        },
+        loadMore(postId) {
+            this.$apollo.queries.getPost.fetchMore({
+                variables: {
+                    postId,
+                },
+                updateQuery: (previousResult, { fetchMoreResult }) => {
+                    const findAndSplice = (post, target) => {
+                        let children = post.children || [];
+                        if (post.postId === target.postId) {
+                            children = target.children;
+                            this.$set(post, 'children', children);
+                        }
+                        return {
+                            __typename: post.__typename,
+                            ...post,
+                            children: children.map(c => findAndSplice(c, target)),
+                        };
+                    };
+                    return {
+                        post: findAndSplice(previousResult.post, fetchMoreResult.post),
+                    };
+                }
+            });
         },
     },
     apollo: {
