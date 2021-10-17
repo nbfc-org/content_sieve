@@ -17,7 +17,6 @@
           exact
           >{{ ago(post.createdAt) }}</router-link>
             &bull; {{ post.replies }} replies
-            &bull; {{ post.depth }} depth
         <span v-if="post.parent">
           &bull; <router-link
                    :to="`/post/${post.parent.postId}`"
