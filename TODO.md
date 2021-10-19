@@ -1,15 +1,18 @@
 - bug: in unnested mode, showReply applies to all
 
+- admin mode / hide posts
+
+- get rid of self-votes / surface votes to client
+
 - calculate karma from scores & meta votes & vote wilson score
 - make meta voting not admin
 
 - handle JWT expiry
 - look at client side query caching
 
-- admin mode / hide posts
-
 - digital ocean / terraform / cloudflare
 - authenticated origin CA / origin pulls
+- production mode server side for stack traces
 
 - scrape top of hn / mefi into cs
 

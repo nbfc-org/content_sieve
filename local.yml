@@ -1,0 +1,22 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: build/Dockerfile.web
+      args:
+        - nodeenv=${NODE_ENV}
+        - webgraphql=/api
+    ports:
+      - "8080:80"
+  api:
+    build:
+      context: .
+      dockerfile: build/Dockerfile.api
+  postgres:
+    volumes:
+      - /attic/***REMOVED***data/local_content_sieve:/var/lib/postgresql/data
+    ports:
+      - "6432:5432"
+  keycloak_db:
+    volumes:
+      - /attic/***REMOVED***data/local_keycloak:/var/lib/postgresql/data

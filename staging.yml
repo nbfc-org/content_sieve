@@ -1,0 +1,15 @@
+services:
+  web:
+    image: content_sieve_web
+    ports:
+      - "80:80"
+  api:
+    image: content_sieve_api
+  postgres:
+    volumes:
+      - /root/data/content_sieve:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  keycloak_db:
+    volumes:
+      - /root/data/keycloak:/var/lib/postgresql/data

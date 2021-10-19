@@ -28,5 +28,20 @@
             "migrationsDir": "src/migrations",
             "entitiesDir": "src/entities"
         }
+    },
+    {
+        "name": "staging",
+        "type": "postgres",
+        "username": "postgres",
+        "host": "localhost",
+        "port": "8432",
+        "database": "cs",
+        "password": "wat",
+        "migrations": ["dist/api/src/migrations/*.js"],
+        "entities": ["dist/api/src/entities/*.js"],
+        "cli": {
+            "migrationsDir": "src/migrations",
+            "entitiesDir": "src/entities"
+        }
     }
 ]
