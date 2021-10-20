@@ -6,14 +6,12 @@ services:
       args:
         - nodeenv=${NODE_ENV}
         - webgraphql=/api
-    image: content_sieve_web:${NODE_ENV}
     ports:
       - "8080:80"
   api:
     build:
       context: ..
       dockerfile: build/Dockerfile.api
-    image: content_sieve_api:${NODE_ENV}
   postgres:
     volumes:
       - /attic/***REMOVED***data/local_content_sieve:/var/lib/postgresql/data

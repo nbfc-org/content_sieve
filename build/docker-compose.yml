@@ -1,10 +1,12 @@
 services:
   web:
+    image: content_sieve_web:${NODE_ENV}
     environment:
       - NODE_ENV
     depends_on:
       - api
   api:
+    image: content_sieve_api:${NODE_ENV}
     environment:
       - API_PORT=4002
       - API_DB_NAME=cs

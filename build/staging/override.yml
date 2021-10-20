@@ -1,10 +1,7 @@
 services:
   web:
-    image: content_sieve_web
     ports:
       - "8080:80"
-  api:
-    image: content_sieve_api
   postgres:
     volumes:
       - /root/data/content_sieve:/var/lib/postgresql/data
