@@ -1,5 +1,7 @@
 - bug: in unnested mode, showReply applies to all
-- bug: https://staging.nbfc.org/auth/admin/ doesn't work
+
+- fix "web" app name / rename to nbfc
+- inline favicon.ico
 
 - admin mode / hide posts
 
