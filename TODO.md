@@ -1,4 +1,5 @@
 - bug: in unnested mode, showReply applies to all
+- bug: https://staging.nbfc.org/auth/admin/ doesn't work
 
 - admin mode / hide posts
 
@@ -10,8 +11,8 @@
 - handle JWT expiry
 - look at client side query caching
 
-- digital ocean / terraform / cloudflare
-- authenticated origin CA / origin pulls
+- terraform DO & cloudflare
+- https://frankindev.com/2020/11/18/allow-cloudflare-only-in-nginx/
 - production mode server side for stack traces
 
 - scrape top of hn / mefi into cs
