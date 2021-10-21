@@ -1,15 +1,21 @@
 - bug: in unnested mode, showReply applies to all
 
+- fix "web" app name / rename to nbfc
+- inline favicon.ico
+
+- admin mode / hide posts
+
+- get rid of self-votes / surface votes to client
+
 - calculate karma from scores & meta votes & vote wilson score
 - make meta voting not admin
 
 - handle JWT expiry
 - look at client side query caching
 
-- admin mode / hide posts
-
-- digital ocean / terraform / cloudflare
-- authenticated origin CA / origin pulls
+- terraform DO & cloudflare
+- https://frankindev.com/2020/11/18/allow-cloudflare-only-in-nginx/
+- production mode server side for stack traces
 
 - scrape top of hn / mefi into cs
 

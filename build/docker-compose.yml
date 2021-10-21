@@ -1,21 +1,12 @@
 services:
   web:
-    build:
-      context: .
-      dockerfile: build/Dockerfile.web
-      args:
-        - nodeenv=${NODE_ENV}
-        - webgraphql=/api
+    image: content_sieve_web:${NODE_ENV}
     environment:
       - NODE_ENV
-    ports:
-      - "8080:80"
     depends_on:
       - api
   api:
-    build:
-      context: .
-      dockerfile: build/Dockerfile.api
+    image: content_sieve_api:${NODE_ENV}
     environment:
       - API_PORT=4002
       - API_DB_NAME=cs
@@ -27,18 +18,12 @@ services:
     image: postgres:13
     environment:
       - POSTGRES_PASSWORD=wat
-    volumes:
-      - /attic/***REMOVED***data/local_content_sieve:/var/lib/postgresql/data
-    ports:
-      - "6432:5432"
   keycloak_db:
     image: postgres:13
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: keycloak
-    volumes:
-      - /attic/***REMOVED***data/local_keycloak:/var/lib/postgresql/data
   keycloak:
     image: jboss/keycloak:15.0.2
     depends_on:
