@@ -1,10 +1,9 @@
 {
   "private": true,
   "name": "web",
-  "productName": "web",
-  "description": "web",
+  "productName": "nbfc.org",
+  "description": "nbfc.org",
   "version": "0.0.0",
-  "license": "MIT",
   "scripts": {
     "dev": "poi --serve",
     "build": "poi",

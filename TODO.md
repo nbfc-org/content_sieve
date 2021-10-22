@@ -1,11 +1,27 @@
-- bug: in unnested mode, showReply applies to all
+## blocks prod
 
-- fix "web" app name / rename to nbfc
 - inline favicon.ico
+- fix navbar, make it responsive; drawer?
+- get rid of self-votes / surface votes to client
+- scrape top of hn / mefi into cs
+- production mode server side for stack traces
+
+- add sorting on PostsWithTag page
+- add summary mode for list / toplevel view
+- via css, make top level post obvious
+- move "hide all" back into "-"
+
+## bugs
+
+- in unnested mode, showReply applies to all
+
+## optional below here
+
+- make comment box top/bottom on small screens
+
+- rate limiting: https://docs.nginx.com/nginx/admin-guide/security-controls/controlling-access-proxied-http/
 
 - admin mode / hide posts
-
-- get rid of self-votes / surface votes to client
 
 - calculate karma from scores & meta votes & vote wilson score
 - make meta voting not admin
@@ -15,15 +31,6 @@
 
 - terraform DO & cloudflare
 - https://frankindev.com/2020/11/18/allow-cloudflare-only-in-nginx/
-- production mode server side for stack traces
-
-- scrape top of hn / mefi into cs
-
-- add sorting on PostsWithTag page
-- add summary mode for list / toplevel view
-
-- via css, make top level post obvious
-- move "hide all" back into "-"
 
 - add paging
   - https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#using-pagination
@@ -63,7 +70,6 @@ target: Object { postId: "3WfHRmvVV08TAoa8MnVnGI", title:
 - edit for 5 minutes
 
 - vuetify themes?
-- app nav bar / drawer
 
 - query caching in the db using typegraphql
 - materialized views

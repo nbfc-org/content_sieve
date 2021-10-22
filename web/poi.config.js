@@ -12,14 +12,13 @@ module.exports = {
   babel: {
   },
   */
-  /*
-    // moved
-  html: {
-    title: pkg.productName,
-    description: pkg.description,
-    template: path.join(__dirname, 'index.ejs')
+  output: {
+    html: {
+      title: pkg.productName,
+      description: pkg.description,
+      template: path.join(__dirname, 'index.ejs')
+    },
   },
-  */
   chainWebpack(config) {
     config.plugin('VuetifyLoaderPlugin').use(VuetifyLoaderPlugin);
     config.plugin('VuetifyLoaderPlugin').tap(args => [{
