@@ -37,7 +37,7 @@
             @click="openReply"
             :data-target="`comment-${post.postId}-reply-form`"
             >
-            <v-icon left dark>mdi-reply</v-icon>Reply
+            <v-icon left dark>{{ mdiReply }}</v-icon>Reply
           </v-btn>&nbsp;
         </v-item-group>
         <v-item-group v-if="$keycloak.ready && $keycloak.authenticated">
@@ -62,7 +62,7 @@
           color="teal"
           @click="loadIt"
           >
-          <v-icon left dark>mdi-download-circle</v-icon>Load More
+          <v-icon left dark>{{ mdiDownloadCircle }}</v-icon>Load More
         </v-btn>
       </v-card-actions>
       <v-expand-transition>
@@ -82,7 +82,7 @@
               color="teal"
               @click="postReply"
               >
-              <v-icon left dark>mdi-plus-box</v-icon>Add reply
+              <v-icon left dark>{{ mdiPlusBox }}</v-icon>Add reply
             </v-btn>
             <v-btn
               x-small
@@ -90,7 +90,7 @@
               color="red"
               @click="reply"
               >
-              <v-icon left dark>mdi-close</v-icon>Close reply
+              <v-icon left dark>{{ mdiClose }}</v-icon>Close reply
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -110,6 +110,8 @@ import TextEditor from './TextEditor.vue';
 import VoteButton from './VoteButton.vue';
 import { mapState } from 'vuex';
 
+import { mdiReply, mdiDownloadCircle, mdiPlusBox, mdiClose } from '@mdi/js';
+
 export default {
     name: 'Post',
     components: {
@@ -124,6 +126,10 @@ export default {
     ],
     data: function() {
         return {
+            mdiReply,
+            mdiDownloadCircle,
+            mdiPlusBox,
+            mdiClose,
             newPostContent: '',
             version: 0,
             open: true,

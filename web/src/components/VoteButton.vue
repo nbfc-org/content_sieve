@@ -12,19 +12,31 @@
 
 import { VOTE } from '../lib/queries.js';
 
+import { mdiArrowDown, mdiArrowUp, mdiFlag } from '@mdi/js';
+
+const icon_map = {
+    down: mdiArrowDown,
+    up: mdiArrowUp,
+    flag: mdiFlag,
+};
+
 export default {
     props: [
         'postId',
         'voteId',
         'which',
     ],
+    data: function() {
+        return {
+            mdiArrowDown,
+        };
+    },
     computed: {
         color() {
             return this.which === 'flag' ? "red" : "deep-purple";
         },
         icon() {
-            const s = this.which === 'flag' ? this.which : `arrow-${this.which}`;
-            return `mdi-${s}`;
+            return icon_map[this.which];
         },
     },
     methods: {

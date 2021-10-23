@@ -1,7 +1,5 @@
 import Vue from 'vue';
 
-import '@mdi/font/css/materialdesignicons.css';
-
 import App from './components/App.vue';
 import { config } from '../../lib/config.js';
 import apolloProvider from './lib/apollo.js';
@@ -26,6 +24,9 @@ import Vuetify from 'vuetify/lib';
 Vue.use(Vuetify);
 const vuetify = new Vuetify({
   theme: { disable: true },
+  icons: {
+    iconfont: 'mdiSvg',
+  },
 });
 
 new Vue({
