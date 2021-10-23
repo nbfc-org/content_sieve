@@ -54,6 +54,7 @@
     "sass-loader": "^7.1.0",
     "serve": "^6.1.0",
     "tyu": "^1.0.4",
-    "vuetify-loader": "^1.7.3"
+    "vuetify-loader": "^1.7.3",
+    "webpack-bundle-analyzer": "^4.5.0"
   }
 }
