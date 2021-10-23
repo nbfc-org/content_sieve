@@ -34,12 +34,5 @@ module.exports = {
   },
   plugins: [
     { resolve: 'poi-preset-babel-minify'},
-    { resolve: 'poi-preset-bundle-report' },
-    { resolve: 'poi-preset-offline',
-      options: {
-        pwa: './src/pwa.js', // Path to pwa runtime entry
-        pluginOptions: {} // Additional options for offline-plugin
-      },
-    },
-  ]
+  ],
 };
