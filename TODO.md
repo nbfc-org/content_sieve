@@ -1,6 +1,5 @@
 ## blocks prod
 
-- inline favicon.ico
 - fix navbar, make it responsive; drawer?
 - get rid of self-votes / surface votes to client
 - scrape top of hn / mefi into cs
