@@ -1,7 +1,14 @@
 const path = require('path');
 const pkg = require('./package');
 
+/*
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+configureWebpack: {
+  plugins: [
+    new BundleAnalyzerPlugin()
+  ]
+},
+*/
 
 const { VuetifyLoaderPlugin } = require('vuetify-loader');
 
@@ -10,11 +17,6 @@ module.exports = {
     'src/polyfills.js',
     'src/index.js'
   ],
-  configureWebpack: {
-    plugins: [
-      new BundleAnalyzerPlugin()
-    ]
-  },
   output: {
     html: {
       title: pkg.productName,
