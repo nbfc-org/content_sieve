@@ -2,7 +2,7 @@
   "private": true,
   "name": "web",
   "productName": "nbfc.org",
-  "description": "nbfc.org",
+  "description": "Not Bad for Commenting",
   "version": "0.0.0",
   "scripts": {
     "dev": "poi --serve",

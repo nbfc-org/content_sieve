@@ -2,7 +2,7 @@
   <v-app-bar app dense>
     <v-app-bar-nav-icon />
     <v-toolbar-title>
-      <v-btn to="/" exact>content sieve</v-btn>
+      <v-btn to="/" exact>{{ title }}</v-btn>
     </v-toolbar-title>
     <v-spacer/>
     <v-toolbar-items>
@@ -16,7 +16,13 @@
 </template>
 
 <script>
+import pkg from '../../package.json';
 export default {
+    computed: {
+        title() {
+            return pkg.productName;
+        },
+    },
     methods: {
         authed() {
             return this.$keycloak.ready && this.$keycloak.authenticated;
