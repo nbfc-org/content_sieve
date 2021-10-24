@@ -1,13 +1,15 @@
 ## blocks prod
 
+- via css, make top level post obvious
+
+- #anchor to parent if post is on page
+
 - get rid of self-votes / surface votes to client
 - scrape top of hn / mefi into cs
 - production mode server side for stack traces
 
 - add sorting on PostsWithTag page
 - add summary mode for list / toplevel view
-- via css, make top level post obvious
-- move "hide all" back into "-"
 
 ## bugs
 
@@ -16,6 +18,8 @@
 ## optional below here
 
 - make comment box top/bottom on small screens
+
+- add user info page
 
 - rate limiting: https://docs.nginx.com/nginx/admin-guide/security-controls/controlling-access-proxied-http/
 

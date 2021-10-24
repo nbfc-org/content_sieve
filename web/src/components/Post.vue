@@ -1,22 +1,20 @@
 <template>
-  <v-card v-if="post.content" class="mt-2">
+  <v-card v-if="post.content" flat class="rounded-0">
     <details class="comment" open>
       <v-card-text v-if="post.content.rendered">
         <div class="markdown-body" v-html="post.content.rendered" />
       </v-card-text>
-      <summary @click="details">
+      <summary class="text--secondary" @click="details">
         <v-card-title v-if="post.content.url">
           <a :href="post.content.url">{{ post.content.title }}</a>
         </v-card-title>
         <v-card-text>
-        {{ post.score }} points
-        by {{ post.author.username }}
+        {{ post.author.username }}
         &bull; <router-link
           :to="`/post/${post.postId}`"
           active-class="active"
           exact
           >{{ ago(post.createdAt) }}</router-link>
-            &bull; {{ post.replies }} replies
         <span v-if="post.parent">
           &bull; <router-link
                    :to="`/post/${post.parent.postId}`"
@@ -25,10 +23,12 @@
                    exact
                    >parent</router-link>
         </span>
-        {{ detailsInfo }}
+        &bull; {{ detailsInfo }}
         </v-card-text>
       </summary>
       <v-card-actions>
+        {{ post.score }} points
+        &bull; {{ post.replies }} replies
         <v-item-group v-if="!justOnePost">
           <v-btn
             x-small
@@ -69,6 +69,7 @@
 
         <v-card
           v-if="showReplyForm"
+          flat
           class="transition-fast-in-fast-out v-card--reveal"
           style="height: 100%;"
           >
@@ -146,9 +147,9 @@ export default {
             },
         }),
         detailsInfo: function() {
-            // const text = this.open ? '-' : `show ${this.post.replies + 1}`;
-            const text = this.open ? 'hide all' : 'show all';
-            return ` [${text}]`;
+            const text = this.open ? 'hide' : `show ${this.post.replies + 1}`;
+            // const text = this.open ? 'hide all' : 'show all';
+            return `[${text}]`;
         },
         postId: function() {
             return this.post.postId;
