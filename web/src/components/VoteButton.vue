@@ -33,7 +33,7 @@ export default {
     },
     computed: {
         color() {
-            return this.which === 'flag' ? "red" : "deep-purple";
+            return this.which === 'flag' ? "error" : "secondary";
         },
         icon() {
             return icon_map[this.which];

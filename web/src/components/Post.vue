@@ -26,14 +26,16 @@
         &bull; {{ detailsInfo }}
         </v-card-text>
       </summary>
-      <v-card-actions>
+      <div class="text--secondary">
         {{ post.score }} points
         &bull; {{ post.replies }} replies
+      </div>
+      <v-card-actions>
         <v-item-group v-if="!justOnePost">
           <v-btn
             x-small
             outlined
-            color="teal"
+            color="primary"
             @click="openReply"
             :data-target="`comment-${post.postId}-reply-form`"
             >
@@ -59,7 +61,7 @@
         <v-btn
           x-small
           outlined
-          color="teal"
+          color="primary"
           @click="loadIt"
           >
           <v-icon left dark>{{ mdiDownloadCircle }}</v-icon>Load More
@@ -80,7 +82,7 @@
             <v-btn
               x-small
               outlined
-              color="teal"
+              color="primary"
               @click="postReply"
               >
               <v-icon left dark>{{ mdiPlusBox }}</v-icon>Add reply
@@ -88,7 +90,7 @@
             <v-btn
               x-small
               outlined
-              color="red"
+              color="error"
               @click="reply"
               >
               <v-icon left dark>{{ mdiClose }}</v-icon>Close reply
