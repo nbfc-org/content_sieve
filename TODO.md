@@ -3,6 +3,7 @@
 - via css, make top level post obvious
 - https://old.reddit.com/r/gamedev/comments/qeqn3b/despite_having_just_58_sales_over_38_of_bug/
 
+
 - drawer in nav bar
 
 - #anchor to parent if post is on page
@@ -73,6 +74,7 @@ target: Object { postId: "3WfHRmvVV08TAoa8MnVnGI", title:
 ```
 
 - nginx caching of graphql queries?
+- https://www.apollographql.com/docs/apollo-server/v2/performance/caching/
 
 - edit for 5 minutes
 
