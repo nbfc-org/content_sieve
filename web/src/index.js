@@ -6,6 +6,9 @@ import apolloProvider from './lib/apollo.js';
 import store from './lib/store.js';
 import router from './lib/router.js';
 
+import Vuetify from 'vuetify/lib';
+import colors from 'vuetify/lib/util/colors';
+
 import VueKeyCloak from '@dsb-norge/vue-keycloak-js';
 Vue.use(VueKeyCloak, {
   config: config.keycloak,
@@ -19,11 +22,22 @@ Vue.use(VueKeyCloak, {
 
 Vue.config.productionTip = false;
 
-import Vuetify from 'vuetify/lib';
-
 Vue.use(Vuetify);
 const vuetify = new Vuetify({
-  theme: { disable: true },
+  theme: {
+    themes: {
+      light: {
+        primary: colors.green.darken1,
+        anchor: colors.purple.darken2,
+        secondary: colors.grey.darken1,
+        accent: colors.shades.black,
+        error: colors.red.accent3,
+      },
+      dark: {
+        primary: colors.blue.lighten3,
+      },
+    },
+  },
   icons: {
     iconfont: 'mdiSvg',
   },

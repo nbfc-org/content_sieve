@@ -1,5 +1,5 @@
 .replies {
-  margin-left: 1em;
+  margin-left: 1.5em;
 }
 
 details.comment summary {
@@ -13,5 +13,26 @@ details.comment summary::-webkit-details-marker {
 }
 
 .v-card__text, .v-card__title {
-  padding: .5em !important;
+  padding: .25em !important;
+}
+
+div.replies > .v-sheet {
+  border-left: thin solid rgba(0, 0, 0, 0.12) !important;
+  border-top: thin solid rgba(0, 0, 0, 0.12) !important;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:active {
+  text-decoration: underline;
 }

@@ -1,21 +1,32 @@
 ## blocks prod
 
+- via css, make top level post obvious
+- https://old.reddit.com/r/gamedev/comments/qeqn3b/despite_having_just_58_sales_over_38_of_bug/
+
+
+- drawer in nav bar
+
+- #anchor to parent if post is on page
+
 - get rid of self-votes / surface votes to client
 - scrape top of hn / mefi into cs
 - production mode server side for stack traces
 
 - add sorting on PostsWithTag page
 - add summary mode for list / toplevel view
-- via css, make top level post obvious
-- move "hide all" back into "-"
 
 ## bugs
 
 - in unnested mode, showReply applies to all
 
+- load more doesn't refresh everything
+- don't reload all data on change
+
 ## optional below here
 
 - make comment box top/bottom on small screens
+
+- add user info page
 
 - rate limiting: https://docs.nginx.com/nginx/admin-guide/security-controls/controlling-access-proxied-http/
 
@@ -62,8 +73,8 @@ property: "title"
 target: Object { postId: "3WfHRmvVV08TAoa8MnVnGI", title:
 ```
 
-- don't reload all data on change
 - nginx caching of graphql queries?
+- https://www.apollographql.com/docs/apollo-server/v2/performance/caching/
 
 - edit for 5 minutes
 

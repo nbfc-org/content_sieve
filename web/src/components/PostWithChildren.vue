@@ -1,11 +1,10 @@
 <template>
-  <div>
-    <div v-if="error">{{ error }}</div>
-    <div class="comment-thread">
+  <v-row justify="center">
+    <v-col xl="9" lg="10" md="11" sm="12">
       <Post v-if="settings.nested" @reloadPost="reloadPost" @loadMore="loadMore" :key="`${getPost.postId}`" :post="getPost" :sortBy="settings.sortType" :showReply="showReply" />
       <Post v-else @reloadPost="reloadPost" @loadMore="loadMore" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" :sortBy="settings.sortType" :showReply="showReply" />
-    </div>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 <script>
 import { getPost, getOwnUserInfo, flattenPost, getSort } from '../lib/queries.js';
