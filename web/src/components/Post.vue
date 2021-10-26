@@ -58,44 +58,61 @@
       </summary>
       <v-card-actions>
         <v-item-group v-if="justOnePost">
-          <v-btn
-            x-small
-            plain
-            exact
-            :to="`/post/${post.postId}`"
-            color="primary"
-            >
-            <v-icon left dark>{{ mdiCommentTextMultiple }}</v-icon>
-            {{ post.replies }} Comments
-          </v-btn>&nbsp;
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                x-small
+                plain
+                exact
+                :to="`/post/${post.postId}`"
+                color="primary"
+                v-on="on"
+                >
+                <v-icon left dark>{{ mdiCommentTextMultiple }}</v-icon>
+                {{ post.replies }}
+              </v-btn>
+            </template>
+            <span>View {{ post.replies }} Comments</span>
+          </v-tooltip>&nbsp;
         </v-item-group>
         <v-item-group v-if="!justOnePost">
-          <v-btn
-            x-small
-            plain
-            color="primary"
-            @click="openReply"
-            :data-target="`comment-${post.postId}-reply-form`"
-            >
-            <v-icon left dark>{{ mdiReply }}</v-icon>Reply
-          </v-btn>&nbsp;
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                x-small
+                plain
+                color="primary"
+                @click="openReply"
+                :data-target="`comment-${post.postId}-reply-form`"
+                v-on="on"
+                >
+                <v-icon left dark>{{ mdiReply }}</v-icon>
+              </v-btn>&nbsp;
+            </template>
+            <span>Reply</span>
+          </v-tooltip>
         </v-item-group>
         <v-item-group v-if="$keycloak.ready && $keycloak.authenticated">
           <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="up" />
           <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="down" />
-          <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="flag" />
+          <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="flag" />&nbsp;
         </v-item-group>
         <v-item-group v-if="!justOnePost">
-          <v-btn
-            x-small
-            plain
-            exact
-            :to="`/post/${post.postId}`"
-            color="primary"
-            >
-            <v-icon left dark>{{ mdiLink }}</v-icon>
-            Permalink
-          </v-btn>&nbsp;
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                x-small
+                plain
+                exact
+                :to="`/post/${post.postId}`"
+                color="primary"
+                v-on="on"
+                >
+                <v-icon left dark>{{ mdiLink }}</v-icon>
+              </v-btn>&nbsp;
+            </template>
+            <span>Permalink</span>
+          </v-tooltip>
         </v-item-group>
       </v-card-actions>
       <v-expand-transition>

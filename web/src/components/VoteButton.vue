@@ -1,12 +1,18 @@
 <template>
-  <v-btn
-    :color="color"
-    x-small
-    plain
-    @click="click"
-    >
-    <v-icon left dark>{{ icon }}</v-icon>{{ which }}
-  </v-btn>
+  <v-tooltip bottom>
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn
+        :color="color"
+        x-small
+        plain
+        @click="click"
+        v-on="on"
+        >
+        <v-icon left dark>{{ icon }}</v-icon>
+      </v-btn>
+    </template>
+    <span>Vote {{ which }}</span>
+  </v-tooltip>
 </template>
 <script>
 
