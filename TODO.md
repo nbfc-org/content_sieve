@@ -1,6 +1,5 @@
 ## blocks prod
 
-- via css, make top level post obvious
 - https://old.reddit.com/r/gamedev/comments/qeqn3b/despite_having_just_58_sales_over_38_of_bug/
 
 - #anchor to parent if post is on page

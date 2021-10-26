@@ -1,6 +1,7 @@
 <template>
   <v-row justify="center">
     <v-col xl="9" lg="10" md="11" sm="12">
+      <div v-if="tag" class="text-h6">Posts tagged with: <span class="text-button">{{ tag }}</span></div>
       <Post @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" :topLevel="true" v-for="post in postsWithTag" />
     </v-col>
   </v-row>
@@ -16,8 +17,6 @@ export default {
     data: function() {
         return {
             postsWithTag: [],
-            error: null,
-            version: 0,
         };
     },
     props: [
@@ -25,7 +24,6 @@ export default {
     ],
     methods: {
         reloadPost(cache, post) {
-            this.version++;
             this.$apollo.queries.postsWithTag.refetch();
         },
     },

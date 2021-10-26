@@ -35,7 +35,7 @@
           </v-card>
         </v-col>
       </v-row>
-      <summary class="text--secondary" @click="details">
+      <summary class="text--secondary grey lighten-4" @click="details">
         <v-card-text>
         {{ post.author.username }}
         &bull; <router-link

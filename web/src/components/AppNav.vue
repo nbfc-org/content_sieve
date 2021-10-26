@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-navigation-drawer v-model="sidebar" app>
       <v-list-item>
         <v-list-item-content>
@@ -43,7 +43,7 @@
         </v-btn>
       </v-toolbar-items>
     </v-app-bar>
-  </v-container>
+  </div>
 </template>
 
 <script>
