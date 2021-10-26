@@ -1,13 +1,41 @@
 <template>
   <v-card v-if="post.content" flat class="rounded-0">
     <details class="comment" open>
-      <v-card-text v-if="post.content.rendered">
-        <div class="markdown-body" v-html="post.content.rendered" />
-      </v-card-text>
+      <v-row dense>
+        <v-col :cols="post.tags.length ? 9 : 12">
+          <v-card-text v-if="post.content.rendered">
+            <div class="markdown-body" v-html="post.content.rendered" />
+          </v-card-text>
+          <v-card-text v-if="post.content.url">
+            <a :href="post.content.url">{{ post.content.title }}</a>
+          </v-card-text>
+        </v-col>
+        <v-col cols="3" v-if="post.tags.length">
+          <v-card flat>
+            <v-card-text>
+            <v-chip
+              color="primary"
+              class="ml-2"
+              outlined
+              small
+              label
+              :key="`tag_${tag.canonical.slug}`"
+              v-for="tag in post.tags">
+              <v-icon left>
+                {{ mdiLabel }}
+              </v-icon>
+              <router-link
+                :to="`/tag/${tag.canonical.slug}`"
+                class="nav-item nav-link"
+                active-class="active"
+                exact
+                >{{ tag.canonical.slug }}</router-link>
+            </v-chip>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
       <summary class="text--secondary" @click="details">
-        <v-card-title v-if="post.content.url">
-          <a :href="post.content.url">{{ post.content.title }}</a>
-        </v-card-title>
         <v-card-text>
         {{ post.author.username }}
         &bull; <router-link
@@ -15,6 +43,7 @@
           active-class="active"
           exact
           >{{ ago(post.createdAt) }}</router-link>
+        &bull; score: {{ post.score }}
         <span v-if="post.parent">
           &bull; <router-link
                    :to="`/post/${post.parent.postId}`"
@@ -23,18 +52,23 @@
                    exact
                    >parent</router-link>
         </span>
+        <span v-if="settings.nested && childrenLength">
         &bull; {{ detailsInfo }}
+        </span>
+        <span v-if="!childrenLength && post.replies !== 0">
+        &bull; <router-link
+          :to="`/post/${post.postId}`"
+          active-class="active"
+          exact
+          >{{ post.replies }} replies</router-link>
+        </span>
         </v-card-text>
       </summary>
-      <div class="text--secondary">
-        {{ post.score }} points
-        &bull; {{ post.replies }} replies
-      </div>
       <v-card-actions>
         <v-item-group v-if="!justOnePost">
           <v-btn
             x-small
-            outlined
+            plain
             color="primary"
             @click="openReply"
             :data-target="`comment-${post.postId}-reply-form`"
@@ -47,28 +81,8 @@
           <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="down" />
           <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="flag" />
         </v-item-group>
-        <v-spacer />
-        <v-chip outlined class="ml-2" x-small :key="`tag_${tag.canonical.slug}`" v-for="tag in post.tags">
-          <router-link
-            :to="`/tag/${tag.canonical.slug}`"
-            class="nav-item nav-link"
-            active-class="active"
-            exact
-            >{{ tag.canonical.slug }}</router-link>
-        </v-chip>
-      </v-card-actions>
-      <v-card-actions v-if="hasMore">
-        <v-btn
-          x-small
-          outlined
-          color="primary"
-          @click="loadIt"
-          >
-          <v-icon left dark>{{ mdiDownloadCircle }}</v-icon>Load More
-        </v-btn>
       </v-card-actions>
       <v-expand-transition>
-
         <v-card
           v-if="showReplyForm"
           flat
@@ -98,6 +112,16 @@
           </v-card-actions>
         </v-card>
       </v-expand-transition>
+      <v-card-actions v-if="hasMore">
+        <v-btn
+          x-small
+          outlined
+          color="primary"
+          @click="loadIt"
+          >
+          <v-icon left dark>{{ mdiDownloadCircle }}</v-icon>Load More
+        </v-btn>
+      </v-card-actions>
       <div class="replies">
         <Post @reloadPost="reloadPost" @loadMore="loadMore" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" v-if="children" />
       </div>
@@ -113,7 +137,7 @@ import TextEditor from './TextEditor.vue';
 import VoteButton from './VoteButton.vue';
 import { mapState } from 'vuex';
 
-import { mdiReply, mdiDownloadCircle, mdiPlusBox, mdiClose } from '@mdi/js';
+import { mdiReply, mdiDownloadCircle, mdiPlusBox, mdiLabel, mdiClose } from '@mdi/js';
 
 export default {
     name: 'Post',
@@ -132,6 +156,7 @@ export default {
             mdiReply,
             mdiDownloadCircle,
             mdiPlusBox,
+            mdiLabel,
             mdiClose,
             newPostContent: '',
             version: 0,
@@ -149,7 +174,7 @@ export default {
             },
         }),
         detailsInfo: function() {
-            const text = this.open ? 'hide' : `show ${this.post.replies + 1}`;
+            const text = `${this.open ? 'hide' : 'show'} ${this.post.replies + 1}`;
             // const text = this.open ? 'hide all' : 'show all';
             return `[${text}]`;
         },

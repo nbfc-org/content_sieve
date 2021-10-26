@@ -1,10 +1,9 @@
 <template>
-  <div>
-    <div v-if="error">{{ error }}</div>
-    <div class="comment-thread">
+  <v-row justify="center">
+    <v-col xl="9" lg="10" md="11" sm="12">
       <Post @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" :topLevel="true" v-for="post in postsWithTag" />
-    </div>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 <script>
 import { postsWithTag } from '../lib/queries.js';

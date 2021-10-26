@@ -12,14 +12,36 @@ details.comment summary::-webkit-details-marker {
   display: none;
 }
 
-.v-card__text, .v-card__title {
-  padding: .25em !important;
+details .v-card__text {
+  padding: .25em .5em !important;
+}
+
+details > .v-card__text {
+  padding: .25em 1.5em !important;
 }
 
 div.replies > .v-sheet {
   border-left: thin solid rgba(0, 0, 0, 0.12) !important;
-  border-top: thin solid rgba(0, 0, 0, 0.12) !important;
 }
+
+summary .v-card__text {
+  padding-top: 1em !important;
+}
+
+.v-card__actions {
+  margin-left: 1.25em;
+  padding: 0 !important;
+}
+
+/*
+.v-card__actions {
+  border-bottom: thin solid rgba(0, 0, 0, 0.12) !important;
+}
+
+div.replies {
+  margin-top: 1.5em;
+}
+*/
 
 a:link {
   text-decoration: none;

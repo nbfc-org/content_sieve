@@ -28,7 +28,7 @@ const vuetify = new Vuetify({
     themes: {
       light: {
         primary: colors.green.darken1,
-        anchor: colors.purple.darken2,
+        // anchor: colors.purple.darken2,
         secondary: colors.grey.darken1,
         accent: colors.shades.black,
         error: colors.red.accent3,

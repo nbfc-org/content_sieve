@@ -2,7 +2,7 @@
   <v-btn
     :color="color"
     x-small
-    outlined
+    plain
     @click="click"
     >
     <v-icon left dark>{{ icon }}</v-icon>{{ which }}
