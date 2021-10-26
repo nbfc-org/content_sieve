@@ -38,11 +38,7 @@
       <summary class="text--secondary grey lighten-4" @click="details">
         <v-card-text>
         {{ post.author.username }}
-        &bull; <router-link
-          :to="`/post/${post.postId}`"
-          active-class="active"
-          exact
-          >{{ ago(post.createdAt) }}</router-link>
+        &bull; {{ ago(post.createdAt) }}
         &bull; score: {{ post.score }}
         <span v-if="post.parent">
           &bull; <router-link
@@ -56,15 +52,23 @@
         &bull; {{ detailsInfo }}
         </span>
         <span v-if="!childrenLength && post.replies !== 0">
-        &bull; <router-link
-          :to="`/post/${post.postId}`"
-          active-class="active"
-          exact
-          >{{ post.replies }} replies</router-link>
+          &bull; {{ post.replies }} replies
         </span>
         </v-card-text>
       </summary>
       <v-card-actions>
+        <v-item-group v-if="justOnePost">
+          <v-btn
+            x-small
+            plain
+            exact
+            :to="`/post/${post.postId}`"
+            color="primary"
+            >
+            <v-icon left dark>{{ mdiCommentTextMultiple }}</v-icon>
+            {{ post.replies }} Comments
+          </v-btn>&nbsp;
+        </v-item-group>
         <v-item-group v-if="!justOnePost">
           <v-btn
             x-small
@@ -80,6 +84,18 @@
           <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="up" />
           <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="down" />
           <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="flag" />
+        </v-item-group>
+        <v-item-group v-if="!justOnePost">
+          <v-btn
+            x-small
+            plain
+            exact
+            :to="`/post/${post.postId}`"
+            color="primary"
+            >
+            <v-icon left dark>{{ mdiLink }}</v-icon>
+            Permalink
+          </v-btn>&nbsp;
         </v-item-group>
       </v-card-actions>
       <v-expand-transition>
@@ -137,7 +153,7 @@ import TextEditor from './TextEditor.vue';
 import VoteButton from './VoteButton.vue';
 import { mapState } from 'vuex';
 
-import { mdiReply, mdiDownloadCircle, mdiPlusBox, mdiLabel, mdiClose } from '@mdi/js';
+import { mdiReply, mdiDownloadCircle, mdiCommentTextMultiple, mdiLink, mdiPlusBox, mdiLabel, mdiClose } from '@mdi/js';
 
 export default {
     name: 'Post',
@@ -155,6 +171,8 @@ export default {
         return {
             mdiReply,
             mdiDownloadCircle,
+            mdiCommentTextMultiple,
+            mdiLink,
             mdiPlusBox,
             mdiLabel,
             mdiClose,
