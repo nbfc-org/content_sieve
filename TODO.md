@@ -1,7 +1,5 @@
 ## blocks prod
 
-- style keycloak pages
-
 - get rid of self-votes / surface votes to client
 - scrape top of hn / mefi into cs
 - production mode server side for stack traces
