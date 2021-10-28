@@ -14,6 +14,7 @@ Vue.use(VueKeyCloak, {
   config: config.keycloak,
   init: {
     onLoad: 'check-sso',
+    silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
   },
   onReady: (kc) => {
     store.dispatch('loadUser', { kc });
