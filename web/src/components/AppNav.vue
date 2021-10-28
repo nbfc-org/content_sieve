@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="sidebar" app>
+    <v-navigation-drawer class="hidden-sm-and-up" v-model="sidebar" app>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
