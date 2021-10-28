@@ -1,7 +1,7 @@
 <template>
   <div class="editor">
-    <textarea v-model="input" ref="area" rows="8" placeholder="plain text or markdown ..." @input="update"></textarea>
-    <div class="markdown-body" v-html="compiledMarkdown"></div>
+    <textarea :class="$vuetify.breakpoint.xs ? 'vertical' : 'horizontal'" v-model="input" ref="area" rows="8" placeholder="plain text or markdown ..." @input="update"></textarea>
+    <div :class="$vuetify.breakpoint.xs ? 'vertical markdown-body' : 'horizontal markdown-body'" v-html="compiledMarkdown"></div>
   </div>
 </template>
 <script>
@@ -41,19 +41,34 @@ export default {
 
 .editor textarea, .editor div {
   display: inline-block;
-  width: 49%;
   height: 100%;
   vertical-align: top;
   box-sizing: border-box;
+  padding: .5em;
+}
+
+.editor .horizontal {
+  width: 49%;
+}
+
+.editor .vertical {
+  width: 100%;
+  min-height: 6em;
+}
+
+.editor textarea.vertical {
+  border-bottom: 1px solid #ccc;
+}
+
+.editor textarea.horizontal {
+  border-right: 1px solid #ccc;
 }
 
 .editor textarea {
   border: none;
-  border-right: 1px solid #ccc;
   outline: none;
   background-color: #f6f6f6;
   font-size: 14px;
   font-family: "Monaco", courier, monospace;
-  padding: 1em;
 }
 </style>

@@ -8,7 +8,6 @@
 - production mode server side for stack traces
 
 - add sorting on PostsWithTag page
-- add summary mode for list / toplevel view
 
 ## bugs
 
@@ -19,7 +18,7 @@
 
 ## optional below here
 
-- make comment box top/bottom on small screens
+- add summary mode for list / toplevel view
 
 - add user info page
 
