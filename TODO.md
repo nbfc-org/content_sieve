@@ -1,6 +1,7 @@
 ## blocks prod
 
-- #anchor to parent if post is on page
+- style keycloak pages
+- handle JWT expiry / increase token length
 
 - get rid of self-votes / surface votes to client
 - scrape top of hn / mefi into cs
@@ -29,7 +30,6 @@
 - calculate karma from scores & meta votes & vote wilson score
 - make meta voting not admin
 
-- handle JWT expiry
 - look at client side query caching
 
 - terraform DO & cloudflare
@@ -71,8 +71,6 @@ target: Object { postId: "3WfHRmvVV08TAoa8MnVnGI", title:
 - https://www.apollographql.com/docs/apollo-server/v2/performance/caching/
 
 - edit for 5 minutes
-
-- vuetify themes?
 
 - query caching in the db using typegraphql
 - materialized views

@@ -2,7 +2,7 @@
   <v-card v-if="post.content" flat class="rounded-0">
     <details class="comment" open>
       <v-row dense>
-        <v-col :cols="post.tags.length ? 9 : 12">
+        <v-col v-ripple :id="`post-${post.postId}`" :cols="post.tags.length ? 9 : 12">
           <v-card-text v-if="post.content.rendered">
             <div class="markdown-body" v-html="post.content.rendered" />
           </v-card-text>
@@ -40,14 +40,6 @@
         {{ post.author.username }}
         &bull; {{ ago(post.createdAt) }}
         &bull; score: {{ post.score }}
-        <span v-if="post.parent">
-          &bull; <router-link
-                   :to="`/post/${post.parent.postId}`"
-                   class="nav-item nav-link"
-                   active-class="active"
-                   exact
-                   >parent</router-link>
-        </span>
         <span v-if="settings.nested && childrenLength">
         &bull; {{ detailsInfo }}
         </span>
@@ -114,6 +106,23 @@
             <span>Permalink</span>
           </v-tooltip>
         </v-item-group>
+        <v-item-group v-if="post.parent">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                x-small
+                plain
+                exact
+                @click="gotoParent(post.parent.postId)"
+                color="primary"
+                v-on="on"
+                >
+                <v-icon left dark>{{ mdiArrowTopLeft }}</v-icon>
+              </v-btn>&nbsp;
+            </template>
+            <span>Go to parent</span>
+          </v-tooltip>
+        </v-item-group>
       </v-card-actions>
       <v-expand-transition>
         <v-card
@@ -170,7 +179,7 @@ import TextEditor from './TextEditor.vue';
 import VoteButton from './VoteButton.vue';
 import { mapState } from 'vuex';
 
-import { mdiReply, mdiDownloadCircle, mdiCommentTextMultiple, mdiLink, mdiPlusBox, mdiLabel, mdiClose } from '@mdi/js';
+import { mdiReply, mdiDownloadCircle, mdiArrowTopLeft, mdiCommentTextMultiple, mdiLink, mdiPlusBox, mdiLabel, mdiClose } from '@mdi/js';
 
 export default {
     name: 'Post',
@@ -190,6 +199,7 @@ export default {
             mdiDownloadCircle,
             mdiCommentTextMultiple,
             mdiLink,
+            mdiArrowTopLeft,
             mdiPlusBox,
             mdiLabel,
             mdiClose,
@@ -231,6 +241,35 @@ export default {
         },
     },
     methods: {
+        ripple: function(el, delay) {
+            let ev = new Event("mousedown");
+            let offset = el.getBoundingClientRect();
+            ev.clientX = offset.left + offset.width/2;
+            ev.clientY = offset.top + offset.height/2;
+            el.dispatchEvent(ev);
+
+            setTimeout(function() {
+                el.dispatchEvent(new Event("mouseup"))
+            }, delay);
+        },
+        gotoParent(postId) {
+            const refName = `post-${postId}`;
+            const el = document.getElementById(refName);
+            if(el) {
+                var headerOffset = 45;
+                var elementPosition = el.getBoundingClientRect().top;
+                var offsetPosition = elementPosition - headerOffset;
+
+                setTimeout(() => this.ripple(el, 800), 400)
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            } else {
+                this.$router.push({ path: `/post/${postId}` });
+            }
+        },
         details: function(event) {
             const o = event.currentTarget.parentElement.getAttribute('open');
             this.open = o === null;
