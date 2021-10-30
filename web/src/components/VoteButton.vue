@@ -4,7 +4,7 @@
       <v-btn
         :color="color"
         x-small
-        plain
+        icon
         @click="click"
         v-on="on"
         >

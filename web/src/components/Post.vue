@@ -72,7 +72,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 x-small
-                plain
+                icon
                 color="primary"
                 @click="openReply"
                 :data-target="`comment-${post.postId}-reply-form`"
@@ -94,7 +94,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 x-small
-                plain
+                icon
                 exact
                 :to="`/post/${post.postId}`"
                 color="primary"
@@ -111,7 +111,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 x-small
-                plain
+                icon
                 exact
                 @click="gotoParent(post.parent.postId)"
                 color="primary"
