@@ -2,7 +2,7 @@
   <v-card v-if="post.content" flat class="rounded-0">
     <details class="comment" open>
       <v-row dense>
-        <v-col v-ripple :id="`post-${post.postId}`" :cols="post.tags.length ? 9 : 12">
+        <v-col v-ripple :id="`post-${post.postId}`" :cols="post.tags.length ? 8 : 12">
           <v-card-text v-if="post.content.rendered">
             <div class="markdown-body" v-html="post.content.rendered" />
           </v-card-text>
@@ -10,7 +10,7 @@
             <a :href="post.content.url">{{ post.content.title }}</a>
           </v-card-text>
         </v-col>
-        <v-col cols="2" v-if="post.tags.length">
+        <v-col cols="3" v-if="post.tags.length">
           <v-card flat>
             <v-card-text>
             <v-chip
