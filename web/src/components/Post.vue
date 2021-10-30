@@ -10,7 +10,7 @@
             <a :href="post.content.url">{{ post.content.title }}</a>
           </v-card-text>
         </v-col>
-        <v-col cols="3" v-if="post.tags.length">
+        <v-col cols="2" v-if="post.tags.length">
           <v-card flat>
             <v-card-text>
             <v-chip
