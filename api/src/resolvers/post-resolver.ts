@@ -48,7 +48,7 @@ export class PostResolver {
 
     @Query(returns => [Post])
     async postsWithTag(@Arg("tli", type => TopLevelInput) tli: TopLevelInput): Promise<Post[]> {
-        const take = 5;
+        const take = 20;
         const skip = tli.page * take
 
         let query = this.postRepository
@@ -78,6 +78,9 @@ export class PostResolver {
             }
         };
         query = query.orderBy(...getOrderBy(tli.sortBy));
+
+        query = query.skip(skip).take(take);
+
         return query.getMany();
     }
 

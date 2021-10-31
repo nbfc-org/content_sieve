@@ -2,11 +2,13 @@
 
 - jwt is still not 7 days
 
+- mouseover relative time to show absolute
+
+- move settings into main page? sidebar?
+
 - get rid of self-votes / surface votes to client
 - scrape top of hn / mefi into cs
 - production mode server side for stack traces
-
-- add sorting on PostsWithTag page
 
 ## bugs
 
@@ -23,7 +25,7 @@
 
 - rate limiting: https://docs.nginx.com/nginx/admin-guide/security-controls/controlling-access-proxied-http/
 
-- admin mode / hide posts
+- admin mode / hide posts / soft delete
 
 - calculate karma from scores & meta votes & vote wilson score
 - make meta voting not admin
@@ -32,10 +34,6 @@
 
 - terraform DO & cloudflare
 - https://frankindev.com/2020/11/18/allow-cloudflare-only-in-nginx/
-
-- add paging
-  - https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#using-pagination
-  - https://www.howtographql.com/vue-apollo/9-pagination/
 
 - vee validate & yup
   - https://vee-validate.logaretm.com/v4/guide/components/validation
