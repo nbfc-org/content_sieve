@@ -39,17 +39,19 @@
         <v-card-text>
         {{ post.author.username }}
         &bull;
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <span v-on="on">
-                {{ ago }}
-              </span>
-            </template>
-            <span>{{ localTime }}</span>
-          </v-tooltip>
-        &bull; score: {{ post.score }}
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-on="on">
+              {{ ago }}
+            </span>
+          </template>
+          <span>{{ localTime }}</span>
+        </v-tooltip>
+        <span v-if="isAdmin()">
+          &bull; score: {{ post.score }}
+        </span>
         <span v-if="settings.nested && childrenLength">
-        &bull; {{ detailsInfo }}
+          &bull; {{ detailsInfo }}
         </span>
         <span v-if="!childrenLength && post.replies !== 0">
           &bull; {{ post.replies }} replies
@@ -92,7 +94,7 @@
             <span>Reply</span>
           </v-tooltip>
         </v-item-group>
-        <v-item-group v-if="$keycloak.ready && $keycloak.authenticated">
+        <v-item-group v-if="authed()">
           <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="up" />
           <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="down" />
           <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="flag" />&nbsp;
@@ -255,6 +257,12 @@ export default {
         },
     },
     methods: {
+        authed() {
+            return this.$keycloak.ready && this.$keycloak.authenticated;
+        },
+        isAdmin() {
+            return this.authed() && this.$keycloak.hasResourceRole('admin');
+        },
         ripple: function(el, delay) {
             let ev = new Event("mousedown");
             let offset = el.getBoundingClientRect();
