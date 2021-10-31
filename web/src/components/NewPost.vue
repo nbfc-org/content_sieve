@@ -8,12 +8,12 @@
     </p>
 
     <p>
-      Please post either a single
+      Please post either a fully composed chunk of
+      <TextEditor @saveContent="saveContent" :text="body" />
+      <strong>or</strong> a single
       <v-text-field v-model="url" placeholder="url ..." />
       with a
       <v-text-field v-model="title" placeholder="title ..." type="text" />
-      Or a fully composed chunk of
-      <TextEditor @saveContent="saveContent" :text="body" />
     </p>
 
     <p>
@@ -21,7 +21,7 @@
     <v-text-field v-model="tagString" placeholder="tags ..." />
     </p>
     Then
-    <v-btn type="submit">submit</v-btn>
+    <v-btn type="submit" color="primary" outlined>submit</v-btn>
     your post. Thank you.
   </v-form>
 </template>
