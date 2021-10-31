@@ -2,8 +2,6 @@
 
 - jwt is still not 7 days
 
-- mouseover relative time to show absolute
-
 - move settings into main page? sidebar?
 
 - get rid of self-votes / surface votes to client

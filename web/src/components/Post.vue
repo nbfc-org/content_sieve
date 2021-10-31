@@ -38,7 +38,15 @@
       <summary class="text--secondary grey lighten-4" @click="details">
         <v-card-text>
         {{ post.author.username }}
-        &bull; {{ ago(post.createdAt) }}
+        &bull;
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <span v-on="on">
+                {{ ago }}
+              </span>
+            </template>
+            <span>{{ localTime }}</span>
+          </v-tooltip>
         &bull; score: {{ post.score }}
         <span v-if="settings.nested && childrenLength">
         &bull; {{ detailsInfo }}
@@ -239,6 +247,12 @@ export default {
             }
             return kids.sort(getSort(this.sortBy));
         },
+        ago: function() {
+            return DateTime.fromMillis(this.post.createdAt).toRelative();
+        },
+        localTime: function() {
+            return DateTime.fromMillis(this.post.createdAt).toRFC2822();
+        },
     },
     methods: {
         ripple: function(el, delay) {
@@ -273,9 +287,6 @@ export default {
         details: function(event) {
             const o = event.currentTarget.parentElement.getAttribute('open');
             this.open = o === null;
-        },
-        ago: function(millis) {
-            return DateTime.fromMillis(millis).toRelative();
         },
         openReply: function(event) {
             if (this.$keycloak.authenticated) {
