@@ -5,7 +5,6 @@ import PostWithChildren from '../components/PostWithChildren.vue';
 import PostsWithTag from '../components/PostsWithTag.vue';
 import NotFoundComponent from '../components/NotFoundComponent.vue';
 import NewPost from '../components/NewPost.vue';
-import Settings from '../components/Settings.vue';
 import MetaVote from '../components/MetaVote.vue';
 
 Vue.use(VueRouter);
@@ -25,10 +24,6 @@ const routes = [
   },
   { path: '/tag/:tag',
     component: PostsWithTag,
-    props: true,
-  },
-  { path: '/user/settings',
-    component: Settings,
     props: true,
   },
   { path: '/user/metavote',

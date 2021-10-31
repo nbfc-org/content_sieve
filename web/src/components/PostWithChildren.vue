@@ -1,8 +1,11 @@
 <template>
   <v-row justify="center">
-    <v-col xl="9" lg="10" md="11" sm="12">
+    <v-col xl="8" lg="9" md="10" cols="12">
       <Post v-if="settings.nested" @reloadPost="reloadPost" @loadMore="loadMore" :key="`${getPost.postId}`" :post="getPost" :sortBy="settings.sortType" :showReply="showReply" />
       <Post v-else @reloadPost="reloadPost" @loadMore="loadMore" :key="`${post.postId}`" :post="post" v-for="post in flatten(getPost)" :sortBy="settings.sortType" :showReply="showReply" />
+    </v-col>
+    <v-col xl="2" lg="2" md="2" cols="12">
+      <Settings />
     </v-col>
   </v-row>
 </template>
@@ -10,10 +13,12 @@
 import { getPost, getOwnUserInfo, flattenPost, getSort } from '../lib/queries.js';
 import Post from './Post.vue';
 import { mapState } from 'vuex';
+import Settings from '../components/Settings.vue';
 
 export default {
     components: {
         Post,
+        Settings,
     },
     data: function() {
         return {

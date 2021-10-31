@@ -68,11 +68,6 @@ export default {
                   icon: mdiBallot,
                   test: this.isAdmin,
                 },
-                { title: "Settings",
-                  path: "/user/settings",
-                  icon: mdiAccountCog,
-                  test: () => true,
-                },
             ],
             sidebar: false,
         };

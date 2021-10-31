@@ -2,11 +2,10 @@
 
 - jwt is still not 7 days
 
-- move settings into main page? sidebar?
-
 - get rid of self-votes / surface votes to client
 - scrape top of hn / mefi into cs
 
+- add "what is this" page
 - make prod
 - consolidate nginx config
 - check production mode server side for stack traces
