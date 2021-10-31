@@ -89,23 +89,6 @@
           <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="down" />
           <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="flag" />&nbsp;
         </v-item-group>
-        <v-item-group v-if="!justOnePost">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                x-small
-                icon
-                exact
-                :to="`/post/${post.postId}`"
-                color="primary"
-                v-on="on"
-                >
-                <v-icon left dark>{{ mdiLink }}</v-icon>
-              </v-btn>&nbsp;
-            </template>
-            <span>Permalink</span>
-          </v-tooltip>
-        </v-item-group>
         <v-item-group v-if="post.parent">
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
@@ -121,6 +104,23 @@
               </v-btn>&nbsp;
             </template>
             <span>Go to parent</span>
+          </v-tooltip>
+        </v-item-group>
+        <v-item-group v-if="!justOnePost">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                x-small
+                icon
+                exact
+                :to="`/post/${post.postId}`"
+                color="primary"
+                v-on="on"
+                >
+                <v-icon left dark>{{ mdiLink }}</v-icon>
+              </v-btn>&nbsp;
+            </template>
+            <span>Permalink</span>
           </v-tooltip>
         </v-item-group>
       </v-card-actions>

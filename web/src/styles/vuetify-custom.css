@@ -33,6 +33,11 @@ summary .v-card__text {
   padding: 0 !important;
 }
 
+button.v-btn--icon {
+  margin-right: 1em;
+
+}
+
 /*
 .v-card__actions {
   border-bottom: thin solid rgba(0, 0, 0, 0.12) !important;
