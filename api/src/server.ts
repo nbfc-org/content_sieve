@@ -105,7 +105,7 @@ export async function bootstrap(generate_db) {
 
         await app.listen({ port: config.api.port });
 
-        // await initJobs();
+        await initJobs();
 
     } catch (err) {
         console.error(err);

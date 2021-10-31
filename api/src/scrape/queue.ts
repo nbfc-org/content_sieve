@@ -1,17 +1,29 @@
-import { Worker, Queue } from 'bullmq';
+import { Worker, Queue, QueueScheduler } from 'bullmq';
+import * as path from 'path';
+
+import { config } from "../../../lib/config.js";
 
 const queueName = "scrapeJobs";
 
-const queue = new Queue(queueName);
+const { connection } = config.scrape;
 
-const worker = new Worker(queueName, async job => {
-    // Will print { foo: 'bar'} for the first job
-    // and { qux: 'baz' } for the second.
-    console.log(job.data);
-});
+const _queueScheduler = new QueueScheduler(queueName, { connection });
+const queue = new Queue(queueName, { connection });
+
+const processorFile = path.join(__dirname, 'get_links.js');
+const worker = new Worker(
+    queueName,
+    processorFile,
+    { connection },
+);
 
 worker.on('completed', (job) => {
-    console.log(`${job.id} has completed!`);
+    // console.log(`${job.id} has completed!`);
+});
+
+worker.on('error', err => {
+    // log the error
+    console.error(err);
 });
 
 worker.on('failed', (job, err) => {
@@ -20,11 +32,13 @@ worker.on('failed', (job, err) => {
 
 export async function initJobs() {
     await queue.add(
-        'bird',
-        { color: 'bird' },
+        'someJob',
+        { color: 'at' },
         {
+            removeOnFail: true,
+            removeOnComplete: true,
             repeat: {
-                every: 10000,
+                every: 2000,
                 limit: 100,
             },
         }
