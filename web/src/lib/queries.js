@@ -179,7 +179,7 @@ const postsWithTag = {
     return {
       tli: {
         tag: this.tag,
-        sortBy: "NEWEST",
+        sortBy: this.sortType,
       },
     };
   },
