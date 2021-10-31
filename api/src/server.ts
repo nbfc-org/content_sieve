@@ -22,7 +22,7 @@ import { Post } from "./entities/post.js";
 import { TopLevelScores, CommentScores } from "./entities/views.js";
 import { Vote } from "./entities/vote.js";
 import { Tag, TagText } from "./entities/tag.js";
-import { seedDatabase } from "./helpers.js";
+import { initJobs } from "./scrape/queue.js";
 import { customAuthChecker } from "./authz.js";
 
 import { config } from "../../lib/config.js";
@@ -104,6 +104,8 @@ export async function bootstrap(generate_db) {
         server.applyMiddleware({ app });
 
         await app.listen({ port: config.api.port });
+
+        // await initJobs();
 
     } catch (err) {
         console.error(err);
