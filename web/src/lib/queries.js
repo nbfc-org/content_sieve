@@ -180,6 +180,7 @@ const postsWithTag = {
       tli: {
         tag: this.tag,
         sortBy: this.sortType,
+        page: this.page,
       },
     };
   },

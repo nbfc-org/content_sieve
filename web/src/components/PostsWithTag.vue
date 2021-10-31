@@ -21,7 +21,16 @@ export default {
     data: function() {
         return {
             postsWithTag: [],
+            page: 0,
+            nextPage: 1,
+            hasMore: true,
+            bottom: false,
         };
+    },
+    created() {
+        window.addEventListener('scroll', () => {
+            this.bottom = this.bottomVisible()
+        });
     },
     computed: {
         ...mapState({
@@ -42,9 +51,47 @@ export default {
             return [...posts.sort(getSort(this.settings.sortType))];
         },
     },
+    watch: {
+        bottom(bottom) {
+            if (bottom && this.hasMore) {
+                this.loadMore();
+            }
+        }
+    },
     methods: {
+        bottomVisible() {
+            const scrollY = window.scrollY
+            const visible = document.documentElement.clientHeight
+            const pageHeight = document.documentElement.scrollHeight
+            const bottomOfPage = visible + scrollY >= pageHeight
+            return bottomOfPage || pageHeight < visible
+        },
         reloadPost(cache, post) {
             this.$apollo.queries.postsWithTag.refetch();
+        },
+        loadMore() {
+            this.$apollo.queries.postsWithTag.fetchMore({
+                variables: {
+                    tli: {
+                        tag: this.tag,
+                        sortBy: this.sortType,
+                        page: this.page + this.nextPage,
+                    },
+                },
+                updateQuery: (previousResult, { fetchMoreResult }) => {
+                    this.nextPage++;
+                    if (!fetchMoreResult.postsWithTag.length) {
+                        this.hasMore = false;
+                    }
+                    this.bottom = false;
+                    return {
+                        postsWithTag: [
+                            ...previousResult.postsWithTag,
+                            ...fetchMoreResult.postsWithTag,
+                        ]
+                    };
+                }
+            });
         },
     },
     apollo: {
