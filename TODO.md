@@ -2,7 +2,10 @@
 
 - jwt is still not 7 days
 
+- todo list in sidebar
+
 - get rid of self-votes / surface votes to client
+
 - scrape top of hn / mefi into cs
 
 - add "what is this" page
@@ -25,7 +28,9 @@
 
 - rate limiting: https://docs.nginx.com/nginx/admin-guide/security-controls/controlling-access-proxied-http/
 
-- admin mode / hide posts / soft delete
+- admin mode
+-- hide posts / soft delete
+-- detach / merge threads
 
 - calculate karma from scores & meta votes & vote wilson score
 - make meta voting not admin
