@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!--
     <v-navigation-drawer class="hidden-sm-and-up" v-model="sidebar" app>
       <v-list-item>
         <v-list-item-content>
@@ -20,16 +21,22 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
+    -->
 
     <v-app-bar app dense>
+      <!--
       <span class="hidden-sm-and-up">
         <v-app-bar-nav-icon @click="sidebar = !sidebar"></v-app-bar-nav-icon>
       </span>
+      -->
       <v-toolbar-title>
         <v-btn to="/" exact>{{ title }}</v-btn>
       </v-toolbar-title>
       <v-spacer/>
-      <v-toolbar-items class="hidden-xs-only">
+      <!--
+          <v-toolbar-items class="hidden-xs-only">
+            -->
+      <v-toolbar-items>
         <v-btn x-small v-for="item in menuItems" v-if="item.test()" :key="item.title" :to="item.path">
           {{ item.title }}
         </v-btn>
