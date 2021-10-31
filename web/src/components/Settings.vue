@@ -1,12 +1,16 @@
 <template>
-  <v-form>
-    <h3>Comment Settings</h3>
-    <v-switch v-model="nested" inset label="Nested?" />
-    <h4>Sort Order</h4>
-    <v-radio-group mandatory v-model="sortType">
-      <v-radio :key="`sortTypeBtn_${s}`" v-for="s in sortTypes" :value="s" :label="s" />
-    </v-radio-group>
-  </v-form>
+  <v-card>
+    <v-card-text>
+      <h3>Settings</h3>
+      <v-divider class="mb-3 mt-3" />
+      <h5>Sort Order for Posts & Comments</h5>
+      <v-radio-group mandatory v-model="sortType">
+        <v-radio :key="`sortTypeBtn_${s}`" v-for="s in sortTypes" :value="s" :label="s" />
+      </v-radio-group>
+      <h5>Comment Settings</h5>
+      <v-switch v-model="nested" inset label="Nested?" />
+    </v-card-text>
+  </v-card>
 </template>
 <script>
 
