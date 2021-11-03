@@ -9,12 +9,15 @@ import { Link } from "./entities/link.js";
 import { Tag, TagText } from "./entities/tag.js";
 import { TopLevelScores, CommentScores } from "./entities/views.js";
 
-import { renderMarkdown } from '../../lib/validation.js';
+import { renderMarkdown, splitTags } from '../../lib/validation.js';
 
 import { JSDOM, VirtualConsole } from "jsdom";
 import * as createDOMPurify from "dompurify";
 
 import * as cacheManager from "cache-manager";
+import { PostInput } from "./resolvers/types/post-input.js";
+
+import * as uuid62 from 'uuid62';
 
 const data = "<html><body></body></html>";
 const url = "http://example.com";
@@ -86,6 +89,65 @@ async function getSlowPostDataFromDB(post) {
 
     const depth = await repo.countAncestors(post);
     return { score, replies, depth: depth - 1 };
+}
+
+export async function addPostPure(postInput: PostInput, user: User, conn: any): Promise<Post> {
+
+    const post_attrs = {
+        postId: uuid62.decode(postInput.postId),
+        author: user,
+    };
+
+    let post;
+    if (postInput.url) {
+        // link
+        const [ link ] = conn.linkRepository.create([
+            { url: postInput.url, title: postInput.title },
+        ]);
+
+        post = conn.postRepository.create({...post_attrs, link});
+        await conn.postRepository.save(post);
+
+    } else if (postInput.body) {
+        // text
+        const [ text ] = conn.textRepository.create([
+            { body: postInput.body },
+        ]);
+
+        post = conn.postRepository.create({...post_attrs, text});
+        await conn.postRepository.save(post);
+
+        if (postInput.parentId) {
+            // reply
+            post.parent = await conn.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
+            await conn.postRepository.save(post);
+        }
+    }
+
+    if (postInput.tagString) {
+        const tags = [];
+        for (const slug of splitTags(postInput.tagString)) {
+            let tag;
+            let tt;
+            tt = await conn.tagTextRepository.findOne({slug});
+            if (tt) {
+                tag = await conn.tagRepository.findOne(
+                    { canonical: tt },
+                    { relations: ["canonical"] },
+                );
+            } else {
+                tt = conn.tagTextRepository.create({ slug });
+                await conn.tagTextRepository.save(tt);
+                tag = conn.tagRepository.create({ slugs: [tt], canonical: tt });
+                await conn.tagRepository.save(tag);
+            }
+            tags.push(tag);
+        }
+
+        post.tags = tags;
+        await conn.postRepository.save(post);
+    }
+    return post;
 }
 
 export async function seedDatabase() {

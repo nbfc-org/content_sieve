@@ -32,14 +32,13 @@ worker.on('failed', (job, err) => {
 
 export async function initJobs() {
     await queue.add(
-        'someJob',
-        { color: 'at' },
+        'getLinks',
+        { url: 'https://www.metafilter.com/' },
         {
             removeOnFail: true,
             removeOnComplete: true,
             repeat: {
-                every: 2000,
-                limit: 100,
+                every: 30000,
             },
         }
     );

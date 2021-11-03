@@ -13,9 +13,7 @@ import { PostInput } from "./types/post-input.js";
 import { TopLevelInput } from "./types/top-level-input.js";
 import { Context } from "./types/context.js";
 
-import { invalidateCache } from "../helpers.js";
-
-import { splitTags } from '../../../lib/validation.js';
+import { invalidateCache, addPostPure } from "../helpers.js";
 
 import * as uuid62 from 'uuid62';
 
@@ -90,60 +88,7 @@ export class PostResolver {
 
         const user = await findOrCreateUser(req.user);
 
-        const post_attrs = {
-            postId: uuid62.decode(postInput.postId),
-            author: user,
-        };
-
-        let post;
-        if (postInput.url) {
-            // link
-            const [ link ] = this.linkRepository.create([
-                { url: postInput.url, title: postInput.title },
-            ]);
-
-            post = this.postRepository.create({...post_attrs, link});
-            await this.postRepository.save(post);
-
-        } else if (postInput.body) {
-            // text
-            const [ text ] = this.textRepository.create([
-                { body: postInput.body },
-            ]);
-
-            post = this.postRepository.create({...post_attrs, text});
-            await this.postRepository.save(post);
-
-            if (postInput.parentId) {
-                // reply
-                post.parent = await this.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
-                await this.postRepository.save(post);
-            }
-        }
-
-        if (postInput.tagString) {
-            const tags = [];
-            for (const slug of splitTags(postInput.tagString)) {
-                let tag;
-                let tt;
-                tt = await this.tagTextRepository.findOne({slug});
-                if (tt) {
-                    tag = await this.tagRepository.findOne(
-                        { canonical: tt },
-                        { relations: ["canonical"] },
-                    );
-                } else {
-                    tt = this.tagTextRepository.create({ slug });
-                    await this.tagTextRepository.save(tt);
-                    tag = this.tagRepository.create({ slugs: [tt], canonical: tt });
-                    await this.tagRepository.save(tag);
-                }
-                tags.push(tag);
-            }
-
-            post.tags = tags;
-            await this.postRepository.save(post);
-        }
+        const post = await addPostPure(postInput, user, this);
 
         invalidateCache(post);
 
