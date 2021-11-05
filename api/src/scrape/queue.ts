@@ -4,6 +4,7 @@ import * as path from 'path';
 import { config } from "../../../lib/config.js";
 
 const queueName = "scrapeJobs";
+const repeatEvery = 30;
 
 const { connection } = config.scrape;
 
@@ -31,14 +32,25 @@ worker.on('failed', (job, err) => {
 });
 
 export async function initJobs() {
+    const jobId = 'getLinksMefi';
+    try {
+        const jobs = await queue.getRepeatableJobs();
+        for (const job of jobs) {
+            await queue.removeRepeatableByKey(job.key);
+        }
+    } catch(e) {
+        console.error(e);
+    }
+
     await queue.add(
-        'getLinks',
+        jobId,
         { url: 'https://www.metafilter.com/' },
         {
-            removeOnFail: true,
-            removeOnComplete: true,
+            //removeOnFail: true,
+            //removeOnComplete: true,
+            jobId,
             repeat: {
-                every: 30000,
+                every: repeatEvery * 1000 / 2,
             },
         }
     );

@@ -39,7 +39,7 @@ const cc = async () => {
 module.exports = async (job: SandboxedJob) => {
     const { url } = job.data;
 
-    // console.log(url);
+    // console.log(Date.now());
     return;
 
     await cc();
