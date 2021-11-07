@@ -17,6 +17,8 @@ import { addPostPure } from "../helpers.js";
 
 import { config } from "../../../lib/config.js";
 
+import { mefiPosts } from "./osmosis.js";
+
 let created = false;
 
 const cc = async () => {
@@ -39,8 +41,10 @@ const cc = async () => {
 module.exports = async (job: SandboxedJob) => {
     const { url } = job.data;
 
-    // console.log(Date.now());
     return;
+    const { posts, tagString } = await mefiPosts();
+    const { body, id } = posts[0];
+    console.log(body);
 
     await cc();
 
@@ -49,11 +53,12 @@ module.exports = async (job: SandboxedJob) => {
         postRepository: getRepository(Post),
         textRepository: getRepository(Text),
         tagTextRepository: getRepository(TagText),
+        tagRepository: getRepository(Tag),
     };
     const postInput = {
-        url,
-        title: 'Fake Title',
+        body,
         postId: uuid62.v4(),
+        tagString,
     };
     const user = await getRepository(User).findOne();
 
