@@ -2,6 +2,7 @@ import { ObjectType, ID, Field } from "type-graphql";
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, ManyToOne } from "typeorm";
 
 import { Post } from "./post.js";
+import { PostType } from "./post_type.js";
 import { Lazy } from "../helpers.js";
 
 @Entity()
@@ -20,4 +21,7 @@ export class Link {
 
     @OneToOne(() => Post, post => post.link)
     post: Lazy<Post>;
+
+    @OneToOne(() => PostType, post_type => post_type.link)
+    post_type: Lazy<PostType>;
 }

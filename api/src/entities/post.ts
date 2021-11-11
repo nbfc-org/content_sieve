@@ -12,6 +12,7 @@ import { User } from "./user.js";
 import { Link } from "./link.js";
 import { Text } from "./text.js";
 import { Vote } from "./vote.js";
+import { PostType, PostTypeEnum } from "./post_type.js";
 import { Tag } from "./tag.js";
 import { Lazy, getSlowPostData } from "../helpers.js";
 
@@ -70,6 +71,10 @@ export class Post {
     @CreateDateColumn({type: 'timestamp with time zone'})
     createdAt: Date;
 
+    @OneToOne(type => PostType, { cascade: true, eager: true })
+    @JoinColumn()
+    type: PostType;
+
     @OneToOne(type => Link, { cascade: true, eager: true })
     @JoinColumn()
     link: Link;
@@ -97,8 +102,21 @@ export class Post {
     @AfterLoad()
     @AfterInsert()
     async afterLoad() {
-        this.content = this.text || this.link;
         this.postId = uuid62.encode(this.postId);
+        // this.content = this.text || this.link;
+        if (this.type && this.type.postType) {
+            switch (this.type.postType) {
+                case PostTypeEnum.TEXT:
+                    this.content = await this.type.text;
+                    break;
+                case PostTypeEnum.LINK:
+                    this.content = await this.type.link;
+                    break;
+            }
+        } else {
+            console.log(`still using text/link ids for ${this.postId}`);
+            this.content = this.text || this.link;
+        }
         const { score, replies, depth } = await getSlowPostData(this);
         this.score = score;
         this.replies = replies;

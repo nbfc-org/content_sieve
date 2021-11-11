@@ -3,6 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
 import { BeforeInsert, BeforeUpdate } from "typeorm";
 
 import { Post } from "./post.js";
+import { PostType } from "./post_type.js";
 import { Lazy, renderMD } from "../helpers.js";
 
 @Entity()
@@ -27,4 +28,7 @@ export class Text {
 
     @OneToOne(() => Post, post => post.link)
     post: Lazy<Post>;
+
+    @OneToOne(() => PostType, post_type => post_type.link)
+    post_type: Lazy<PostType>;
 }
