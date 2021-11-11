@@ -34,31 +34,13 @@ export class PostResolver {
         const post = await this.postRepository.findOne({ postId: id });
 
         const repo = getManager().getTreeRepository(Post);
-        /*
-        const wat = await repo.createDescendantsQueryBuilder('post', 'postClosure', post)
-            .leftJoinAndSelect("post.author", "author")
-            .leftJoinAndSelect("post.type", "type")
-            .leftJoinAndSelect("type.link", "typelink")
-            .leftJoinAndSelect("type.text", "typetext")
-            .leftJoinAndSelect("post.tags", "tags")
-            .leftJoinAndSelect("tags.canonical", "canonical", "tags.canonical = canonical.id")
-            .leftJoinAndSelect("post.parent", "parent")
-            .getMany();
-        console.log(wat);
-        */
 
         const p = await repo.findDescendantsTree(post, { relations: ["type", "tags", "author", "parent"] });
-        // const p = await repo.findDescendantsTree(post, { relations: ["type", "link", "text", "tags", "author", "parent"] });
-        // for non-root postId, the above doesn't get the top-level parent
-        // TODO: switch to branch that supports this
-        // TODO: this PR https://github.com/typeorm/typeorm/pull/8080
-        // const parents = await repo.findAncestors(post, { relations: ["type", "link", "text", "tags", "author", "parent"] });
-        /*
-        const parents = await repo.findAncestors(post);
+
+        const parents = await repo.findAncestors(post, { relations: ["type", "link", "text", "tags", "author", "parent"] });
         if (parents.length > 1) {
             p.parent = parents[parents.length-2];
         }
-        */
         return p;
     }
 
