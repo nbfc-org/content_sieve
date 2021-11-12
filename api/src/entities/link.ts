@@ -19,9 +19,6 @@ export class Link {
     @Column()
     title: string;
 
-    @OneToOne(() => Post, post => post.link)
-    post: Lazy<Post>;
-
     @OneToOne(() => PostType, post_type => post_type.link)
     post_type: Lazy<PostType>;
 }

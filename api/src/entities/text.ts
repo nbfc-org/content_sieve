@@ -26,9 +26,6 @@ export class Text {
         this.rendered = renderMD(this.body);
     }
 
-    @OneToOne(() => Post, post => post.text)
-    post: Lazy<Post>;
-
     @OneToOne(() => PostType, post_type => post_type.text)
     post_type: Lazy<PostType>;
 }

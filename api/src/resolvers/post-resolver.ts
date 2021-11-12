@@ -38,7 +38,7 @@ export class PostResolver {
 
         const p = await repo.findDescendantsTree(post, { relations: ["type", "tags", "author", "parent"] });
 
-        const parents = await repo.findAncestors(post, { relations: ["type", "link", "text", "tags", "author", "parent"] });
+        const parents = await repo.findAncestors(post, { relations: ["type", "tags", "author", "parent"] });
         if (parents.length > 1) {
             p.parent = parents[parents.length-2];
         }

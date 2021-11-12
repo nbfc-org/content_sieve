@@ -75,16 +75,8 @@ export class Post {
     @JoinColumn()
     type: PostType;
 
-    @OneToOne(type => Link, { cascade: true, eager: true })
-    @JoinColumn()
-    link: Link;
-
     @Column({ nullable: true })
     textId: number;
-
-    @OneToOne(type => Text, { cascade: true, eager: true })
-    @JoinColumn()
-    text: Text;
 
     @Field(type => [Vote], { nullable: true })
     @OneToMany(type => Vote, vote => vote.post, { lazy: true, cascade: ["insert"] })
@@ -114,8 +106,7 @@ export class Post {
                     break;
             }
         } else {
-            console.log(`still using text/link ids for ${this.postId}`);
-            this.content = this.text || this.link;
+            console.error(`still using text/link ids for ${this.postId}`);
         }
         const { score, replies, depth } = await getSlowPostData(this);
         this.score = score;
