@@ -2,9 +2,9 @@ import { Resolver, Query, Authorized, Arg, Mutation, Ctx, ID } from "type-graphq
 import { Repository, getManager } from "typeorm";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { AuthenticationError } from "apollo-server-express";
 
 import { Post, SortType } from "../entities/post.js";
+import { PostType } from "../entities/post_type.js";
 import { Text } from "../entities/text.js";
 import { Link } from "../entities/link.js";
 import { findOrCreateUser } from "../entities/user.js";
@@ -24,6 +24,7 @@ export class PostResolver {
         @InjectRepository(Post) private readonly postRepository: Repository<Post>,
         @InjectRepository(Text) private readonly textRepository: Repository<Text>,
         @InjectRepository(Link) private readonly linkRepository: Repository<Link>,
+        @InjectRepository(PostType) private readonly postTypeRepository: Repository<PostType>,
         @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
         @InjectRepository(TagText) private readonly tagTextRepository: Repository<TagText>,
     ) {}

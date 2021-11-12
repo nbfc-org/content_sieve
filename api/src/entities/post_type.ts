@@ -28,14 +28,14 @@ export class PostType {
     @OneToOne(() => Post, post => post.type)
     post: Lazy<Post>;
 
-    @Column({ nullable: true })
+    @Column()
     contentId: number;
 
-    @OneToOne(() => Link, { eager: true })
+    @OneToOne(() => Link, { cascade: true, eager: true })
     @JoinColumn({ name: 'contentId' })
     link: Lazy<Link>;
 
-    @OneToOne(() => Text, { eager: true })
+    @OneToOne(() => Text, { cascade: true, eager: true })
     @JoinColumn({ name: 'contentId' })
     text: Lazy<Text>;
 }
