@@ -4,6 +4,7 @@ import { Entity, JoinColumn, PrimaryGeneratedColumn, Column, OneToOne } from "ty
 import { Post } from "./post.js";
 import { Link } from "./link.js";
 import { Text } from "./text.js";
+import { Mefi } from "./mefi.js";
 import { Lazy } from "../helpers.js";
 
 export enum PostTypeEnum {
@@ -38,4 +39,8 @@ export class PostType {
     @OneToOne(() => Text, { cascade: true, eager: true })
     @JoinColumn({ name: 'contentId' })
     text: Lazy<Text>;
+
+    @OneToOne(() => Mefi, { cascade: true, eager: true })
+    @JoinColumn({ name: 'contentId' })
+    mefi: Lazy<Mefi>;
 }
