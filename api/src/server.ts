@@ -18,6 +18,7 @@ import { VoteResolver } from "./resolvers/vote-resolver.js";
 import { User, Jwt } from "./entities/user.js";
 import { Link } from "./entities/link.js";
 import { Text } from "./entities/text.js";
+import { PostType } from "./entities/post_type.js";
 import { Post } from "./entities/post.js";
 import { TopLevelScores, CommentScores } from "./entities/views.js";
 import { Vote } from "./entities/vote.js";
@@ -45,7 +46,9 @@ export async function bootstrap(generate_db) {
             type: "postgres",
             username: "postgres", // fill this with your username
             ...config.db,
-            entities: [User, Jwt, Text, Link, Post, Vote,
+            entities: [User, Jwt,
+                       Text, Link, Post, PostType,
+                       Vote,
                        TopLevelScores, CommentScores,
                        Tag, TagText],
             logger: "advanced-console",

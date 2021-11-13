@@ -30,7 +30,7 @@
     "slug": "^5.1.0",
     "type-graphql": "^1.1.1",
     "typedi": "^0.10.0",
-    "typeorm": "^0.2.37",
+    "typeorm": "^0.2.40",
     "typeorm-typedi-extensions": "^0.4.1",
     "uuid62": "^1.0.1",
     "valid-url": "^1.0.9"

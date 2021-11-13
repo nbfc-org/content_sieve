@@ -2,9 +2,9 @@ import { Resolver, Query, Authorized, Arg, Mutation, Ctx, ID } from "type-graphq
 import { Repository, getManager } from "typeorm";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { AuthenticationError } from "apollo-server-express";
 
 import { Post, SortType } from "../entities/post.js";
+import { PostType } from "../entities/post_type.js";
 import { Text } from "../entities/text.js";
 import { Link } from "../entities/link.js";
 import { findOrCreateUser } from "../entities/user.js";
@@ -24,6 +24,7 @@ export class PostResolver {
         @InjectRepository(Post) private readonly postRepository: Repository<Post>,
         @InjectRepository(Text) private readonly textRepository: Repository<Text>,
         @InjectRepository(Link) private readonly linkRepository: Repository<Link>,
+        @InjectRepository(PostType) private readonly postTypeRepository: Repository<PostType>,
         @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
         @InjectRepository(TagText) private readonly tagTextRepository: Repository<TagText>,
     ) {}
@@ -34,10 +35,10 @@ export class PostResolver {
         const post = await this.postRepository.findOne({ postId: id });
 
         const repo = getManager().getTreeRepository(Post);
-        const p = await repo.findDescendantsTree(post, { relations: ["link", "text", "tags", "author", "parent"] });
 
-        // for non-root postId, the above doesn't get the top-level parent
-        const parents = await repo.findAncestors(post);
+        const p = await repo.findDescendantsTree(post, { relations: ["type", "tags", "author", "parent"] });
+
+        const parents = await repo.findAncestors(post, { relations: ["type", "tags", "author", "parent"] });
         if (parents.length > 1) {
             p.parent = parents[parents.length-2];
         }
@@ -53,10 +54,11 @@ export class PostResolver {
             .createQueryBuilder("post")
             .where("post.parent is NULL")
             .leftJoinAndSelect("post.author", "author")
-            .leftJoinAndSelect("post.link", "link")
+            .leftJoinAndSelect("post.type", "type")
+            .leftJoinAndSelect("type.link", "typelink")
+            .leftJoinAndSelect("type.text", "typetext")
             .leftJoinAndSelect("post.tags", "tags")
             .leftJoinAndSelect("tags.canonical", "canonical", "tags.canonical = canonical.id")
-            .leftJoinAndSelect("post.text", "text")
             .leftJoinAndSelect("post.parent", "parent");
 
         if (tli.tag !== "all") {

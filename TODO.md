@@ -2,6 +2,8 @@
 
 - jwt is still not 7 days
 
+- get rid of linkId and textId in post
+
 - todo list in sidebar
 
 - get rid of self-votes / surface votes to client

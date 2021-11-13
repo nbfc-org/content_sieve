@@ -101,20 +101,31 @@ export async function addPostPure(postInput: PostInput, user: User, conn: any): 
     let post;
     if (postInput.url) {
         // link
-        const [ link ] = conn.linkRepository.create([
+        const link = conn.linkRepository.create(
             { url: postInput.url, title: postInput.title },
-        ]);
+        );
+        await conn.linkRepository.save(link);
 
-        post = conn.postRepository.create({...post_attrs, link});
+        const type = conn.postTypeRepository.create(
+            { postType: 'link', contentId: link.id },
+        );
+
+        type.link = link;
+
+        post = conn.postRepository.create({...post_attrs, type});
         await conn.postRepository.save(post);
 
     } else if (postInput.body) {
         // text
-        const [ text ] = conn.textRepository.create([
+        const text = conn.textRepository.create(
             { body: postInput.body },
-        ]);
+        );
 
-        post = conn.postRepository.create({...post_attrs, text});
+        const type = conn.postTypeRepository.create(
+            { postType: 'text', text },
+        );
+
+        post = conn.postRepository.create({...post_attrs, type});
         await conn.postRepository.save(post);
 
         if (postInput.parentId) {
