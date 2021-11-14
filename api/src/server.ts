@@ -54,8 +54,6 @@ export async function bootstrap(generate_db) {
                        Vote,
                        TopLevelScores, CommentScores,
                        Tag, TagText],
-            logger: "advanced-console",
-            logging: "all",
             ...pgOpts,
             // cache: true,
         });

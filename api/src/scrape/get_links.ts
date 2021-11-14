@@ -34,8 +34,6 @@ const cc = async () => {
                        Vote,
                        TopLevelScores, CommentScores,
                        Tag, TagText],
-            logger: "advanced-console",
-            logging: "all",
         });
         created = true;
     }
