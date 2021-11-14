@@ -49,6 +49,6 @@ const mefiObj = ([k, v]) => {
 
 export async function mefiPosts() {
     const links: Array<string> = await mefiLinks();
-    const posts = Object.entries(linksToPosts(links)).map(mefiObj);
+    const posts = Object.entries(linksToPosts(links)).map(mefiObj).reverse();
     return { posts };
 }

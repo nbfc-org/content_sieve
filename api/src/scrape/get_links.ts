@@ -41,12 +41,32 @@ const cc = async () => {
 
 };
 
-module.exports = async (job: SandboxedJob) => {
-    // const { url } = job.data;
+const jobs = {
+    mefi: async (conn) => {
 
-    return;
-    const { posts } = await mefiPosts();
-    const newPost: Mefi = Object.assign(new Mefi(), posts[0]);
+        // TODO: switch to a dedicated mefi user
+        const user = await conn.userRepository.findOne();
+
+        const latest = await conn.mefiRepository.findOne({ order: { xid: "DESC" }});
+
+        const latest_xid = latest ? latest.xid : 0;
+
+        const { posts } = await mefiPosts();
+
+        for (const post of posts) {
+            if (post.xid > latest_xid) {
+                const newPost: Mefi = Object.assign(new Mefi(), post);
+                await addPostPure(newPost, user, conn);
+            }
+            else {
+                break;
+            }
+        }
+    },
+};
+
+module.exports = async (job: SandboxedJob) => {
+    const { key } = job.data;
 
     await cc();
 
@@ -58,13 +78,9 @@ module.exports = async (job: SandboxedJob) => {
         tagTextRepository: getRepository(TagText),
         tagRepository: getRepository(Tag),
         mefiRepository: getRepository(Mefi),
+        userRepository: getRepository(User),
     };
 
-    // TODO: switch to a dedicated mefi user
-    const user = await getRepository(User).findOne();
-
-    const post = await addPostPure(newPost, user, fakeConn);
-
-    console.log(post);
-
-};
+    await jobs[key](fakeConn);
+}
+;
