@@ -1,10 +1,9 @@
 import { Worker, Queue, QueueScheduler } from 'bullmq';
 import * as path from 'path';
 
-import { config } from "../../../lib/config.js";
+import { config, env } from "../../../lib/config.js";
 
-const queueName = "scrapeJobs";
-const repeatEvery = 30 * 60; // seconds
+const queueName = `scrapeJobs_${env}`;
 
 const { connection } = config.scrape;
 
@@ -15,7 +14,7 @@ const processorFile = path.join(__dirname, 'get_links.js');
 const worker = new Worker(
     queueName,
     processorFile,
-    { connection },
+    { connection, concurrency: 5 },
 );
 
 worker.on('completed', (job) => {
@@ -32,7 +31,6 @@ worker.on('failed', (job, err) => {
 });
 
 export async function initJobs() {
-    const jobId = 'getLinksMefi';
     try {
         const jobs = await queue.getRepeatableJobs();
         for (const job of jobs) {
@@ -42,6 +40,7 @@ export async function initJobs() {
         console.error(e);
     }
 
+    let jobId = 'getLinksMefi';
     await queue.add(
         jobId,
         { key: 'mefi' },
@@ -50,8 +49,23 @@ export async function initJobs() {
             //removeOnComplete: true,
             jobId,
             repeat: {
-                every: repeatEvery * 1000 / 2,
+                every: config.scrape.repeatEvery * 1000 / 2,
             },
         }
     );
+
+    jobId = 'getLinksHN';
+    await queue.add(
+        jobId,
+        { key: 'hn' },
+        {
+            //removeOnFail: true,
+            //removeOnComplete: true,
+            jobId,
+            repeat: {
+                every: config.scrape.repeatEvery * 1000 / 2,
+            },
+        }
+    );
+
 };

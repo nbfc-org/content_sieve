@@ -7,6 +7,7 @@ import { Post } from "./entities/post.js";
 import { Text } from "./entities/text.js";
 import { Link } from "./entities/link.js";
 import { Mefi } from "./entities/mefi.js";
+import { HackerNews } from "./entities/hn.js";
 import { PostTypeEnum } from "./entities/post_type.js";
 import { Tag, TagText } from "./entities/tag.js";
 import { TopLevelScores, CommentScores } from "./entities/views.js";
@@ -93,16 +94,22 @@ async function getSlowPostDataFromDB(post) {
     return { score, replies, depth: depth - 1 };
 }
 
-type NewPost = PostInput | Mefi;
+type NewPost = PostInput | Mefi | HackerNews;
 
 export async function addPostPure(newPost: NewPost, user: User, conn: any): Promise<Post> {
     let postInput;
+    const hn = newPost as HackerNews;
     const mf = newPost as Mefi;
 
-    if (mf.xid) {
+    if (mf.xid && mf.url) {
         postInput = {
             postId: uuid62.v4(),
             tagString: "mefi",
+        };
+    } else if (hn.xid) {
+        postInput = {
+            postId: uuid62.v4(),
+            tagString: "hn",
         };
     } else {
         postInput = newPost;
@@ -151,7 +158,7 @@ export async function addPostPure(newPost: NewPost, user: User, conn: any): Prom
             post.parent = await conn.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
             await conn.postRepository.save(post);
         }
-    } else if (mf.xid) {
+    } else if (mf.xid && mf.url) {
         // mefi
         const mefi = conn.mefiRepository.create(
             { url: mf.url, xid: mf.xid, links: mf.links }
@@ -163,6 +170,22 @@ export async function addPostPure(newPost: NewPost, user: User, conn: any): Prom
         );
 
         type.mefi = mefi;
+
+        post = conn.postRepository.create({...post_attrs, type});
+        await conn.postRepository.save(post);
+
+    } else if (hn.xid) {
+        // hn
+        const hnews = conn.hnRepository.create(
+            { xid: hn.xid, links: hn.links }
+        );
+        await conn.hnRepository.save(hnews);
+
+        const type = conn.postTypeRepository.create(
+            { postType: PostTypeEnum.HN, contentId: hnews.id },
+        );
+
+        type.hn = hnews;
 
         post = conn.postRepository.create({...post_attrs, type});
         await conn.postRepository.save(post);

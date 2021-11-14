@@ -7,6 +7,7 @@ import { User, Jwt } from "../entities/user.js";
 import { Link } from "../entities/link.js";
 import { Text } from "../entities/text.js";
 import { Mefi } from "../entities/mefi.js";
+import { HackerNews } from "../entities/hn.js";
 import { Post } from "../entities/post.js";
 import { PostType } from "../entities/post_type.js";
 import { TopLevelScores, CommentScores } from "../entities/views.js";
@@ -17,7 +18,7 @@ import { addPostPure } from "../helpers.js";
 
 import { config } from "../../../lib/config.js";
 
-import { mefiPosts } from "./osmosis.js";
+import { mefiPosts, hnPosts } from "./osmosis.js";
 
 let created = false;
 
@@ -28,13 +29,11 @@ const cc = async () => {
             username: "postgres", // fill this with your username
             ...config.db,
             entities: [User, Jwt,
-                       Text, Link, Mefi,
+                       Text, Link, Mefi, HackerNews,
                        Post, PostType,
                        Vote,
                        TopLevelScores, CommentScores,
                        Tag, TagText],
-            logger: "advanced-console",
-            logging: "all",
         });
         created = true;
     }
@@ -63,6 +62,21 @@ const jobs = {
             }
         }
     },
+    hn: async (conn) => {
+
+        // TODO: switch to a dedicated hn user
+        const user = await conn.userRepository.findOne();
+
+        const { posts } = await hnPosts();
+
+        for (const post of posts) {
+            const exists = await conn.hnRepository.findOne({ xid: post.xid });
+            if (!exists) {
+                const newPost: HackerNews = Object.assign(new HackerNews(), post);
+                await addPostPure(newPost, user, conn);
+            }
+        }
+    },
 };
 
 module.exports = async (job: SandboxedJob) => {
@@ -78,6 +92,7 @@ module.exports = async (job: SandboxedJob) => {
         tagTextRepository: getRepository(TagText),
         tagRepository: getRepository(Tag),
         mefiRepository: getRepository(Mefi),
+        hnRepository: getRepository(HackerNews),
         userRepository: getRepository(User),
     };
 

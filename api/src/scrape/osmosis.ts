@@ -1,4 +1,5 @@
 import * as osmosis from 'osmosis';
+import { HackerNews } from '../entities/hn';
 
 function mefiLinks() {
     return new Promise<Array<string>>((resolve, reject) => {
@@ -50,5 +51,27 @@ const mefiObj = ([k, v]) => {
 export async function mefiPosts() {
     const links: Array<string> = await mefiLinks();
     const posts = Object.entries(linksToPosts(links)).map(mefiObj).reverse();
+    return { posts };
+}
+
+function hnLinks() {
+    return new Promise<Array<string>>((resolve, reject) => {
+        let results = [];
+        osmosis
+            .get('https://news.ycombinator.com/news')
+            .find('tr.athing')
+            .set({
+                link: "td[3] a@href",
+                xid: "@id",
+            })
+            .data(item => {
+                results.push({ xid: item.xid, links: [item.link] });
+            })
+            .done(() => resolve(results));
+    });
+}
+
+export async function hnPosts() {
+    const posts: Array<any> = await hnLinks();
     return { posts };
 }

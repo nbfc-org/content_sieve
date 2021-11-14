@@ -7,15 +7,12 @@ import { Lazy, renderMD } from "../helpers.js";
 
 @Entity()
 @ObjectType()
-export class Mefi {
+export class HackerNews {
     @PrimaryGeneratedColumn()
     readonly id: number;
 
     @Column({ type: 'int', unique: true })
     xid: number;
-
-    @Column()
-    url: string;
 
     @Column({
         type: 'jsonb',
@@ -33,7 +30,7 @@ export class Mefi {
     async beforeInsert() {
         const links = this.links.map(l => `- [${l}](${l})`);
         const body = `
-#### MetaFilter [post ${this.xid}](https://www.metafilter.com${this.url})
+#### Hacker News [post ${this.xid}](https://news.ycombinator.com/item?id=${this.xid})
 
 ${links.join("\n")}
 `;

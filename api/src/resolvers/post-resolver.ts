@@ -17,6 +17,7 @@ import { Context } from "./types/context.js";
 import { invalidateCache, addPostPure } from "../helpers.js";
 
 import * as uuid62 from 'uuid62';
+import { HackerNews } from "../entities/hn.js";
 
 @Service()
 @Resolver(Post)
@@ -26,6 +27,7 @@ export class PostResolver {
         @InjectRepository(Text) private readonly textRepository: Repository<Text>,
         @InjectRepository(Link) private readonly linkRepository: Repository<Link>,
         @InjectRepository(Mefi) private readonly mefiRepository: Repository<Mefi>,
+        @InjectRepository(HackerNews) private readonly hnRepository: Repository<HackerNews>,
         @InjectRepository(PostType) private readonly postTypeRepository: Repository<PostType>,
         @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
         @InjectRepository(TagText) private readonly tagTextRepository: Repository<TagText>,
@@ -60,6 +62,7 @@ export class PostResolver {
             .leftJoinAndSelect("type.link", "typelink")
             .leftJoinAndSelect("type.text", "typetext")
             .leftJoinAndSelect("type.mefi", "typemefi")
+            .leftJoinAndSelect("type.hn", "typehn")
             .leftJoinAndSelect("post.tags", "tags")
             .leftJoinAndSelect("tags.canonical", "canonical", "tags.canonical = canonical.id")
             .leftJoinAndSelect("post.parent", "parent");
