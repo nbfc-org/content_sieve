@@ -11,7 +11,7 @@ export class HackerNews {
     @PrimaryGeneratedColumn()
     readonly id: number;
 
-    @Column({ type: 'int' })
+    @Column({ type: 'int', unique: true })
     xid: number;
 
     @Column({

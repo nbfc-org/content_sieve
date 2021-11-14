@@ -14,7 +14,7 @@ const processorFile = path.join(__dirname, 'get_links.js');
 const worker = new Worker(
     queueName,
     processorFile,
-    { connection },
+    { connection, concurrency: 5 },
 );
 
 worker.on('completed', (job) => {
@@ -31,7 +31,6 @@ worker.on('failed', (job, err) => {
 });
 
 export async function initJobs() {
-    const jobId = 'getLinksMefi';
     try {
         const jobs = await queue.getRepeatableJobs();
         for (const job of jobs) {
@@ -41,6 +40,7 @@ export async function initJobs() {
         console.error(e);
     }
 
+    let jobId = 'getLinksMefi';
     await queue.add(
         jobId,
         { key: 'mefi' },
@@ -54,6 +54,7 @@ export async function initJobs() {
         }
     );
 
+    jobId = 'getLinksHN';
     await queue.add(
         jobId,
         { key: 'hn' },

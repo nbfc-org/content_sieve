@@ -66,23 +66,17 @@ const jobs = {
     },
     hn: async (conn) => {
 
-        return;
-
-        // TODO: switch to a dedicated mefi user
+        // TODO: switch to a dedicated hn user
         const user = await conn.userRepository.findOne();
-
-        const latest = await conn.hnRepository.findOne({ order: { xid: "DESC" }});
-
-        const latest_xid = latest ? latest.xid : 0;
 
         const { posts } = await hnPosts();
 
         for (const post of posts) {
-            if (post.xid > latest_xid) {
+            const exists = await conn.hnRepository.findOne({ xid: post.xid });
+            if (!exists) {
                 const newPost: HackerNews = Object.assign(new HackerNews(), post);
                 await addPostPure(newPost, user, conn);
             }
-            break;
         }
     },
 };
