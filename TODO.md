@@ -17,6 +17,8 @@
 
 ## bugs
 
+- http://localhost:4000/new 404s directly
+
 - in unnested mode, showReply applies to all
 
 - load more doesn't refresh everything

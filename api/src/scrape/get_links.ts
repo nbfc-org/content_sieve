@@ -3,12 +3,12 @@ import { SandboxedJob } from 'bullmq';
 import { getRepository } from 'typeorm';
 import { createConnection } from 'typeorm';
 
-import * as uuid62 from 'uuid62';
-
 import { User, Jwt } from "../entities/user.js";
 import { Link } from "../entities/link.js";
 import { Text } from "../entities/text.js";
+import { Mefi } from "../entities/mefi.js";
 import { Post } from "../entities/post.js";
+import { PostType } from "../entities/post_type.js";
 import { TopLevelScores, CommentScores } from "../entities/views.js";
 import { Vote } from "../entities/vote.js";
 import { Tag, TagText } from "../entities/tag.js";
@@ -27,7 +27,10 @@ const cc = async () => {
             type: "postgres",
             username: "postgres", // fill this with your username
             ...config.db,
-            entities: [User, Jwt, Text, Link, Post, Vote,
+            entities: [User, Jwt,
+                       Text, Link, Mefi,
+                       Post, PostType,
+                       Vote,
                        TopLevelScores, CommentScores,
                        Tag, TagText],
             logger: "advanced-console",
@@ -39,30 +42,28 @@ const cc = async () => {
 };
 
 module.exports = async (job: SandboxedJob) => {
-    const { url } = job.data;
+    // const { url } = job.data;
 
     return;
-    const { posts, tagString } = await mefiPosts();
-    const { body, id } = posts[0];
-    console.log(body);
+    const { posts } = await mefiPosts();
+    const newPost: Mefi = Object.assign(new Mefi(), posts[0]);
 
     await cc();
 
     const fakeConn = {
         linkRepository: getRepository(Link),
         postRepository: getRepository(Post),
+        postTypeRepository: getRepository(PostType),
         textRepository: getRepository(Text),
         tagTextRepository: getRepository(TagText),
         tagRepository: getRepository(Tag),
+        mefiRepository: getRepository(Mefi),
     };
-    const postInput = {
-        body,
-        postId: uuid62.v4(),
-        tagString,
-    };
+
+    // TODO: switch to a dedicated mefi user
     const user = await getRepository(User).findOne();
 
-    const post = await addPostPure(postInput, user, fakeConn);
+    const post = await addPostPure(newPost, user, fakeConn);
 
     console.log(post);
 

@@ -11,6 +11,7 @@ import * as uuid62 from 'uuid62';
 import { User } from "./user.js";
 import { Link } from "./link.js";
 import { Text } from "./text.js";
+import { Mefi } from "./mefi.js";
 import { Vote } from "./vote.js";
 import { PostType, PostTypeEnum } from "./post_type.js";
 import { Tag } from "./tag.js";
@@ -29,10 +30,13 @@ registerEnumType(SortType, {
 
 export const Content = createUnionType({
     name: "Content", // the name of the GraphQL union
-    types: () => [Text, Link] as const, // function that returns tuple of object types classes
+    types: () => [Text, Link, Mefi] as const, // function that returns tuple of object types classes
     resolveType: value => {
         if ("body" in value) {
             return Text; // we can return object type class (the one with `@ObjectType()`)
+        }
+        if ("xid" in value) {
+            return Text; // or the schema name of the type as a string
         }
         if ("url" in value) {
             return Link; // or the schema name of the type as a string
@@ -100,6 +104,9 @@ export class Post {
             switch (this.type.postType) {
                 case PostTypeEnum.TEXT:
                     this.content = await this.type.text;
+                    break;
+                case PostTypeEnum.MEFI:
+                    this.content = await this.type.mefi;
                     break;
                 case PostTypeEnum.LINK:
                     this.content = await this.type.link;

@@ -43,18 +43,12 @@ function linksToPosts(links) {
     return posts;
 }
 
-const mefiBody = ([k, v]) => {
-    const links = v.links.map(l => `- [${l}](${l})`);
-    const body = `
-### MetaFilter [post ${k}](https://www.metafilter.com${v.url})
-
-${links.join("\n")}
-`;
-    return { body, id: k };
+const mefiObj = ([k, v]) => {
+    return { xid: k, links: v.links, url: v.url };
 };
 
 export async function mefiPosts() {
     const links: Array<string> = await mefiLinks();
-    const posts = Object.entries(linksToPosts(links)).map(mefiBody);
-    return { posts, tagString: 'mefi' };
+    const posts = Object.entries(linksToPosts(links)).map(mefiObj);
+    return { posts };
 }

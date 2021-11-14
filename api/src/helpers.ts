@@ -6,6 +6,8 @@ import { User } from "./entities/user.js";
 import { Post } from "./entities/post.js";
 import { Text } from "./entities/text.js";
 import { Link } from "./entities/link.js";
+import { Mefi } from "./entities/mefi.js";
+import { PostTypeEnum } from "./entities/post_type.js";
 import { Tag, TagText } from "./entities/tag.js";
 import { TopLevelScores, CommentScores } from "./entities/views.js";
 
@@ -91,7 +93,20 @@ async function getSlowPostDataFromDB(post) {
     return { score, replies, depth: depth - 1 };
 }
 
-export async function addPostPure(postInput: PostInput, user: User, conn: any): Promise<Post> {
+type NewPost = PostInput | Mefi;
+
+export async function addPostPure(newPost: NewPost, user: User, conn: any): Promise<Post> {
+    let postInput;
+    const mf = newPost as Mefi;
+
+    if (mf.xid) {
+        postInput = {
+            postId: uuid62.v4(),
+            tagString: "mefi",
+        };
+    } else {
+        postInput = newPost;
+    }
 
     const post_attrs = {
         postId: uuid62.decode(postInput.postId),
@@ -107,7 +122,7 @@ export async function addPostPure(postInput: PostInput, user: User, conn: any): 
         await conn.linkRepository.save(link);
 
         const type = conn.postTypeRepository.create(
-            { postType: 'link', contentId: link.id },
+            { postType: PostTypeEnum.LINK, contentId: link.id },
         );
 
         type.link = link;
@@ -120,10 +135,13 @@ export async function addPostPure(postInput: PostInput, user: User, conn: any): 
         const text = conn.textRepository.create(
             { body: postInput.body },
         );
+        await conn.textRepository.save(text);
 
         const type = conn.postTypeRepository.create(
-            { postType: 'text', text },
+            { postType: PostTypeEnum.TEXT, contentId: text.id },
         );
+
+        type.text = text;
 
         post = conn.postRepository.create({...post_attrs, type});
         await conn.postRepository.save(post);
@@ -133,6 +151,21 @@ export async function addPostPure(postInput: PostInput, user: User, conn: any): 
             post.parent = await conn.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
             await conn.postRepository.save(post);
         }
+    } else if (mf.xid) {
+        // mefi
+        const mefi = conn.mefiRepository.create(
+            { url: mf.url, xid: mf.xid, links: mf.links }
+        );
+        await conn.mefiRepository.save(mefi);
+
+        const type = conn.postTypeRepository.create(
+            { postType: PostTypeEnum.MEFI, contentId: mefi.id },
+        );
+
+        type.mefi = mefi;
+
+        post = conn.postRepository.create({...post_attrs, type});
+        await conn.postRepository.save(post);
     }
 
     if (postInput.tagString) {
