@@ -4,7 +4,6 @@ import * as path from 'path';
 import { config } from "../../../lib/config.js";
 
 const queueName = "scrapeJobs";
-const repeatEvery = 30 * 60; // seconds
 
 const { connection } = config.scrape;
 
@@ -50,7 +49,7 @@ export async function initJobs() {
             //removeOnComplete: true,
             jobId,
             repeat: {
-                every: repeatEvery * 1000 / 2,
+                every: config.scrape.repeatEvery * 1000 / 2,
             },
         }
     );

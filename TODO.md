@@ -2,6 +2,8 @@
 
 - jwt is still not 7 days
 
+- reserve all, hn, mefi tags
+
 - get rid of linkId and textId in post
 
 - todo list in sidebar
