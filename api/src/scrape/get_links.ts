@@ -7,6 +7,7 @@ import { User, Jwt } from "../entities/user.js";
 import { Link } from "../entities/link.js";
 import { Text } from "../entities/text.js";
 import { Mefi } from "../entities/mefi.js";
+import { HackerNews } from "../entities/hn.js";
 import { Post } from "../entities/post.js";
 import { PostType } from "../entities/post_type.js";
 import { TopLevelScores, CommentScores } from "../entities/views.js";
@@ -17,7 +18,7 @@ import { addPostPure } from "../helpers.js";
 
 import { config } from "../../../lib/config.js";
 
-import { mefiPosts } from "./osmosis.js";
+import { mefiPosts, hnPosts } from "./osmosis.js";
 
 let created = false;
 
@@ -28,7 +29,7 @@ const cc = async () => {
             username: "postgres", // fill this with your username
             ...config.db,
             entities: [User, Jwt,
-                       Text, Link, Mefi,
+                       Text, Link, Mefi, HackerNews,
                        Post, PostType,
                        Vote,
                        TopLevelScores, CommentScores,
@@ -63,6 +64,27 @@ const jobs = {
             }
         }
     },
+    hn: async (conn) => {
+
+        return;
+
+        // TODO: switch to a dedicated mefi user
+        const user = await conn.userRepository.findOne();
+
+        const latest = await conn.hnRepository.findOne({ order: { xid: "DESC" }});
+
+        const latest_xid = latest ? latest.xid : 0;
+
+        const { posts } = await hnPosts();
+
+        for (const post of posts) {
+            if (post.xid > latest_xid) {
+                const newPost: HackerNews = Object.assign(new HackerNews(), post);
+                await addPostPure(newPost, user, conn);
+            }
+            break;
+        }
+    },
 };
 
 module.exports = async (job: SandboxedJob) => {
@@ -78,6 +100,7 @@ module.exports = async (job: SandboxedJob) => {
         tagTextRepository: getRepository(TagText),
         tagRepository: getRepository(Tag),
         mefiRepository: getRepository(Mefi),
+        hnRepository: getRepository(HackerNews),
         userRepository: getRepository(User),
     };
 

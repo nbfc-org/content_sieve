@@ -53,4 +53,17 @@ export async function initJobs() {
             },
         }
     );
+
+    await queue.add(
+        jobId,
+        { key: 'hn' },
+        {
+            //removeOnFail: true,
+            //removeOnComplete: true,
+            jobId,
+            repeat: {
+                every: config.scrape.repeatEvery * 1000 / 2,
+            },
+        }
+    );
 };

@@ -19,6 +19,7 @@ import { User, Jwt } from "./entities/user.js";
 import { Link } from "./entities/link.js";
 import { Text } from "./entities/text.js";
 import { Mefi } from "./entities/mefi.js";
+import { HackerNews } from "./entities/hn.js";
 import { PostType } from "./entities/post_type.js";
 import { Post } from "./entities/post.js";
 import { TopLevelScores, CommentScores } from "./entities/views.js";
@@ -48,7 +49,7 @@ export async function bootstrap(generate_db) {
             username: "postgres", // fill this with your username
             ...config.db,
             entities: [User, Jwt,
-                       Text, Link, Mefi,
+                       Text, Link, Mefi, HackerNews,
                        Post, PostType,
                        Vote,
                        TopLevelScores, CommentScores,
