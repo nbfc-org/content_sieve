@@ -1,9 +1,9 @@
 import { Worker, Queue, QueueScheduler } from 'bullmq';
 import * as path from 'path';
 
-import { config } from "../../../lib/config.js";
+import { config, env } from "../../../lib/config.js";
 
-const queueName = "scrapeJobs";
+const queueName = `scrapeJobs_${env}`;
 
 const { connection } = config.scrape;
 
@@ -67,4 +67,5 @@ export async function initJobs() {
             },
         }
     );
+
 };
