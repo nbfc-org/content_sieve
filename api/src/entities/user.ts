@@ -106,9 +106,12 @@ export class User {
     @Column({ type: "jsonb", default: {} })
     settings: UserSettings;
 
+    // TODO: uncomment this? when adding a post, this gets executed, even though it's lazy
+    /*
     @OneToMany(type => Post, post => post.author, { lazy: true })
     @Field(type => [Post])
     posts: Lazy<Post[]>;
+    */
 
     @OneToMany(type => Jwt, jwt => jwt.user, { lazy: true })
     jwts: Lazy<Post[]>;

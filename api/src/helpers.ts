@@ -6,15 +6,21 @@ import { User } from "./entities/user.js";
 import { Post } from "./entities/post.js";
 import { Text } from "./entities/text.js";
 import { Link } from "./entities/link.js";
+import { Mefi } from "./entities/mefi.js";
+import { HackerNews } from "./entities/hn.js";
+import { PostTypeEnum } from "./entities/post_type.js";
 import { Tag, TagText } from "./entities/tag.js";
 import { TopLevelScores, CommentScores } from "./entities/views.js";
 
-import { renderMarkdown } from '../../lib/validation.js';
+import { renderMarkdown, splitTags } from '../../lib/validation.js';
 
 import { JSDOM, VirtualConsole } from "jsdom";
 import * as createDOMPurify from "dompurify";
 
 import * as cacheManager from "cache-manager";
+import { PostInput } from "./resolvers/types/post-input.js";
+
+import * as uuid62 from 'uuid62';
 
 const data = "<html><body></body></html>";
 const url = "http://example.com";
@@ -86,6 +92,129 @@ async function getSlowPostDataFromDB(post) {
 
     const depth = await repo.countAncestors(post);
     return { score, replies, depth: depth - 1 };
+}
+
+type NewPost = PostInput | Mefi | HackerNews;
+
+export async function addPostPure(newPost: NewPost, user: User, conn: any): Promise<Post> {
+    let postInput;
+    const hn = newPost as HackerNews;
+    const mf = newPost as Mefi;
+
+    if (mf.xid && mf.url) {
+        postInput = {
+            postId: uuid62.v4(),
+            tagString: "mefi",
+        };
+    } else if (hn.xid) {
+        postInput = {
+            postId: uuid62.v4(),
+            tagString: "hn",
+        };
+    } else {
+        postInput = newPost;
+    }
+
+    const post_attrs = {
+        postId: uuid62.decode(postInput.postId),
+        author: user,
+    };
+
+    let post;
+    if (postInput.url) {
+        // link
+        const link = conn.linkRepository.create(
+            { url: postInput.url, title: postInput.title },
+        );
+        await conn.linkRepository.save(link);
+
+        const type = conn.postTypeRepository.create(
+            { postType: PostTypeEnum.LINK, contentId: link.id },
+        );
+
+        type.link = link;
+
+        post = conn.postRepository.create({...post_attrs, type});
+        await conn.postRepository.save(post);
+
+    } else if (postInput.body) {
+        // text
+        const text = conn.textRepository.create(
+            { body: postInput.body },
+        );
+        await conn.textRepository.save(text);
+
+        const type = conn.postTypeRepository.create(
+            { postType: PostTypeEnum.TEXT, contentId: text.id },
+        );
+
+        type.text = text;
+
+        post = conn.postRepository.create({...post_attrs, type});
+        await conn.postRepository.save(post);
+
+        if (postInput.parentId) {
+            // reply
+            post.parent = await conn.postRepository.findOne({ postId: uuid62.decode(postInput.parentId) });
+            await conn.postRepository.save(post);
+        }
+    } else if (mf.xid && mf.url) {
+        // mefi
+        const mefi = conn.mefiRepository.create(
+            { url: mf.url, xid: mf.xid, links: mf.links }
+        );
+        await conn.mefiRepository.save(mefi);
+
+        const type = conn.postTypeRepository.create(
+            { postType: PostTypeEnum.MEFI, contentId: mefi.id },
+        );
+
+        type.mefi = mefi;
+
+        post = conn.postRepository.create({...post_attrs, type});
+        await conn.postRepository.save(post);
+
+    } else if (hn.xid) {
+        // hn
+        const hnews = conn.hnRepository.create(
+            { xid: hn.xid, links: hn.links }
+        );
+        await conn.hnRepository.save(hnews);
+
+        const type = conn.postTypeRepository.create(
+            { postType: PostTypeEnum.HN, contentId: hnews.id },
+        );
+
+        type.hn = hnews;
+
+        post = conn.postRepository.create({...post_attrs, type});
+        await conn.postRepository.save(post);
+    }
+
+    if (postInput.tagString) {
+        const tags = [];
+        for (const slug of splitTags(postInput.tagString)) {
+            let tag;
+            let tt;
+            tt = await conn.tagTextRepository.findOne({slug});
+            if (tt) {
+                tag = await conn.tagRepository.findOne(
+                    { canonical: tt },
+                    { relations: ["canonical"] },
+                );
+            } else {
+                tt = conn.tagTextRepository.create({ slug });
+                await conn.tagTextRepository.save(tt);
+                tag = conn.tagRepository.create({ slugs: [tt], canonical: tt });
+                await conn.tagRepository.save(tag);
+            }
+            tags.push(tag);
+        }
+
+        post.tags = tags;
+        await conn.postRepository.save(post);
+    }
+    return post;
 }
 
 export async function seedDatabase() {

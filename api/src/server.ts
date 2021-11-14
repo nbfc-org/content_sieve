@@ -18,11 +18,14 @@ import { VoteResolver } from "./resolvers/vote-resolver.js";
 import { User, Jwt } from "./entities/user.js";
 import { Link } from "./entities/link.js";
 import { Text } from "./entities/text.js";
+import { Mefi } from "./entities/mefi.js";
+import { HackerNews } from "./entities/hn.js";
+import { PostType } from "./entities/post_type.js";
 import { Post } from "./entities/post.js";
 import { TopLevelScores, CommentScores } from "./entities/views.js";
 import { Vote } from "./entities/vote.js";
 import { Tag, TagText } from "./entities/tag.js";
-import { seedDatabase } from "./helpers.js";
+import { initJobs } from "./scrape/queue.js";
 import { customAuthChecker } from "./authz.js";
 
 import { config } from "../../lib/config.js";
@@ -45,11 +48,12 @@ export async function bootstrap(generate_db) {
             type: "postgres",
             username: "postgres", // fill this with your username
             ...config.db,
-            entities: [User, Jwt, Text, Link, Post, Vote,
+            entities: [User, Jwt,
+                       Text, Link, Mefi, HackerNews,
+                       Post, PostType,
+                       Vote,
                        TopLevelScores, CommentScores,
                        Tag, TagText],
-            logger: "advanced-console",
-            logging: "all",
             ...pgOpts,
             // cache: true,
         });
@@ -104,6 +108,8 @@ export async function bootstrap(generate_db) {
         server.applyMiddleware({ app });
 
         await app.listen({ port: config.api.port });
+
+        await initJobs();
 
     } catch (err) {
         console.error(err);

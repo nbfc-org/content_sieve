@@ -11,7 +11,10 @@ import * as uuid62 from 'uuid62';
 import { User } from "./user.js";
 import { Link } from "./link.js";
 import { Text } from "./text.js";
+import { Mefi } from "./mefi.js";
+import { HackerNews } from "./hn.js";
 import { Vote } from "./vote.js";
+import { PostType, PostTypeEnum } from "./post_type.js";
 import { Tag } from "./tag.js";
 import { Lazy, getSlowPostData } from "../helpers.js";
 
@@ -28,10 +31,13 @@ registerEnumType(SortType, {
 
 export const Content = createUnionType({
     name: "Content", // the name of the GraphQL union
-    types: () => [Text, Link] as const, // function that returns tuple of object types classes
+    types: () => [Text, Link, Mefi, HackerNews] as const, // function that returns tuple of object types classes
     resolveType: value => {
         if ("body" in value) {
             return Text; // we can return object type class (the one with `@ObjectType()`)
+        }
+        if ("xid" in value) {
+            return Text; // or the schema name of the type as a string
         }
         if ("url" in value) {
             return Link; // or the schema name of the type as a string
@@ -70,16 +76,12 @@ export class Post {
     @CreateDateColumn({type: 'timestamp with time zone'})
     createdAt: Date;
 
-    @OneToOne(type => Link, { cascade: true, eager: true })
+    @OneToOne(type => PostType, { cascade: true, eager: true })
     @JoinColumn()
-    link: Link;
+    type: PostType;
 
     @Column({ nullable: true })
     textId: number;
-
-    @OneToOne(type => Text, { cascade: true, eager: true })
-    @JoinColumn()
-    text: Text;
 
     @Field(type => [Vote], { nullable: true })
     @OneToMany(type => Vote, vote => vote.post, { lazy: true, cascade: ["insert"] })
@@ -97,8 +99,26 @@ export class Post {
     @AfterLoad()
     @AfterInsert()
     async afterLoad() {
-        this.content = this.text || this.link;
         this.postId = uuid62.encode(this.postId);
+        // this.content = this.text || this.link;
+        if (this.type && this.type.postType) {
+            switch (this.type.postType) {
+                case PostTypeEnum.TEXT:
+                    this.content = await this.type.text;
+                    break;
+                case PostTypeEnum.MEFI:
+                    this.content = await this.type.mefi;
+                    break;
+                case PostTypeEnum.HN:
+                    this.content = await this.type.hn;
+                    break;
+                case PostTypeEnum.LINK:
+                    this.content = await this.type.link;
+                    break;
+            }
+        } else {
+            console.error(`still using text/link ids for ${this.postId}`);
+        }
         const { score, replies, depth } = await getSlowPostData(this);
         this.score = score;
         this.replies = replies;

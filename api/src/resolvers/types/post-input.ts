@@ -26,6 +26,6 @@ export class PostInput implements Partial<Post> {
     parentId?: string;
 
     @Field(type => String, { nullable: true })
-    @MaxLength(32)
+    @MaxLength(128)
     tagString?: string;
 }

@@ -2,11 +2,13 @@
 
 - jwt is still not 7 days
 
+- reserve all, hn, mefi tags
+
+- get rid of linkId and textId in post
+
 - todo list in sidebar
 
 - get rid of self-votes / surface votes to client
-
-- scrape top of hn / mefi into cs
 
 - add "what is this" page
 - make prod
@@ -15,10 +17,13 @@
 
 ## bugs
 
+- http://localhost:4000/new 404s directly
+
 - in unnested mode, showReply applies to all
 
 - load more doesn't refresh everything
 - don't reload all data on change
+- fix optimistic post responses
 
 ## optional below here
 
