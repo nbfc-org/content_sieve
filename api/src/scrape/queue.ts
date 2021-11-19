@@ -49,7 +49,7 @@ export async function initJobs() {
             //removeOnComplete: true,
             jobId,
             repeat: {
-                every: config.scrape.repeatEvery * 1000 / 2,
+                every: config.scrape.repeatEvery * .9 * 1000 / 2,
             },
         }
     );
@@ -63,7 +63,7 @@ export async function initJobs() {
             //removeOnComplete: true,
             jobId,
             repeat: {
-                every: config.scrape.repeatEvery * 1000 / 2,
+                every: config.scrape.repeatEvery * 1.1 * 1000 / 2,
             },
         }
     );
