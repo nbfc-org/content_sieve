@@ -4,6 +4,9 @@
 
 - todo list in sidebar
 
+- infinite scroll not working on mobile
+- latent markdown rendering on mobile
+
 - get rid of self-votes / surface votes to client
 
 - add "what is this" page

@@ -54,6 +54,7 @@ export async function initJobs() {
         }
     );
 
+    /*
     jobId = 'getLinksHN';
     await queue.add(
         jobId,
@@ -67,5 +68,5 @@ export async function initJobs() {
             },
         }
     );
-
+    */
 };
