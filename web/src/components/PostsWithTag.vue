@@ -4,21 +4,16 @@
       <div v-if="tag" class="text-h6">Posts tagged with: <span class="text-button">{{ tag }}</span></div>
 <Post @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" :topLevel="true" v-for="post in sortedPosts" />
     </v-col>
-    <v-col xl="2" lg="2" md="2" cols="12">
-      <Settings />
-    </v-col>
   </v-row>
 </template>
 <script>
 import { postsWithTag, sortTypes, getSort } from '../lib/queries.js';
 import Post from './Post.vue';
 import { mapState } from 'vuex';
-import Settings from '../components/Settings.vue';
 
 export default {
     components: {
         Post,
-        Settings,
     },
     props: [
         'tag',

@@ -10,6 +10,13 @@
       <h5>Comment Settings</h5>
       <v-switch v-model="nested" inset label="Nested?" />
     </v-card-text>
+    <v-card-actions>
+      <v-item-group>
+        <v-btn color="primary" outlined v-if="authed()" @click="logout">
+          Log out
+        </v-btn>
+      </v-item-group>
+    </v-card-actions>
   </v-card>
 </template>
 <script>
@@ -54,6 +61,16 @@ export default {
                     settings,
                 });
             },
+        },
+    },
+    methods: {
+        authed() {
+            return this.$keycloak.ready && this.$keycloak.authenticated;
+        },
+        logout() {
+            const basePath = window.location.toString();
+            this.$keycloak.logoutFn({ redirectUri: basePath });
+            this.$store.dispatch('logoutSession');
         },
     },
 };

@@ -42,11 +42,11 @@
         </v-btn>
       </v-toolbar-items>
       <v-toolbar-items>
-        <v-btn v-if="authed()" x-small @click="logout">
-          Log out
+        <v-btn v-if="authed()" x-small to="/user/settings">
+          <v-icon>{{ mdiAccountCog }}</v-icon>
         </v-btn>
         <v-btn v-if="!authed()" x-small @click="login">
-          Log in
+          <v-icon>{{ mdiLoginVariant }}</v-icon>
         </v-btn>
       </v-toolbar-items>
     </v-app-bar>
@@ -64,6 +64,7 @@ export default {
         return {
             mdiLogoutVariant,
             mdiLoginVariant,
+            mdiAccountCog,
             menuItems: [
                 { title: "New Post",
                   path: "/new",

@@ -1,7 +1,5 @@
 ## blocks prod
 
-- jwt is still not 7 days
-
 - reserve all, hn, mefi tags
 
 - todo list in sidebar
