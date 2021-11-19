@@ -69,9 +69,6 @@ export class Post {
     @Field(type => Int)
     depth: number;
 
-    @Column({ nullable: true })
-    linkId: number;
-
     @Field(type => Float)
     @CreateDateColumn({type: 'timestamp with time zone'})
     createdAt: Date;
@@ -79,9 +76,6 @@ export class Post {
     @OneToOne(type => PostType, { cascade: true, eager: true })
     @JoinColumn()
     type: PostType;
-
-    @Column({ nullable: true })
-    textId: number;
 
     @Field(type => [Vote], { nullable: true })
     @OneToMany(type => Vote, vote => vote.post, { lazy: true, cascade: ["insert"] })

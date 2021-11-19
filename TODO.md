@@ -4,8 +4,6 @@
 
 - reserve all, hn, mefi tags
 
-- get rid of linkId and textId in post
-
 - todo list in sidebar
 
 - get rid of self-votes / surface votes to client
@@ -16,6 +14,8 @@
 - check production mode server side for stack traces
 
 ## bugs
+
+- top level parent link is broken
 
 - http://localhost:4000/new 404s directly
 
