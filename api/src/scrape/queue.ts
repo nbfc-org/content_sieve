@@ -18,7 +18,7 @@ const worker = new Worker(
 );
 
 worker.on('completed', (job) => {
-    // console.log(`${job.id} has completed!`);
+    console.log(`${job.id} has completed!`);
 });
 
 worker.on('error', err => {
@@ -54,7 +54,6 @@ export async function initJobs() {
         }
     );
 
-    /*
     jobId = 'getLinksHN';
     await queue.add(
         jobId,
@@ -68,5 +67,4 @@ export async function initJobs() {
             },
         }
     );
-    */
 };

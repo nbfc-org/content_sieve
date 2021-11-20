@@ -11,6 +11,7 @@
 
 - add "what is this" page
 - make prod
+
 - consolidate nginx config
 - check production mode server side for stack traces
 
