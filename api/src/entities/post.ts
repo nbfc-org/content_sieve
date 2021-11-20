@@ -94,7 +94,7 @@ export class Post {
     @AfterInsert()
     async afterLoad() {
         this.postId = uuid62.encode(this.postId);
-        // this.content = this.text || this.link;
+
         if (this.type && this.type.postType) {
             switch (this.type.postType) {
                 case PostTypeEnum.TEXT:
@@ -111,8 +111,10 @@ export class Post {
                     break;
             }
         } else {
-            console.error(`still using text/link ids for ${this.postId}`);
+            // this only happens on invalidateCache
+            // console.error(`still using text/link ids for ${this.postId}`);
         }
+
         const { score, replies, depth } = await getSlowPostData(this);
         this.score = score;
         this.replies = replies;
