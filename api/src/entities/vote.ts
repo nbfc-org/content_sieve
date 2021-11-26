@@ -22,8 +22,8 @@ registerEnumType(VoteType, {
 
 @Entity()
 @ObjectType()
-@Unique(["type", "user", "post"])
-@Unique(["type", "user", "meta"])
+@Unique(["user", "post"])
+@Unique(["user", "meta"])
 export class Vote {
     @PrimaryGeneratedColumn()
     readonly id: number;
