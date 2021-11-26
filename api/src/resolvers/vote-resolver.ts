@@ -54,11 +54,19 @@ export class VoteResolver {
             const vote = await this.voteRepository.findOneOrFail(
                 { voteId: uuid62.decode(voteInput.voteId) },
             );
+            const vote_user = await vote.user;
+            if (user.id === vote_user.id) {
+                throw new Error("Can't self vote");
+            }
             associations = { meta: vote };
         } else {
             post = await this.postRepository.findOneOrFail(
                 { postId: uuid62.decode(voteInput.postId) },
             );
+            const post_user = await post.author;
+            if (user.id === post_user.id) {
+                throw new Error("Can't self vote");
+            }
             associations = { post };
         }
 
