@@ -40,9 +40,9 @@ export class PostResolver {
 
         const repo = getManager().getTreeRepository(Post);
 
-        const p = await repo.findDescendantsTree(post, { relations: ["type", "tags", "author", "parent"] });
+        const p = await repo.findDescendantsTree(post, { relations: ["type", "tags", "author", "parent", "votes"] });
 
-        const parents = await repo.findAncestors(post, { relations: ["type", "tags", "author", "parent"] });
+        const parents = await repo.findAncestors(post, { relations: ["type", "tags", "author", "parent", "votes"] });
         if (parents.length > 1) {
             p.parent = parents[parents.length-2];
         }
@@ -50,7 +50,7 @@ export class PostResolver {
     }
 
     @Query(returns => [Post])
-    async postsWithTag(@Arg("tli", type => TopLevelInput) tli: TopLevelInput): Promise<Post[]> {
+    async postsWithTag(@Arg("tli", type => TopLevelInput) tli: TopLevelInput, @Ctx() { req }: Context): Promise<Post[]> {
         const take = 20;
         const skip = tli.page * take
 
@@ -66,6 +66,12 @@ export class PostResolver {
             .leftJoinAndSelect("post.tags", "tags")
             .leftJoinAndSelect("tags.canonical", "canonical", "tags.canonical = canonical.id")
             .leftJoinAndSelect("post.parent", "parent");
+
+        if (req.user) {
+            const user = await findOrCreateUser(req.user);
+            console.log(user);
+            query = query.leftJoinAndSelect("post.votes", "myvotes", `myvotes.userId=${user.id}`);
+        }
 
         if (tli.tag !== "all") {
             query = query.leftJoin("post.tags", "sometags")
