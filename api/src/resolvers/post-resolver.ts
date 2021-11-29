@@ -34,18 +34,41 @@ export class PostResolver {
     ) {}
 
     @Query(returns => Post, { nullable: true })
-    async post(@Arg("postId", type => ID) postId: string) {
+    async post(@Arg("postId", type => ID) postId: string, @Ctx() { req }: Context) {
         const id = uuid62.decode(postId);
         const post = await this.postRepository.findOne({ postId: id });
 
         const repo = getManager().getTreeRepository(Post);
 
-        const p = await repo.findDescendantsTree(post, { relations: ["type", "tags", "author", "parent", "votes"] });
+        const relations = ["type", "tags", "author", "parent"];
 
-        const parents = await repo.findAncestors(post, { relations: ["type", "tags", "author", "parent", "votes"] });
+        if (req.user) {
+            relations.push("votes");
+        }
+
+        const p = await repo.findDescendantsTree(post, { relations });
+
+        const parents = await repo.findAncestors(post, { relations });
+
         if (parents.length > 1) {
             p.parent = parents[parents.length-2];
         }
+
+        if (req.user) {
+            const user = await findOrCreateUser(req.user);
+
+            const remove_votes = async (w) => {
+                const votes = await w.votes;
+                w.votes = votes.filter(v => {
+                    return v.userId === user.id;
+                });
+                for (const c of w.children) {
+                    remove_votes(c);
+                }
+            };
+            await remove_votes(p);
+        }
+
         return p;
     }
 
@@ -69,7 +92,6 @@ export class PostResolver {
 
         if (req.user) {
             const user = await findOrCreateUser(req.user);
-            console.log(user);
             query = query.leftJoinAndSelect("post.votes", "myvotes", `myvotes.userId=${user.id}`);
         }
 

@@ -43,14 +43,17 @@ export class Vote {
     @CreateDateColumn()
     date: Date;
 
-    @Field(type => User)
+    // @Field(type => User)
     @ManyToOne(type => User, { lazy: true })
     user: Lazy<User>;
+
+    @Column()
+    userId: number;
 
     @Field({ nullable: true })
     username: string;
 
-    @Field(type => Post, { nullable: true })
+    // @Field(type => Post, { nullable: true })
     @ManyToOne(type => Post, { eager: true })
     post: Lazy<Post>;
 
