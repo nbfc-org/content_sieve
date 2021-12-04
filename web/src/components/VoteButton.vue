@@ -18,35 +18,50 @@
 
 import { VOTE } from '../lib/queries.js';
 
-import { mdiArrowDown, mdiArrowUp, mdiFlag } from '@mdi/js';
+import { mdiFlagOutline, mdiFlag } from '@mdi/js';
+import { mdiArrowUpBoldOutline, mdiArrowUpBold } from '@mdi/js';
+import { mdiArrowDownBoldOutline, mdiArrowDownBold } from '@mdi/js';
 
 const icon_map = {
-    down: mdiArrowDown,
-    up: mdiArrowUp,
-    flag: mdiFlag,
+    down: {
+        no: mdiArrowDownBoldOutline,
+        yes: mdiArrowDownBold,
+    },
+    up: {
+        no: mdiArrowUpBoldOutline,
+        yes: mdiArrowUpBold,
+    },
+    flag: {
+        no: mdiFlagOutline,
+        yes: mdiFlag,
+    },
 };
 
 export default {
-    props: [
-        'postId',
-        'voteId',
-        'which',
-    ],
-    data: function() {
-        return {
-            mdiArrowDown,
-        };
+    props: {
+        'postId': {},
+        'voteId': {},
+        'which': {
+            type: String,
+            required: true,
+        },
+        'vote': {
+            default: () => {},
+            type: Object,
+        },
     },
     computed: {
         color() {
             return this.which === 'flag' ? "error" : "secondary";
         },
         icon() {
-            return icon_map[this.which];
+            const type = this.vote && this.vote.type.toLowerCase();
+            const toggle = type == this.which ? 'yes' : 'no';
+            return icon_map[this.which][toggle];
         },
     },
     methods: {
-        vote: async function(event, postId, voteId, type) {
+        makeVote: async function(event, postId, voteId, type) {
             try {
                 const w = await this.$apollo.mutate({
                     mutation: VOTE,
@@ -67,7 +82,7 @@ export default {
             }
         },
         click: function(event) {
-            this.vote(event, this.postId, this.voteId, this.which.toUpperCase());
+            this.makeVote(event, this.postId, this.voteId, this.which.toUpperCase());
         },
     },
 };

@@ -95,9 +95,9 @@
           </v-tooltip>
         </v-item-group>
         <v-item-group v-if="authed()">
-          <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="up" />
-          <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="down" />
-          <VoteButton @reloadPost="reloadPost" :postId="post.postId" which="flag" />&nbsp;
+          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="up" />
+          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="down" />
+          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="flag" />&nbsp;
         </v-item-group>
         <v-item-group v-if="post.parent">
           <v-tooltip bottom>
