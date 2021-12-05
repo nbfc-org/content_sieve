@@ -50,6 +50,12 @@ export class Vote {
     @Column()
     userId: number;
 
+    @Column()
+    metaId: number;
+
+    @Column()
+    postId: number;
+
     @Field({ nullable: true })
     username: string;
 
