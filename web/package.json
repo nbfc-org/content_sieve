@@ -51,7 +51,7 @@
     "poi-preset-bundle-report": "^2.0.0",
     "sass": "^1.32.13",
     "sass-loader": "^7.1.0",
-    "serve": "^6.1.0",
+    "serve": "^13.0.2",
     "vuetify-loader": "^1.7.3",
     "webpack-bundle-analyzer": "^4.5.0"
   }
