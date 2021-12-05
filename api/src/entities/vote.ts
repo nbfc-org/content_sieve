@@ -22,8 +22,8 @@ registerEnumType(VoteType, {
 
 @Entity()
 @ObjectType()
-@Unique(["type", "user", "post"])
-@Unique(["type", "user", "meta"])
+@Unique(["user", "post"])
+@Unique(["user", "meta"])
 export class Vote {
     @PrimaryGeneratedColumn()
     readonly id: number;
@@ -43,10 +43,23 @@ export class Vote {
     @CreateDateColumn()
     date: Date;
 
+    // @Field(type => User)
     @ManyToOne(type => User, { lazy: true })
     user: Lazy<User>;
 
-    @Field(type => Post, { nullable: true })
+    @Column()
+    userId: number;
+
+    @Column()
+    metaId: number;
+
+    @Column()
+    postId: number;
+
+    @Field({ nullable: true })
+    username: string;
+
+    // @Field(type => Post, { nullable: true })
     @ManyToOne(type => Post, { eager: true })
     post: Lazy<Post>;
 
@@ -54,7 +67,7 @@ export class Vote {
     @ManyToOne(type => Vote, { lazy: true })
     meta: Lazy<Vote>;
 
-    @Field(type => [Vote], { nullable: true })
+    // @Field(type => [Vote], { nullable: true })
     @OneToMany(type => Vote, vote => vote.meta, { lazy: true })
     votes: Lazy<Vote[]>;
 
@@ -63,6 +76,10 @@ export class Vote {
     async afterLoad() {
         if (this.voteId) {
             this.voteId = uuid62.encode(this.voteId);
+        }
+        if (this.user) {
+            const user = await this.user;
+            this.username = user.username;
         }
     }
 }

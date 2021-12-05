@@ -59,6 +59,9 @@ export default {
         }
     },
     methods: {
+        authed() {
+            return this.$keycloak.ready && this.$keycloak.authenticated;
+        },
         bottomVisible() {
             const scrollY = window.scrollY
             const visible = document.documentElement.clientHeight

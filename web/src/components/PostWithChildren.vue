@@ -38,6 +38,9 @@ export default {
         }),
     },
     methods: {
+        authed() {
+            return this.$keycloak.ready && this.$keycloak.authenticated;
+        },
         flatten(post) {
             const posts = flattenPost(post);
             if (this.settings.sortType === undefined) {

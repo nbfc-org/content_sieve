@@ -20,16 +20,6 @@ export class VoteResolver {
         @InjectRepository(Vote) private readonly voteRepository: Repository<Vote>,
     ) {}
 
-    /*
-    @Authorized()
-    @Query(returns => User)
-    async getOwnUser(@Ctx() { req }: Context): Promise<User> {
-        const user = await findOrCreateUser(req.user);
-        // console.log(user.settings);
-        return user;
-    }
-    */
-
     @Authorized(['admin'])
     @Query(returns => [Vote])
     async votes(@Ctx() { req }: Context): Promise<Vote[]> {
@@ -50,16 +40,27 @@ export class VoteResolver {
         let associations = {};
         let post;
 
+        const ev = { userId: user.id };
         if (is_meta) {
             const vote = await this.voteRepository.findOneOrFail(
                 { voteId: uuid62.decode(voteInput.voteId) },
             );
+            const vote_user = await vote.user;
+            if (user.id === vote_user.id) {
+                throw new Error("Can't self vote");
+            }
             associations = { meta: vote };
+            ev['metaId'] = vote.id;
         } else {
             post = await this.postRepository.findOneOrFail(
                 { postId: uuid62.decode(voteInput.postId) },
             );
+            const post_user = await post.author;
+            if (user.id === post_user.id) {
+                throw new Error("Can't self vote");
+            }
             associations = { post };
+            ev['postId'] = post.id;
         }
 
         const vote = this.voteRepository.create({
@@ -67,6 +68,16 @@ export class VoteResolver {
             user,
             type: voteInput.type,
         });
+
+        const existingVote = await this.voteRepository.findOne(ev);
+
+        if (existingVote) {
+            if (existingVote.type == vote.type) {
+                return existingVote;
+            } else {
+                await this.voteRepository.remove(existingVote);
+            }
+        }
 
         await this.voteRepository.save(vote);
 

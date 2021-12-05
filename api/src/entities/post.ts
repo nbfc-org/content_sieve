@@ -3,7 +3,7 @@ import { Entity, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
 import { Column, JoinColumn, OneToOne, ManyToOne, OneToMany } from "typeorm";
 import { ManyToMany, JoinTable } from "typeorm";
 import { AfterInsert, AfterLoad } from "typeorm";
-import { createUnionType } from "type-graphql";
+import { createUnionType, Authorized } from "type-graphql";
 import { Tree, TreeChildren, TreeParent } from "typeorm";
 
 import * as uuid62 from 'uuid62';
@@ -78,6 +78,7 @@ export class Post {
     type: PostType;
 
     @Field(type => [Vote], { nullable: true })
+    @Authorized()
     @OneToMany(type => Vote, vote => vote.post, { lazy: true, cascade: ["insert"] })
     votes: Lazy<Vote[]>;
 

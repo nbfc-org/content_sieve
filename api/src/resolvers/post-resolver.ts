@@ -34,23 +34,46 @@ export class PostResolver {
     ) {}
 
     @Query(returns => Post, { nullable: true })
-    async post(@Arg("postId", type => ID) postId: string) {
+    async post(@Arg("postId", type => ID) postId: string, @Ctx() { req }: Context) {
         const id = uuid62.decode(postId);
         const post = await this.postRepository.findOne({ postId: id });
 
         const repo = getManager().getTreeRepository(Post);
 
-        const p = await repo.findDescendantsTree(post, { relations: ["type", "tags", "author", "parent"] });
+        const relations = ["type", "tags", "author", "parent"];
 
-        const parents = await repo.findAncestors(post, { relations: ["type", "tags", "author", "parent"] });
+        if (req.user) {
+            relations.push("votes");
+        }
+
+        const p = await repo.findDescendantsTree(post, { relations });
+
+        const parents = await repo.findAncestors(post, { relations });
+
         if (parents.length > 1) {
             p.parent = parents[parents.length-2];
         }
+
+        if (req.user) {
+            const user = await findOrCreateUser(req.user);
+
+            const remove_votes = async (w) => {
+                const votes = await w.votes;
+                w.votes = votes.filter(v => {
+                    return v.userId === user.id;
+                });
+                for (const c of w.children) {
+                    remove_votes(c);
+                }
+            };
+            await remove_votes(p);
+        }
+
         return p;
     }
 
     @Query(returns => [Post])
-    async postsWithTag(@Arg("tli", type => TopLevelInput) tli: TopLevelInput): Promise<Post[]> {
+    async postsWithTag(@Arg("tli", type => TopLevelInput) tli: TopLevelInput, @Ctx() { req }: Context): Promise<Post[]> {
         const take = 20;
         const skip = tli.page * take
 
@@ -66,6 +89,11 @@ export class PostResolver {
             .leftJoinAndSelect("post.tags", "tags")
             .leftJoinAndSelect("tags.canonical", "canonical", "tags.canonical = canonical.id")
             .leftJoinAndSelect("post.parent", "parent");
+
+        if (req.user) {
+            const user = await findOrCreateUser(req.user);
+            query = query.leftJoinAndSelect("post.votes", "myvotes", `myvotes.userId=${user.id}`);
+        }
 
         if (tli.tag !== "all") {
             query = query.leftJoin("post.tags", "sometags")

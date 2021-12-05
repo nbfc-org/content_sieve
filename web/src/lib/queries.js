@@ -49,12 +49,17 @@ const postFields = gql`
         slug
       }
     }
+    votes @include(if: $authed) {
+      type
+      date
+      username
+    }
   }
 `;
 
 const GET_POST_RECURSIVE = gql`
 ${postFields}
-query ($postId: ID!) {
+query ($postId: ID!, $authed: Boolean!) {
   post(postId: $postId) {
     ...PostFields
     children {
@@ -86,7 +91,7 @@ query ($postId: ID!) {
 
 const GET_POSTS_WITH_TAG = gql`
 ${postFields}
-query ($tli: TopLevelInput!) {
+query ($tli: TopLevelInput!, $authed: Boolean!) {
   postsWithTag(tli: $tli) {
     ...PostFields
   }
@@ -112,7 +117,7 @@ const getOwnUserInfo = {
 
 const ADD_POST = gql`
 ${postFields}
-mutation ($post: PostInput!) {
+mutation ($post: PostInput!, $authed: Boolean!) {
   addPost(post: $post) {
     ...PostFields
   }
@@ -127,7 +132,8 @@ const addPost = function(event, input) {
       post: {
         postId: id,
         ...input,
-      }
+      },
+      authed: true,
     },
     update: (cache, result) => {
       this.$emit('reloadPost', cache, parent);
@@ -166,6 +172,7 @@ const getPost = {
   variables() {
     return {
       postId: this.postId,
+      authed: this.authed(),
     };
   },
   update(data) {
@@ -182,6 +189,7 @@ const postsWithTag = {
         sortBy: this.sortType,
         page: this.page,
       },
+      authed: this.authed(),
     };
   },
   update(data) {
@@ -198,7 +206,7 @@ const VOTE = gql`mutation ($vote: VoteInput!) {
 
 const GET_VOTES = gql`
 ${postFields}
-query {
+query ($authed: Boolean!) {
   votes {
     type
     date
@@ -213,6 +221,11 @@ const getVotes = {
   query: GET_VOTES,
   update(data) {
     return data.votes;
+  },
+  variables() {
+    return {
+      authed: true,
+    };
   },
 };
 
