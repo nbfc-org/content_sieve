@@ -7,9 +7,6 @@
 - infinite scroll not working on mobile
 - latent markdown rendering on mobile
 
-- get rid of self-votes / surface votes to client
-- only one type of vote per post per user
-
 - add "what is this" page
 - make prod
 
