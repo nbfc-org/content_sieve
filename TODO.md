@@ -4,8 +4,6 @@
 
 - todo list in sidebar
 
-- infinite scroll not working on mobile
-
 - add "what is this" page
 - make prod
 

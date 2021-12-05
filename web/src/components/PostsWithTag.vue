@@ -28,9 +28,11 @@ export default {
         };
     },
     created() {
-        window.addEventListener('scroll', () => {
+        const bottomHandler = () => {
             this.bottom = this.bottomVisible()
-        });
+        };
+        window.addEventListener('scroll', bottomHandler);
+        window.addEventListener('touchmove', bottomHandler);
     },
     computed: {
         ...mapState({
