@@ -71,15 +71,18 @@ export class VoteResolver {
 
         const existingVote = await this.voteRepository.findOne(ev);
 
-        if (existingVote.type != vote.type) {
-
-            await this.voteRepository.remove(existingVote);
-
-            await this.voteRepository.save(vote);
-
-            if (!is_meta) {
-                invalidateCache(post);
+        if (existingVote) {
+            if (existingVote.type == vote.type) {
+                return existingVote;
+            } else {
+                await this.voteRepository.remove(existingVote);
             }
+        }
+
+        await this.voteRepository.save(vote);
+
+        if (!is_meta) {
+            invalidateCache(post);
         }
 
         return this.voteRepository.findOneOrFail(vote.id);
