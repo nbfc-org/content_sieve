@@ -5,7 +5,6 @@
 - todo list in sidebar
 
 - infinite scroll not working on mobile
-- latent markdown rendering on mobile
 
 - add "what is this" page
 - make prod

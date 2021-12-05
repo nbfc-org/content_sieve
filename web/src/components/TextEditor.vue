@@ -1,11 +1,10 @@
 <template>
   <div class="editor">
-    <textarea :class="$vuetify.breakpoint.xs ? 'vertical' : 'horizontal'" v-model="input" ref="area" rows="8" placeholder="plain text or markdown ..." @input="update"></textarea>
+    <textarea :class="$vuetify.breakpoint.xs ? 'vertical' : 'horizontal'" :value="input" ref="area" rows="8" placeholder="plain text or markdown ..." @input="update"></textarea>
     <div :class="$vuetify.breakpoint.xs ? 'vertical markdown-body' : 'horizontal markdown-body'" v-html="compiledMarkdown"></div>
   </div>
 </template>
 <script>
-import { debounce } from 'lodash-es';
 import { renderMarkdown } from '../../../lib/validation.js';
 
 export default {
@@ -26,9 +25,10 @@ export default {
         },
     },
     methods: {
-        update: debounce(function(e) {
-            this.$emit('saveContent', e.target.value);
-        }, 100),
+        update: function(e) {
+            this.input = e.target.value;
+            this.$emit('saveContent', this.input);
+        },
     },
 }
 </script>
