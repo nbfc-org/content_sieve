@@ -12,7 +12,7 @@ import { postsWithTag, sortTypes, getSort } from '../lib/queries.js';
 import Post from './Post.vue';
 import { mapState } from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
-import { debounce } from 'lodash-es';
+import { delay } from 'lodash-es';
 
 export default {
     components: {
@@ -49,30 +49,27 @@ export default {
         },
     },
     methods: {
-        infiniteHandler($state) {
-            console.log(new Date());
-            // $state.loaded();
-        },
         authed() {
             return this.$keycloak.ready && this.$keycloak.authenticated;
         },
         reloadPost(cache, post) {
             this.$apollo.queries.postsWithTag.refetch();
         },
-        loadMore: debounce(function($state) {
+        loadMore($state) {
             this.$apollo.queries.postsWithTag.fetchMore({
                 variables: {
                     tli: {
                         tag: this.tag,
                         sortBy: this.sortType,
-                        page: this.page + this.nextPage++,
+                        page: this.page + this.nextPage,
                     },
                 },
                 updateQuery: (previousResult, { fetchMoreResult }) => {
+                    this.nextPage++;
                     if (fetchMoreResult.postsWithTag.length) {
-                        $state.loaded();
+                        delay($state.loaded, 4000);
                     } else {
-                        $state.complete();
+                        delay($state.complete, 4000);
                     }
                     return {
                         postsWithTag: [
@@ -82,7 +79,7 @@ export default {
                     };
                 }
             });
-        }, 2000),
+        },
     },
     apollo: {
         postsWithTag,
