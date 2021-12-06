@@ -2,7 +2,8 @@
   <v-row justify="center">
     <v-col xl="8" lg="9" md="10" cols="12">
       <div v-if="tag" class="text-h6">Posts tagged with: <span class="text-button">{{ tag }}</span></div>
-<Post @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" :topLevel="true" v-for="post in sortedPosts" />
+      <Post @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" :topLevel="true" v-for="post in sortedPosts" />
+      <infinite-loading @infinite="loadMore"></infinite-loading>
     </v-col>
   </v-row>
 </template>
@@ -10,10 +11,13 @@
 import { postsWithTag, sortTypes, getSort } from '../lib/queries.js';
 import Post from './Post.vue';
 import { mapState } from 'vuex';
+import InfiniteLoading from 'vue-infinite-loading';
+import { debounce } from 'lodash-es';
 
 export default {
     components: {
         Post,
+        InfiniteLoading,
     },
     props: [
         'tag',
@@ -23,16 +27,7 @@ export default {
             postsWithTag: [],
             page: 0,
             nextPage: 1,
-            hasMore: true,
-            bottom: false,
         };
-    },
-    created() {
-        const bottomHandler = () => {
-            this.bottom = this.bottomVisible()
-        };
-        window.addEventListener('scroll', bottomHandler);
-        window.addEventListener('touchmove', bottomHandler);
     },
     computed: {
         ...mapState({
@@ -53,42 +48,32 @@ export default {
             return [...posts.sort(getSort(this.settings.sortType))];
         },
     },
-    watch: {
-        bottom(bottom) {
-            if (bottom && this.hasMore) {
-                this.loadMore();
-            }
-        }
-    },
     methods: {
+        infiniteHandler($state) {
+            console.log(new Date());
+            // $state.loaded();
+        },
         authed() {
             return this.$keycloak.ready && this.$keycloak.authenticated;
-        },
-        bottomVisible() {
-            const scrollY = window.scrollY
-            const visible = document.documentElement.clientHeight
-            const pageHeight = document.documentElement.scrollHeight
-            const bottomOfPage = visible + scrollY >= pageHeight
-            return bottomOfPage || pageHeight < visible
         },
         reloadPost(cache, post) {
             this.$apollo.queries.postsWithTag.refetch();
         },
-        loadMore() {
+        loadMore: debounce(function($state) {
             this.$apollo.queries.postsWithTag.fetchMore({
                 variables: {
                     tli: {
                         tag: this.tag,
                         sortBy: this.sortType,
-                        page: this.page + this.nextPage,
+                        page: this.page + this.nextPage++,
                     },
                 },
                 updateQuery: (previousResult, { fetchMoreResult }) => {
-                    this.nextPage++;
-                    if (!fetchMoreResult.postsWithTag.length) {
-                        this.hasMore = false;
+                    if (fetchMoreResult.postsWithTag.length) {
+                        $state.loaded();
+                    } else {
+                        $state.complete();
                     }
-                    this.bottom = false;
                     return {
                         postsWithTag: [
                             ...previousResult.postsWithTag,
@@ -97,7 +82,7 @@ export default {
                     };
                 }
             });
-        },
+        }, 2000),
     },
     apollo: {
         postsWithTag,
