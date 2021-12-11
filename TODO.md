@@ -1,10 +1,8 @@
 ## blocks prod
 
-- reserve all, hn, mefi tags
-
 - todo list in sidebar
-
 - add "what is this" page
+
 - make prod
 
 - consolidate nginx config

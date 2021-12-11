@@ -100,6 +100,7 @@ export async function addPostPure(newPost: NewPost, user: User, conn: any): Prom
     let postInput;
     const hn = newPost as HackerNews;
     const mf = newPost as Mefi;
+    let fromUser = false;
 
     if (mf.xid && mf.url) {
         postInput = {
@@ -113,6 +114,7 @@ export async function addPostPure(newPost: NewPost, user: User, conn: any): Prom
         };
     } else {
         postInput = newPost;
+        fromUser = true;
     }
 
     const post_attrs = {
@@ -196,6 +198,11 @@ export async function addPostPure(newPost: NewPost, user: User, conn: any): Prom
         for (const slug of splitTags(postInput.tagString)) {
             let tag;
             let tt;
+
+            if (fromUser && ['hn', 'mefi', 'all'].includes(slug)) {
+                continue;
+            }
+
             tt = await conn.tagTextRepository.findOne({slug});
             if (tt) {
                 tag = await conn.tagRepository.findOne(
