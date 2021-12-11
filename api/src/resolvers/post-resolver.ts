@@ -95,7 +95,11 @@ export class PostResolver {
             query = query.leftJoinAndSelect("post.votes", "myvotes", `myvotes.userId=${user.id}`);
         }
 
-        if (tli.tag !== "all") {
+        if (tli.tag === "all") {
+            query = query.leftJoin("post.tags", "sometags")
+                .leftJoin("tag_text", "sometag_text", "sometags.canonical = sometag_text.id")
+                .andWhere("sometag_text.slug not in (:...slug)", { slug: ['all', 'hn', 'mefi'] });
+        } else {
             query = query.leftJoin("post.tags", "sometags")
                 .leftJoin("tag_text", "sometag_text", "sometags.canonical = sometag_text.id")
                 .andWhere("sometag_text.slug = :slug", { slug: tli.tag });
