@@ -1,7 +1,3 @@
-variable region {
-  default = "sfo3"
-}
-
 resource "digitalocean_project" "project" {
   name="nbfc ${terraform.workspace}"
   environment=terraform.workspace
@@ -44,7 +40,7 @@ resource "digitalocean_floating_ip" "ip" {
 }
 
 resource "digitalocean_firewall" "firewall" {
-  name = "nbfc-staging"
+  name = "nbfc-${terraform.workspace}"
 
   inbound_rule {
     protocol         = "tcp"
