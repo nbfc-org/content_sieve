@@ -8,5 +8,6 @@ echo "running ${NODE_ENV} ..."
 
 docker-compose \
     -p content_sieve \
+    --env-file="./build/${NODE_ENV}/.env" \
     -f ./build/docker-compose.yml \
     -f "./build/${NODE_ENV}/override.yml" $@

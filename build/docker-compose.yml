@@ -10,7 +10,7 @@ services:
     environment:
       - API_PORT=4002
       - API_DB_NAME=cs
-      - API_DB_PASSWORD=wat
+      - API_DB_PASSWORD=${DB_PASSWORD}
       - NODE_ENV
     depends_on:
       - postgres
@@ -20,7 +20,7 @@ services:
   postgres:
     image: postgres:13
     environment:
-      - POSTGRES_PASSWORD=wat
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
   keycloak_db:
     image: postgres:13
     environment:
