@@ -40,7 +40,7 @@ resource "digitalocean_droplet" "docker" {
   size   = var.size
 
   # TODO: uncomment this for prod
-  # ssh_keys = [digitalocean_ssh_key.key.fingerprint]
+  ssh_keys = [digitalocean_ssh_key.key.fingerprint]
 
   tags = [
     digitalocean_tag.env.id
