@@ -25,8 +25,8 @@ resource "digitalocean_vpc" "vpc" {
 }
 
 resource "digitalocean_ssh_key" "key" {
-  name       = "sc_digitalocean"
-  public_key = file("~/.ssh/sc_digitalocean.pub")
+  name       = var.ssh_key
+  public_key = file("~/.ssh/${var.ssh_key}.pub")
 }
 
 resource "digitalocean_tag" "env" {
@@ -35,12 +35,12 @@ resource "digitalocean_tag" "env" {
 
 resource "digitalocean_droplet" "docker" {
   image  = var.image
-  name   = "debian-s-1vcpu-1gb-amd-${var.region}-01"
+  name   = "${digitalocean_tag.env.id}-debian-s-1vcpu-1gb-amd-${var.region}-01"
   region = var.region
   size   = var.size
 
   # TODO: uncomment this for prod
-  ssh_keys = [digitalocean_ssh_key.key.fingerprint]
+  # ssh_keys = [digitalocean_ssh_key.key.fingerprint]
 
   tags = [
     digitalocean_tag.env.id

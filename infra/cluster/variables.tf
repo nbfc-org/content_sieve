@@ -2,6 +2,8 @@ variable do_token {}
 
 variable vpc_subnet {}
 
+variable ssh_key {}
+
 variable image {
   default = "debian-11-x64"
 }
