@@ -42,3 +42,41 @@ resource "digitalocean_floating_ip" "ip" {
   region = var.region
   droplet_id = digitalocean_droplet.docker.id
 }
+
+resource "digitalocean_firewall" "firewall" {
+  name = "nbfc-staging"
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "443"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol         = "icmp"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "all"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "all"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  tags = [
+    terraform.workspace,
+  ]
+
+}
