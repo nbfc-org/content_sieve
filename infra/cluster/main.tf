@@ -24,11 +24,18 @@ resource "digitalocean_vpc" "vpc" {
   ip_range = "10.124.0.0/20"
 }
 
+resource "digitalocean_ssh_key" "key" {
+  name       = "sc_digitalocean"
+  public_key = file("~/.ssh/sc_digitalocean.pub")
+}
+
 resource "digitalocean_droplet" "docker" {
   image  = "debian-11-x64"
   name   = "debian-s-1vcpu-1gb-amd-sfo3-01"
   region = var.region
   size   = "s-1vcpu-1gb-amd"
+  # TODO: uncomment this for prod
+  # ssh_keys = [digitalocean_ssh_key.key.fingerprint]
   tags = [
     terraform.workspace,
   ]
