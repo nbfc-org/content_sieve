@@ -23,7 +23,7 @@ resource "digitalocean_project_resources" "resources" {
 }
 
 resource "digitalocean_vpc" "vpc" {
-  name   = "${var.region}-vpc-01"
+  name   = "${terraform.workspace}-${var.region}-vpc-01"
   region = var.region
   ip_range = var.vpc_subnet
 }
