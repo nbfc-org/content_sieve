@@ -1,3 +1,7 @@
+variable region {
+  default = "sfo3"
+}
+
 resource "digitalocean_project" "project" {
   name="nbfc ${terraform.workspace}"
   environment=terraform.workspace
@@ -14,21 +18,27 @@ resource "digitalocean_project_resources" "resources" {
   # Bucket Database Domain DomainRecord Droplet Firewall FloatingIp Image Kubernetes LoadBalancer MarketplaceApp Saas Volume
   resources = [
     digitalocean_droplet.docker.urn,
+    digitalocean_floating_ip.ip.urn,
   ]
 }
 
 resource "digitalocean_vpc" "vpc" {
   name   = "sfo3-vpc-01"
-  region = "sfo3"
+  region = var.region
   ip_range = "10.124.0.0/20"
 }
 
 resource "digitalocean_droplet" "docker" {
   image  = "debian-11-x64"
   name   = "debian-s-1vcpu-1gb-amd-sfo3-01"
-  region = "sfo3"
+  region = var.region
   size   = "s-1vcpu-1gb-amd"
   tags = [
     terraform.workspace,
   ]
+}
+
+resource "digitalocean_floating_ip" "ip" {
+  region = var.region
+  droplet_id = digitalocean_droplet.docker.id
 }
