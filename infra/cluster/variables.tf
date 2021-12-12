@@ -1,5 +1,7 @@
 variable do_token {}
 
+variable vpc_subnet {}
+
 variable app {
   default = "nbfc"
 }

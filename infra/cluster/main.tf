@@ -23,9 +23,9 @@ resource "digitalocean_project_resources" "resources" {
 }
 
 resource "digitalocean_vpc" "vpc" {
-  name   = "sfo3-vpc-01"
+  name   = "${var.region}-vpc-01"
   region = var.region
-  ip_range = "10.124.0.0/20"
+  ip_range = var.vpc_subnet
 }
 
 resource "digitalocean_ssh_key" "key" {
@@ -35,7 +35,7 @@ resource "digitalocean_ssh_key" "key" {
 
 resource "digitalocean_droplet" "docker" {
   image  = "debian-11-x64"
-  name   = "debian-s-1vcpu-1gb-amd-sfo3-01"
+  name   = "debian-s-1vcpu-1gb-amd-${var.region}-01"
   region = var.region
   size   = "s-1vcpu-1gb-amd"
   # TODO: uncomment this for prod
