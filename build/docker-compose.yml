@@ -26,7 +26,7 @@ services:
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
   keycloak:
     image: jboss/keycloak:15.0.2
     depends_on:
@@ -36,6 +36,6 @@ services:
       DB_ADDR: keycloak_db
       DB_DATABASE: keycloak
       DB_USER: keycloak
-      DB_PASSWORD: keycloak
+      DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
     ports:
       - "28080:8080"
