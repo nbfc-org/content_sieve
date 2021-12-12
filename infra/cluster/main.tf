@@ -34,12 +34,14 @@ resource "digitalocean_ssh_key" "key" {
 }
 
 resource "digitalocean_droplet" "docker" {
-  image  = "debian-11-x64"
+  image  = var.image
   name   = "debian-s-1vcpu-1gb-amd-${var.region}-01"
   region = var.region
-  size   = "s-1vcpu-1gb-amd"
+  size   = var.size
+
   # TODO: uncomment this for prod
   # ssh_keys = [digitalocean_ssh_key.key.fingerprint]
+
   tags = [
     terraform.workspace,
   ]
