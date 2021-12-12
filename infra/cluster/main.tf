@@ -42,6 +42,32 @@ resource "digitalocean_droplet" "docker" {
   # TODO: uncomment this for prod
   ssh_keys = [digitalocean_ssh_key.key.fingerprint]
 
+  vpc_uuid = digitalocean_vpc.vpc.id
+
+  connection {
+    host = self.ipv4_address
+    user = "root"
+    type = "ssh"
+    private_key = file("~/.ssh/${var.ssh_key}")
+    timeout = "2m"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "apt-get update",
+      "apt-get -y dist-upgrade",
+      "apt-get -y install docker.io htop",
+      "mkdir -p data/content_sieve",
+      "mkdir -p data/keycloak",
+      "mkdir -p data/cloudflare",
+      "fallocate -l 2G /root/swapfile",
+      "chmod 600 /root/swapfile",
+      "mkswap /root/swapfile",
+      "swapon /root/swapfile",
+      "echo '/root/swapfile swap swap defaults 0 0' >> /etc/fstab",
+    ]
+  }
+
   tags = [
     digitalocean_tag.env.id
   ]
