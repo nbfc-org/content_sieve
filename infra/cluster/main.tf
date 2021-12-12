@@ -1,11 +1,15 @@
+locals {
+  name = "${var.app}-${terraform.workspace}"
+}
+
 resource "digitalocean_project" "project" {
-  name="nbfc ${terraform.workspace}"
+  name = local.name
   environment=terraform.workspace
   purpose="Just trying out DigitalOcean"
 }
 
 data "digitalocean_project" "project" {
-  name="nbfc ${terraform.workspace}"
+  name = local.name
 }
 
 resource "digitalocean_project_resources" "resources" {
@@ -47,7 +51,7 @@ resource "digitalocean_floating_ip" "ip" {
 }
 
 resource "digitalocean_firewall" "firewall" {
-  name = "nbfc-${terraform.workspace}"
+  name = local.name
 
   inbound_rule {
     protocol         = "tcp"
