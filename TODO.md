@@ -3,7 +3,9 @@
 - todo list in sidebar
 - add "what is this" page
 
-- make prod
+- wat passwords to env / change in dbs
+- make cs db in prod
+- add cloudflare certs
 
 - consolidate nginx config
 - check production mode server side for stack traces

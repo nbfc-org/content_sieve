@@ -1,4 +1,6 @@
-[
+const password = process.env.TYPEORM_PASSWORD;
+
+export default [
     {
         "name": "default",
         "type": "postgres",
@@ -6,7 +8,7 @@
         "host": "localhost",
         "port": "5432",
         "database": "type-graphql-lazy",
-        "password": "wat",
+        password,
         "migrations": ["dist/api/src/migrations/*.js"],
         "entities": ["dist/api/src/entities/*.js"],
         "cli": {
@@ -18,10 +20,10 @@
         "name": "local",
         "type": "postgres",
         "username": "postgres",
+        password,
         "host": "localhost",
         "port": "6432",
         "database": "cs",
-        "password": "wat",
         "migrations": ["dist/api/src/migrations/*.js"],
         "entities": ["dist/api/src/entities/*.js"],
         "cli": {
@@ -33,10 +35,10 @@
         "name": "staging",
         "type": "postgres",
         "username": "postgres",
+        password,
         "host": "localhost",
         "port": "8432",
         "database": "cs",
-        "password": "wat",
         "migrations": ["dist/api/src/migrations/*.js"],
         "entities": ["dist/api/src/entities/*.js"],
         "cli": {
@@ -48,6 +50,7 @@
         "name": "production",
         "type": "postgres",
         "username": "postgres",
+        password,
         "host": "localhost",
         "port": "8732",
         "database": "cs",
@@ -58,4 +61,4 @@
             "entitiesDir": "src/entities"
         }
     }
-]
+];
