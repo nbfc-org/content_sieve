@@ -8,12 +8,8 @@ resource "digitalocean_project" "project" {
   purpose="Just trying out DigitalOcean"
 }
 
-data "digitalocean_project" "project" {
-  name = local.name
-}
-
 resource "digitalocean_project_resources" "resources" {
-  project = data.digitalocean_project.project.id
+  project = digitalocean_project.project.id
 
   # Bucket Database Domain DomainRecord Droplet Firewall FloatingIp Image Kubernetes LoadBalancer MarketplaceApp Saas Volume
   resources = [
@@ -33,6 +29,10 @@ resource "digitalocean_ssh_key" "key" {
   public_key = file("~/.ssh/sc_digitalocean.pub")
 }
 
+resource "digitalocean_tag" "env" {
+  name = terraform.workspace
+}
+
 resource "digitalocean_droplet" "docker" {
   image  = var.image
   name   = "debian-s-1vcpu-1gb-amd-${var.region}-01"
@@ -40,10 +40,10 @@ resource "digitalocean_droplet" "docker" {
   size   = var.size
 
   # TODO: uncomment this for prod
-  # ssh_keys = [digitalocean_ssh_key.key.fingerprint]
+  ssh_keys = [digitalocean_ssh_key.key.fingerprint]
 
   tags = [
-    terraform.workspace,
+    digitalocean_tag.env.id
   ]
 }
 
@@ -85,7 +85,7 @@ resource "digitalocean_firewall" "firewall" {
   }
 
   tags = [
-    terraform.workspace,
+    digitalocean_tag.env.id
   ]
 
 }
