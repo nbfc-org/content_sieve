@@ -5,9 +5,6 @@
 
 - main page doesn't show untagged posts
 
-- make cs db in prod & change password
-- add cloudflare certs
-
 - consolidate nginx config
 - check production mode server side for stack traces
 
