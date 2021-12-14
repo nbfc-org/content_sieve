@@ -3,7 +3,7 @@
 - todo list in sidebar
 - add "what is this" page
 
-- make prod
+- main page doesn't show untagged posts
 
 - consolidate nginx config
 - check production mode server side for stack traces
