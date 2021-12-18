@@ -3,7 +3,7 @@
 - todo list in sidebar
 - add "what is this" page
 
-- main page doesn't show untagged posts
+- find a different worker lib
 
 - consolidate nginx config
 - check production mode server side for stack traces
@@ -37,7 +37,7 @@
 
 - look at client side query caching
 
-- terraform DO & cloudflare
+- terraform cloudflare
 - https://frankindev.com/2020/11/18/allow-cloudflare-only-in-nginx/
 
 - vee validate & yup
