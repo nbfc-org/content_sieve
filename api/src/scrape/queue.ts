@@ -40,6 +40,9 @@ export async function initJobs() {
         console.error(e);
     }
 
+    // TOOD: re-enable aync jobs
+    return;
+
     let jobId = 'getLinksMefi';
     await queue.add(
         jobId,

@@ -8,7 +8,7 @@ import * as jwksRsa from 'jwks-rsa';
 import * as cors from 'cors';
 
 import { Container } from "typedi";
-import { createConnection, getRepository, useContainer } from "typeorm";
+import { createConnection, useContainer } from "typeorm";
 import * as TypeGraphQL from "type-graphql";
 
 import { PostResolver } from "./resolvers/post-resolver.js";

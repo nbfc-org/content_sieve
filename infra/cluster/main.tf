@@ -39,7 +39,6 @@ resource "digitalocean_droplet" "docker" {
   region = var.region
   size   = var.size
 
-  # TODO: uncomment this for prod
   ssh_keys = [digitalocean_ssh_key.key.fingerprint]
 
   vpc_uuid = digitalocean_vpc.vpc.id
