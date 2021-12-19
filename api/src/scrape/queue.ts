@@ -56,19 +56,15 @@ export async function initPGBoss() {
 
     await boss.start();
 
-    return;
-    let jobId = await boss.publish(queueName, { key: 'mefi' })
-    let hnjobId = await boss.publish(queueName, { key: 'hn' })
-    // console.log(`created job in queue ${queue}: ${jobId}`);
+    // let jobId = await boss.publish(queueName, { key: 'mefi' })
+    // let hnjobId = await boss.publish(queueName, { key: 'hn' })
 
-
-    console.log(1);
     await boss.subscribe(queueName, scrapeHandler);
-    console.log(1);
 
-    return;
-    await boss.schedule(queueName, `* * * * *`, { key: 'bar'}, { tz: 'America/Los_Angeles' })
-    console.log(1);
+    await boss.schedule(queueName,
+                        `1-59/2 * * * *`,
+                        { key: 'mefi'},
+                        { tz: 'America/Los_Angeles' })
 }
 
 export async function initJobs() {

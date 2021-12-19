@@ -83,6 +83,9 @@ const jobs = {
 
 export const scrapeHandler = async (job) => {
     const { key } = job.data;
+    const dt = new Date();
+
+    console.log(`running "${key}" job ${job.id} at ${dt}`);
 
     // a new connection w/ bullmq because it was forking
     // await cc();
