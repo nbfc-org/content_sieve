@@ -3,7 +3,9 @@
 - todo list in sidebar
 - add "what is this" page
 
-- find a different worker lib
+- delete bullmq code & deps
+- disable redis
+- reverse scrape order
 
 - consolidate nginx config
 - check production mode server side for stack traces

@@ -1,10 +1,14 @@
-import { Worker, Queue, QueueScheduler } from 'bullmq';
-import * as path from 'path';
+// import { Worker, Queue, QueueScheduler } from 'bullmq';
+// import * as path from 'path';
+
+import * as PgBoss from 'pg-boss';
+import { scrapeHandler } from './get_links.js';
 
 import { config, env } from "../../../lib/config.js";
 
 const queueName = `scrapeJobs_${env}`;
 
+/*
 const { connection } = config.scrape;
 
 const _queueScheduler = new QueueScheduler(queueName, { connection });
@@ -30,7 +34,50 @@ worker.on('failed', (job, err) => {
     console.error(`${job.id} has failed with ${err.message}`);
 });
 
+async function someAsyncJobHandler(job) {
+    console.log(`job ${job.id} received with data:`);
+    console.log(JSON.stringify(job.data));
+
+    // await doSomethingAsyncWithThis(job.data);
+}
+*/
+
+export async function initPGBoss() {
+    const { enabled, boss: dbconfig } = config.scrape;
+
+    if (!enabled) {
+        return;
+    }
+
+    const { host, port, database, password } = dbconfig;
+    const boss = new PgBoss(`postgres://postgres:${password}@${host}:${port}/${database}`);
+
+    boss.on('error', error => console.error(error));
+
+    await boss.start();
+
+    return;
+    let jobId = await boss.publish(queueName, { key: 'mefi' })
+    let hnjobId = await boss.publish(queueName, { key: 'hn' })
+    // console.log(`created job in queue ${queue}: ${jobId}`);
+
+
+    console.log(1);
+    await boss.subscribe(queueName, scrapeHandler);
+    console.log(1);
+
+    return;
+    await boss.schedule(queueName, `* * * * *`, { key: 'bar'}, { tz: 'America/Los_Angeles' })
+    console.log(1);
+}
+
 export async function initJobs() {
+    await initPGBoss();
+
+    /*
+    // TOOD: re-enable bullmq jobs?
+    return;
+
     try {
         const jobs = await queue.getRepeatableJobs();
         for (const job of jobs) {
@@ -39,9 +86,6 @@ export async function initJobs() {
     } catch(e) {
         console.error(e);
     }
-
-    // TOOD: re-enable aync jobs
-    return;
 
     let jobId = 'getLinksMefi';
     await queue.add(
@@ -70,4 +114,5 @@ export async function initJobs() {
             },
         }
     );
+    */
 };

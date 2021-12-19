@@ -1,4 +1,4 @@
-import { SandboxedJob } from 'bullmq';
+// import { SandboxedJob } from 'bullmq';
 
 import { getRepository } from 'typeorm';
 import { createConnection } from 'typeorm';
@@ -20,6 +20,7 @@ import { config } from "../../../lib/config.js";
 
 import { mefiPosts, hnPosts } from "./osmosis.js";
 
+/*
 let created = false;
 
 const cc = async () => {
@@ -39,6 +40,7 @@ const cc = async () => {
     }
 
 };
+*/
 
 const jobs = {
     mefi: async (conn) => {
@@ -79,10 +81,11 @@ const jobs = {
     },
 };
 
-module.exports = async (job: SandboxedJob) => {
+export const scrapeHandler = async (job) => {
     const { key } = job.data;
 
-    await cc();
+    // a new connection w/ bullmq because it was forking
+    // await cc();
 
     const fakeConn = {
         linkRepository: getRepository(Link),
@@ -96,6 +99,9 @@ module.exports = async (job: SandboxedJob) => {
         userRepository: getRepository(User),
     };
 
-    await jobs[key](fakeConn);
-}
-;
+    try {
+        await jobs[key](fakeConn);
+    } catch(e) {
+        console.error(e);
+    }
+};
