@@ -43,7 +43,7 @@ async function someAsyncJobHandler(job) {
 */
 
 export async function initPGBoss() {
-    const { enabled, boss: dbconfig } = config.scrape;
+    const { enabled, boss: dbconfig, jobs } = config.scrape;
 
     if (!enabled) {
         return;
@@ -56,15 +56,23 @@ export async function initPGBoss() {
 
     await boss.start();
 
-    // let jobId = await boss.publish(queueName, { key: 'mefi' })
-    // let hnjobId = await boss.publish(queueName, { key: 'hn' })
+    for (const schedule of await boss.getSchedules()) {
+        const { name } = schedule;
+        console.log(`unscheduling ${name}`);
+        boss.unschedule(name);
+    }
 
-    await boss.subscribe(queueName, scrapeHandler);
+    for (const key of Object.keys(jobs)) {
+        const { cron } = jobs[key];
 
-    await boss.schedule(queueName,
-                        `1-59/2 * * * *`,
-                        { key: 'mefi'},
-                        { tz: 'America/Los_Angeles' })
+        const name = `${queueName}_${key}`;
+        await boss.subscribe(name, scrapeHandler);
+
+        await boss.schedule(name,
+                            cron,
+                            { key },
+                            { tz: 'America/Los_Angeles' })
+    }
 }
 
 export async function initJobs() {
