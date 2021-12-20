@@ -13,21 +13,6 @@ async function mefiLinks() {
     return c('div.copy a').map(
         (i, e) => e.attribs.href
     ).get();
-    /*
-    return new Promise<Array<string>>((resolve, reject) => {
-        let results = [];
-        osmosis
-            .get('https://www.metafilter.com')
-            .find('div.copy a@href')
-            .set('link')
-            .data(item => {
-                results.push(item.link);
-            })
-            .error(err => reject(err))
-            .done(() => resolve(results));
-
-    });
-    */
 }
 
 function linksToPosts(links) {
@@ -85,23 +70,6 @@ async function hnLinks() {
         }
     ).get().reverse();
     return objs;
-    /*
-    return new Promise<Array<string>>((resolve, reject) => {
-        let results = [];
-        osmosis
-            .get('https://news.ycombinator.com/news')
-            .find('tr.athing')
-            .set({
-                link: "td[3] a@href",
-                xid: "@id",
-            })
-            .data(item => {
-                results.push({ xid: item.xid, links: [item.link] });
-            })
-            .error(err => reject(err))
-            .done(() => resolve(results));
-    });
-    */
 }
 
 export async function hnPosts() {
