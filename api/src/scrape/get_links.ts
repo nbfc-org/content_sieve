@@ -1,26 +1,26 @@
 // import { SandboxedJob } from 'bullmq';
 
 import { getRepository } from 'typeorm';
-import { createConnection } from 'typeorm';
 
-import { User, Jwt } from "../entities/user.js";
+import { User } from "../entities/user.js";
 import { Link } from "../entities/link.js";
 import { Text } from "../entities/text.js";
 import { Mefi } from "../entities/mefi.js";
 import { HackerNews } from "../entities/hn.js";
 import { Post } from "../entities/post.js";
 import { PostType } from "../entities/post_type.js";
-import { TopLevelScores, CommentScores } from "../entities/views.js";
-import { Vote } from "../entities/vote.js";
 import { Tag, TagText } from "../entities/tag.js";
 
 import { addPostPure } from "../helpers.js";
-
-import { config } from "../../../lib/config.js";
-
 import { mefiPosts, hnPosts } from "./posts.js";
 
 /*
+import { Jwt } from "../entities/user.js";
+import { createConnection } from 'typeorm';
+import { config } from "../../../lib/config.js";
+import { TopLevelScores, CommentScores } from "../entities/views.js";
+import { Vote } from "../entities/vote.js";
+
 let created = false;
 
 const cc = async () => {
