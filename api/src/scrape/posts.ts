@@ -1,18 +1,18 @@
-import * as osmosis from 'osmosis';
 import { HackerNews } from '../entities/hn';
 
-function mefiLinks() {
-    return new Promise<Array<string>>((resolve, reject) => {
-        let results = [];
-        osmosis
-            .get('https://www.metafilter.com')
-            .find('div.copy a@href')
-            .set('link')
-            .data(item => {
-                results.push(item.link);
-            })
-            .done(() => resolve(results));
-    });
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+
+async function mefiLinks() {
+    const url = 'https://www.metafilter.com';
+
+    const { data } = await axios.get(url)
+
+    const c = cheerio.load(data)
+
+    return c('div.copy a').map(
+        (i, e) => e.attribs.href
+    ).get();
 }
 
 function linksToPosts(links) {
@@ -21,7 +21,6 @@ function linksToPosts(links) {
     for (const link of links.reverse()) {
         const r = /^\/(\d+?)\//;
         const m = r.exec(link);
-        // console.log(link);
         if (m && m[1]) {
             curPostId = m[1];
             if (!posts[curPostId]) {
@@ -30,7 +29,6 @@ function linksToPosts(links) {
                     links: [],
                 };
             }
-            // console.log(postId);
         } else {
             const u = /^\/user\/(\d+?)$/;
             const um = u.exec(link);
@@ -50,25 +48,28 @@ const mefiObj = ([k, v]) => {
 
 export async function mefiPosts() {
     const links: Array<string> = await mefiLinks();
-    const posts = Object.entries(linksToPosts(links)).map(mefiObj).reverse();
+    const posts = Object.entries(linksToPosts(links)).map(mefiObj);
     return { posts };
 }
 
-function hnLinks() {
-    return new Promise<Array<string>>((resolve, reject) => {
-        let results = [];
-        osmosis
-            .get('https://news.ycombinator.com/news')
-            .find('tr.athing')
-            .set({
-                link: "td[3] a@href",
-                xid: "@id",
-            })
-            .data(item => {
-                results.push({ xid: item.xid, links: [item.link] });
-            })
-            .done(() => resolve(results));
-    });
+async function hnLinks() {
+    const url = 'https://news.ycombinator.com/news';
+
+    const { data } = await axios.get(url)
+
+    const c = cheerio.load(data)
+
+    const objs = c('tr.athing').map(
+        (i, e) => {
+            const td = c('td', e).get()[2];
+            const link = c('a', td).get()[0];
+            return {
+                xid: e.attribs.id,
+                links: [link.attribs.href],
+            };
+        }
+    ).get().reverse();
+    return objs;
 }
 
 export async function hnPosts() {

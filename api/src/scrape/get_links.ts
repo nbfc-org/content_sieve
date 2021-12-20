@@ -1,24 +1,25 @@
-import { SandboxedJob } from 'bullmq';
+// import { SandboxedJob } from 'bullmq';
 
 import { getRepository } from 'typeorm';
-import { createConnection } from 'typeorm';
 
-import { User, Jwt } from "../entities/user.js";
+import { User } from "../entities/user.js";
 import { Link } from "../entities/link.js";
 import { Text } from "../entities/text.js";
 import { Mefi } from "../entities/mefi.js";
 import { HackerNews } from "../entities/hn.js";
 import { Post } from "../entities/post.js";
 import { PostType } from "../entities/post_type.js";
-import { TopLevelScores, CommentScores } from "../entities/views.js";
-import { Vote } from "../entities/vote.js";
 import { Tag, TagText } from "../entities/tag.js";
 
 import { addPostPure } from "../helpers.js";
+import { mefiPosts, hnPosts } from "./posts.js";
 
+/*
+import { Jwt } from "../entities/user.js";
+import { createConnection } from 'typeorm';
 import { config } from "../../../lib/config.js";
-
-import { mefiPosts, hnPosts } from "./osmosis.js";
+import { TopLevelScores, CommentScores } from "../entities/views.js";
+import { Vote } from "../entities/vote.js";
 
 let created = false;
 
@@ -39,6 +40,7 @@ const cc = async () => {
     }
 
 };
+*/
 
 const jobs = {
     mefi: async (conn) => {
@@ -53,6 +55,7 @@ const jobs = {
         const { posts } = await mefiPosts();
 
         for (const post of posts) {
+            console.log(`mefi post ${post.xid}`);
             if (post.xid > latest_xid) {
                 const newPost: Mefi = Object.assign(new Mefi(), post);
                 await addPostPure(newPost, user, conn);
@@ -70,6 +73,7 @@ const jobs = {
         const { posts } = await hnPosts();
 
         for (const post of posts) {
+            console.log(`hn post ${post.xid}`);
             const exists = await conn.hnRepository.findOne({ xid: post.xid });
             if (!exists) {
                 const newPost: HackerNews = Object.assign(new HackerNews(), post);
@@ -79,10 +83,14 @@ const jobs = {
     },
 };
 
-module.exports = async (job: SandboxedJob) => {
+export const scrapeHandler = async (job) => {
     const { key } = job.data;
+    const dt = new Date();
 
-    await cc();
+    console.log(`running "${key}" job ${job.id} at ${dt}`);
+
+    // a new connection w/ bullmq because it was forking
+    // await cc();
 
     const fakeConn = {
         linkRepository: getRepository(Link),
@@ -96,6 +104,10 @@ module.exports = async (job: SandboxedJob) => {
         userRepository: getRepository(User),
     };
 
-    await jobs[key](fakeConn);
-}
-;
+    try {
+        await jobs[key](fakeConn);
+    } catch(e) {
+        console.error(e);
+    }
+    console.log(`done running "${key}" job ${job.id}`);
+};
