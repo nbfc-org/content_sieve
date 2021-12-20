@@ -55,6 +55,7 @@ const jobs = {
         const { posts } = await mefiPosts();
 
         for (const post of posts) {
+            console.log(`mefi post ${post.xid}`);
             if (post.xid > latest_xid) {
                 const newPost: Mefi = Object.assign(new Mefi(), post);
                 await addPostPure(newPost, user, conn);
@@ -72,6 +73,7 @@ const jobs = {
         const { posts } = await hnPosts();
 
         for (const post of posts) {
+            console.log(`hn post ${post.xid}`);
             const exists = await conn.hnRepository.findOne({ xid: post.xid });
             if (!exists) {
                 const newPost: HackerNews = Object.assign(new HackerNews(), post);
@@ -107,4 +109,5 @@ export const scrapeHandler = async (job) => {
     } catch(e) {
         console.error(e);
     }
+    console.log(`done running "${key}" job ${job.id}`);
 };

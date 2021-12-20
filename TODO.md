@@ -3,8 +3,6 @@
 - todo list in sidebar
 - add "what is this" page
 
-- delete bullmq code & deps
-- disable redis
 - reverse scrape order
 
 - consolidate nginx config

@@ -11,7 +11,9 @@ function mefiLinks() {
             .data(item => {
                 results.push(item.link);
             })
+            .error(err => reject(err))
             .done(() => resolve(results));
+
     });
 }
 
@@ -67,6 +69,7 @@ function hnLinks() {
             .data(item => {
                 results.push({ xid: item.xid, links: [item.link] });
             })
+            .error(err => reject(err))
             .done(() => resolve(results));
     });
 }

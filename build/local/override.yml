@@ -8,9 +8,6 @@ services:
         - webgraphql=/api
     ports:
       - "8080:80"
-  job_queue:
-    ports:
-      - "6379:6379"
   api:
     build:
       context: ..
