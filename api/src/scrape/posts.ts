@@ -1,4 +1,3 @@
-import * as osmosis from 'osmosis';
 import { HackerNews } from '../entities/hn';
 
 import axios from 'axios';

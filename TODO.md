@@ -3,8 +3,6 @@
 - todo list in sidebar
 - add "what is this" page
 
-- reverse scrape order
-
 - consolidate nginx config
 - check production mode server side for stack traces
 

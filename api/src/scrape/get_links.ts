@@ -18,7 +18,7 @@ import { addPostPure } from "../helpers.js";
 
 import { config } from "../../../lib/config.js";
 
-import { mefiPosts, hnPosts } from "./osmosis.js";
+import { mefiPosts, hnPosts } from "./posts.js";
 
 /*
 let created = false;
