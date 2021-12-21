@@ -48,20 +48,14 @@ const jobs = {
         // TODO: switch to a dedicated mefi user
         const user = await conn.userRepository.findOne();
 
-        const latest = await conn.mefiRepository.findOne({ order: { xid: "DESC" }});
-
-        const latest_xid = latest ? latest.xid : 0;
-
         const { posts } = await mefiPosts();
 
         for (const post of posts) {
             console.log(`mefi post ${post.xid}`);
-            if (post.xid > latest_xid) {
+            const exists = await conn.mefiRepository.findOne({ xid: post.xid });
+            if (!exists) {
                 const newPost: Mefi = Object.assign(new Mefi(), post);
                 await addPostPure(newPost, user, conn);
-            }
-            else {
-                break;
             }
         }
     },
