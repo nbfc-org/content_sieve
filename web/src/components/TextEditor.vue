@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import { renderMarkdown } from '../../../lib/validation.js';
+import { renderMarkdown } from '@nbfc/shared/validation.js';
 
 export default {
     props: [
