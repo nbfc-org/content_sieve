@@ -8,8 +8,6 @@
 
 ## bugs
 
-- top level parent link is broken
-
 - http://localhost:4000/new 404s directly
 
 - in unnested mode, showReply applies to all

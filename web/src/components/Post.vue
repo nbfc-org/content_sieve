@@ -54,7 +54,7 @@
           &bull; {{ detailsInfo }}
         </span>
         <span v-if="!childrenLength && post.replies !== 0">
-          &bull; {{ post.replies }} replies
+          &bull; {{ pluralize("reply", post.replies, true) }}
         </span>
         </v-card-text>
       </summary>
@@ -74,7 +74,7 @@
                 {{ post.replies }}
               </v-btn>
             </template>
-            <span>View {{ post.replies }} Comments</span>
+            <span>View {{ pluralize("Comment", post.replies, true) }}</span>
           </v-tooltip>&nbsp;
         </v-item-group>
         <v-item-group v-if="!justOnePost">
@@ -191,6 +191,8 @@ import { mapState } from 'vuex';
 
 import { mdiReply, mdiDownloadCircle, mdiArrowTopLeft, mdiCommentTextMultiple, mdiLink, mdiPlusBox, mdiLabel, mdiClose } from '@mdi/js';
 
+import * as pluralize from 'pluralize';
+
 export default {
     name: 'Post',
     components: {
@@ -205,6 +207,7 @@ export default {
     ],
     data: function() {
         return {
+            pluralize,
             mdiReply,
             mdiDownloadCircle,
             mdiCommentTextMultiple,
