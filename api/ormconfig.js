@@ -1,5 +1,14 @@
 const password = process.env.TYPEORM_PASSWORD;
 
+const common = {
+    "migrations": ["dist/src/migrations/*.js"],
+    "entities": ["dist/src/entities/*.js"],
+    "cli": {
+        "migrationsDir": "src/migrations",
+        "entitiesDir": "src/entities"
+    },
+};
+
 export default [
     {
         "name": "default",
@@ -9,12 +18,7 @@ export default [
         "port": "5432",
         "database": "type-graphql-lazy",
         password,
-        "migrations": ["dist/api/src/migrations/*.js"],
-        "entities": ["dist/api/src/entities/*.js"],
-        "cli": {
-            "migrationsDir": "src/migrations",
-            "entitiesDir": "src/entities"
-        }
+        ...common,
     },
     {
         "name": "local",
@@ -24,12 +28,7 @@ export default [
         "host": "localhost",
         "port": "6432",
         "database": "cs",
-        "migrations": ["dist/api/src/migrations/*.js"],
-        "entities": ["dist/api/src/entities/*.js"],
-        "cli": {
-            "migrationsDir": "src/migrations",
-            "entitiesDir": "src/entities"
-        }
+        ...common,
     },
     {
         "name": "staging",
@@ -39,12 +38,7 @@ export default [
         "host": "localhost",
         "port": "8432",
         "database": "cs",
-        "migrations": ["dist/api/src/migrations/*.js"],
-        "entities": ["dist/api/src/entities/*.js"],
-        "cli": {
-            "migrationsDir": "src/migrations",
-            "entitiesDir": "src/entities"
-        }
+        ...common,
     },
     {
         "name": "production",
@@ -54,11 +48,6 @@ export default [
         "host": "localhost",
         "port": "8732",
         "database": "cs",
-        "migrations": ["dist/api/src/migrations/*.js"],
-        "entities": ["dist/api/src/entities/*.js"],
-        "cli": {
-            "migrationsDir": "src/migrations",
-            "entitiesDir": "src/entities"
-        }
+        ...common,
     }
 ];
