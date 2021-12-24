@@ -27,6 +27,7 @@ import { Vote } from "./entities/vote.js";
 import { Tag, TagText } from "./entities/tag.js";
 import { initJobs } from "./scrape/queue.js";
 import { customAuthChecker } from "./authz.js";
+import { ui } from "./ui.js";
 
 import { config } from "../../lib/config.js";
 
@@ -106,6 +107,8 @@ export async function bootstrap(generate_db) {
         await server.start();
 
         server.applyMiddleware({ app });
+
+        app.get('/ui', ui);
 
         await app.listen({ port: config.api.port });
 
