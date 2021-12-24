@@ -74,7 +74,6 @@ target: Object { postId: "3WfHRmvVV08TAoa8MnVnGI", title:
   - https://dba.stackexchange.com/a/191195
 
 - typeorm use views to handle schema changes
-- ssr
 - markdown renderer dos: https://marked.js.org/using_advanced#workers
 - user sessions
 
