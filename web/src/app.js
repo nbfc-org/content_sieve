@@ -8,7 +8,9 @@ import colors from 'vuetify/lib/util/colors';
 
 import VueKeyCloak from '@dsb-norge/vue-keycloak-js';
 
-import apolloProvider from './lib/apollo.js';
+import VueApollo from "vue-apollo";
+import { getApolloClient } from './lib/apollo.js';
+
 import App from './components/App.vue';
 import router from './lib/router.js';
 import store from './lib/store.js';
@@ -59,6 +61,11 @@ function createApp(context) {
     // We initialize the store state with the data injected from the server
     store.replaceState(window.__INITIAL_STATE__);
   }
+
+  const apolloClient = getApolloClient(context.ssr);
+  const apolloProvider = new VueApollo({
+    defaultClient: apolloClient,
+  });
 
   return {
     app: new Vue({
