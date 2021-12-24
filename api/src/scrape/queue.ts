@@ -1,7 +1,7 @@
 import * as PgBoss from 'pg-boss';
 import { scrapeHandler } from './get_links.js';
 
-import { config, env } from "../../../lib/config.js";
+import { config, env } from "@nbfc/shared/config";
 
 const queueName = `scrapeJobs_${env}`;
 

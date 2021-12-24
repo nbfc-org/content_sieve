@@ -7,7 +7,7 @@ import { setContext } from 'apollo-link-context';
 import { HttpLink } from 'apollo-link-http';
 import { onError } from "apollo-link-error";
 
-import { config } from '../../../lib/config.js';
+import { config } from '@nbfc/shared/config.js';
 
 import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import introspectionQueryResultData from '../../fragmentTypes.json';

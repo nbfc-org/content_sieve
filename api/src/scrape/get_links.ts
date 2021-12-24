@@ -17,7 +17,7 @@ import { mefiPosts, hnPosts } from "./posts.js";
 /*
 import { Jwt } from "../entities/user.js";
 import { createConnection } from 'typeorm';
-import { config } from "../../../lib/config.js";
+import { config } from "@nbfc/shared/config";
 import { TopLevelScores, CommentScores } from "../entities/views.js";
 import { Vote } from "../entities/vote.js";
 

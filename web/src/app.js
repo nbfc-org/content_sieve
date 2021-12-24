@@ -15,7 +15,7 @@ import App from './components/App.vue';
 import router from './lib/router.js';
 import store from './lib/store.js';
 
-import { config } from '../../lib/config.js';
+import { config } from '@nbfc/shared/config.js';
 
 Vue.use(VueKeyCloak, {
   config: config.keycloak,

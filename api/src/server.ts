@@ -29,7 +29,7 @@ import { initJobs } from "./scrape/queue.js";
 import { customAuthChecker } from "./authz.js";
 import { ui } from "./ui.js";
 
-import { config } from "../../lib/config.js";
+import { config } from "@nbfc/shared/config";
 
 // register 3rd party IOC container
 useContainer(Container);
