@@ -28,7 +28,7 @@
 <script>
 import TextEditor from './TextEditor.vue';
 import { addPost } from '../lib/queries.js';
-import { validatePost } from '@nbfc/shared/validation.js';
+import { validatePost } from '../../validation.js';
 
 export default {
     components: {
