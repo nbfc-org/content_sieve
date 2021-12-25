@@ -28,7 +28,7 @@ import { Tag, TagText } from "./entities/tag.js";
 import { initJobs } from "./scrape/queue.js";
 import { customAuthChecker } from "./authz.js";
 
-import { config } from "../../lib/config.js";
+import { config } from "@nbfc/shared/config";
 
 // register 3rd party IOC container
 useContainer(Container);

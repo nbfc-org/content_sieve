@@ -26,6 +26,6 @@ export default {
 }
 </script>
 
-<style src="@/styles/vuetify-custom.css" />
+<style src="../styles/vuetify-custom.css" />
 <style src="@/../node_modules/github-markdown-css/github-markdown.css" />
-<style src="@/styles/markdown-custom.css" />
+<style src="../styles/markdown-custom.css" />

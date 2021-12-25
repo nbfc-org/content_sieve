@@ -3,7 +3,7 @@
     <v-col xl="8" lg="9" md="10" cols="12">
       <div v-if="tag" class="text-h6">Posts tagged with: <span class="text-button">{{ tag }}</span></div>
       <Post @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" :topLevel="true" v-for="post in sortedPosts" />
-      <infinite-loading @infinite="loadMore"></infinite-loading>
+      <infinite-loading v-if="!$apollo.loading" @infinite="loadMore"></infinite-loading>
     </v-col>
   </v-row>
 </template>
@@ -27,6 +27,7 @@ export default {
             postsWithTag: [],
             page: 0,
             nextPage: 1,
+            lastPage: false,
         };
     },
     computed: {
@@ -56,6 +57,11 @@ export default {
             this.$apollo.queries.postsWithTag.refetch();
         },
         loadMore($state) {
+            if (this.lastPage) {
+                $state.loaded();
+                $state.complete();
+                return;
+            }
             this.$apollo.queries.postsWithTag.fetchMore({
                 variables: {
                     tli: {
@@ -66,9 +72,11 @@ export default {
                 },
                 updateQuery: (previousResult, { fetchMoreResult }) => {
                     this.nextPage++;
-                    if (fetchMoreResult.postsWithTag.length) {
+                    const len = fetchMoreResult.postsWithTag.length;
+                    if (len) {
                         delay($state.loaded, 4000);
                     } else {
+                        this.lastPage = true;
                         delay($state.complete, 4000);
                     }
                     return {

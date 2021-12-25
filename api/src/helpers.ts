@@ -12,7 +12,7 @@ import { PostTypeEnum } from "./entities/post_type.js";
 import { Tag, TagText } from "./entities/tag.js";
 import { TopLevelScores, CommentScores } from "./entities/views.js";
 
-import { renderMarkdown, splitTags } from '../../lib/validation.js';
+import { renderMarkdown, splitTags } from '@nbfc/shared/validation';
 
 import { JSDOM, VirtualConsole } from "jsdom";
 import * as createDOMPurify from "dompurify";

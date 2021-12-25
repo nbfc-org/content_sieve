@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
 
-import { config } from '../lib/config.js';
+import { config } from '@nbfc/shared/config.js';
 
 fetch(`${config.web.graphql}/graphql`, {
   method: 'POST',

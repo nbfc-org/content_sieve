@@ -1,9 +1,9 @@
-FROM node:16-bullseye-slim as webbuild
+FROM node:14-bullseye-slim as webbuild
 
 WORKDIR /build/web
 
 COPY web/package*.json ./
-RUN npm ci
+RUN npm i
 
 WORKDIR /build
 
@@ -11,6 +11,8 @@ COPY web web
 COPY lib lib
 
 WORKDIR /build/web
+
+RUN npm i
 
 ARG nodeenv
 ENV POI_APP_NODE_ENV $nodeenv

@@ -9,5 +9,9 @@
         "module": "commonjs",
         "target": "es2016",
     },
-    "include": ["./src/**/*", "../lib/**/*"],
+    "files": [
+        "node_modules/@nbfc/shared/validation.js",
+        "node_modules/@nbfc/shared/config.js",
+    ],
+    "include": ["./src/**/*"],
 }
