@@ -118,11 +118,11 @@ export async function bootstrap(generate_db) {
                 ApolloServerPluginCacheControl({ defaultMaxAge: 60 }),
             ],
             formatError: (err) => {
-                // Don't give the specific errors to the client.
+                if (err.message == 'PersistedQueryNotFound') {
+                    return err;
+                }
                 // if (err.message.startsWith('Database Error: ')) {
-                // TODO: PERSISTED_QUERY_NOT_FOUND
-                // return new Error('Internal server error');
-                return err;
+                return new Error('Internal server error');
             },
         });
 

@@ -9,7 +9,6 @@
 - server side caching
   - invalidate on login/out
   - move maxAge values into config
-  - add back db error traps
 
 ## bugs
 
