@@ -7,9 +7,9 @@
 
 - nginx caching of graphql queries?
 - server side caching
-  - invalidate on mutations (vote & post)
   - invalidate on login/out
   - move maxAge values into config
+  - add back db error traps
 
 ## bugs
 
