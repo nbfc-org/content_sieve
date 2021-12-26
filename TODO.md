@@ -3,9 +3,6 @@
 - todo list in sidebar
 - add "what is this" page
 
-- consolidate nginx config
-- check production mode server side for stack traces
-
 ## bugs
 
 - http://localhost:4000/new 404s directly
@@ -17,6 +14,8 @@
 - fix optimistic post responses
 
 ## optional below here
+
+- consolidate nginx config
 
 - add summary mode for list / toplevel view
 

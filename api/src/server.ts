@@ -101,6 +101,12 @@ export async function bootstrap(generate_db) {
                     req,
                 };
             },
+            formatError: (err) => {
+                // Don't give the specific errors to the client.
+                // if (err.message.startsWith('Database Error: ')) {
+                return new Error('Internal server error');
+                return err;
+            },
         });
 
         await server.start();
