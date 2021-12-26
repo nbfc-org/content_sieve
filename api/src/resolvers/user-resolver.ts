@@ -1,7 +1,7 @@
-import { Resolver, Query, Authorized, Arg, Mutation, Ctx, ID } from "type-graphql";
+import { Resolver, Query, Authorized, Arg, Mutation, Ctx, Info } from "type-graphql";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { Repository, getManager } from "typeorm";
+import { Repository } from "typeorm";
 
 import { User, findOrCreateUser } from "../entities/user.js";
 import { UserSettingsInput } from "./types/user-input.js";
@@ -16,7 +16,8 @@ export class UserResolver {
 
     @Authorized()
     @Query(returns => User)
-    async getOwnUser(@Ctx() { req }: Context): Promise<User> {
+    async getOwnUser(@Ctx() { req }: Context, @Info() info): Promise<User> {
+        info.cacheControl.setCacheHint({ maxAge: 0, scope: 'PRIVATE' });
         const user = await findOrCreateUser(req.user);
         // console.log(user.settings);
         return user;

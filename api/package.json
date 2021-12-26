@@ -14,8 +14,8 @@
   "dependencies": {
     "@nbfc/shared": "file:../lib/shared",
     "@types/express": "^4.17.11",
-    "apollo-server": "^2.25.3",
-    "apollo-server-express": "^2.25.3",
+    "apollo-server": "^3.5.0",
+    "apollo-server-express": "^3.5.0",
     "apollo-server-plugin-response-cache": "^3.4.0",
     "axios": "^0.24.0",
     "cache-manager": "^3.4.4",

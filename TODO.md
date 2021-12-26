@@ -6,7 +6,10 @@
 ## next up
 
 - nginx caching of graphql queries?
-- https://www.apollographql.com/docs/apollo-server/v2/performance/caching/
+- server side caching
+  - invalidate on mutations (vote & post)
+  - invalidate on login/out
+  - move maxAge values into config
 
 ## bugs
 

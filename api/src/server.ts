@@ -2,7 +2,9 @@ import "reflect-metadata";
 
 import * as express from 'express';
 import { ApolloServer } from "apollo-server-express";
-// import responseCachePlugin from 'apollo-server-plugin-response-cache';
+
+import responseCachePlugin from 'apollo-server-plugin-response-cache';
+import { ApolloServerPluginCacheControl } from 'apollo-server-core';
 
 import * as jwt from 'express-jwt';
 import * as jwksRsa from 'jwks-rsa';
@@ -102,17 +104,19 @@ export async function bootstrap(generate_db) {
                     req,
                 };
             },
-            tracing: true,
-            cacheControl: {
-                defaultMaxAge: 5, // 5 seconds
-            },
             persistedQueries: {
                 ttl: 300,
             },
             // plugins: [responseCachePlugin({
-            // plugins: [responseCachePlugin({
-                // sessionId: (requestContext) => (requestContext.request.http.headers.get('sessionid') || null),
-            // })],
+            plugins: [
+                responseCachePlugin({
+                    sessionId: (requestContext) => {
+                        const { user } = requestContext.context.req;
+                        return user ? user.sub : null;
+                    },
+                }),
+                ApolloServerPluginCacheControl({ defaultMaxAge: 60 }),
+            ],
             formatError: (err) => {
                 // Don't give the specific errors to the client.
                 // if (err.message.startsWith('Database Error: ')) {
