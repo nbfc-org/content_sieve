@@ -16,6 +16,8 @@ import { Context } from "./types/context.js";
 
 import { invalidateCache, addPostPure } from "../helpers.js";
 
+import { config } from "@nbfc/shared/config";
+
 import * as uuid62 from 'uuid62';
 import { HackerNews } from "../entities/hn.js";
 
@@ -43,7 +45,10 @@ export class PostResolver {
         const relations = ["type", "tags", "author", "parent"];
 
         if (req.user) {
-            info.cacheControl.setCacheHint({ maxAge: 30, scope: 'PRIVATE' });
+            info.cacheControl.setCacheHint({
+                maxAge: config.api.cache.authedVotesMaxAge,
+                scope: 'PRIVATE',
+            });
             relations.push("votes");
         }
 
@@ -78,8 +83,6 @@ export class PostResolver {
         const take = 20;
         const skip = tli.page * take
 
-        // info.cacheControl.setCacheHint({ maxAge: 60, scope: 'PUBLIC' });
-
         let query = this.postRepository
             .createQueryBuilder("post")
             .where("post.parent is NULL")
@@ -94,7 +97,10 @@ export class PostResolver {
             .leftJoinAndSelect("post.parent", "parent");
 
         if (req.user) {
-            info.cacheControl.setCacheHint({ maxAge: 30, scope: 'PRIVATE' });
+            info.cacheControl.setCacheHint({
+                maxAge: config.api.cache.authedVotesMaxAge,
+                scope: 'PRIVATE',
+            });
             const user = await findOrCreateUser(req.user);
             query = query.leftJoinAndSelect("post.votes", "myvotes", `myvotes.userId=${user.id}`);
         }

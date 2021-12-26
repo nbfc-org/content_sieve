@@ -115,7 +115,7 @@ export async function bootstrap(generate_db) {
                         return user ? user.sub : null;
                     },
                 }),
-                ApolloServerPluginCacheControl({ defaultMaxAge: 60 }),
+                ApolloServerPluginCacheControl({ defaultMaxAge: config.api.cache.defaultMaxAge }),
             ],
             formatError: (err) => {
                 if (err.message == 'PersistedQueryNotFound') {

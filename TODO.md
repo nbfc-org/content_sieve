@@ -3,18 +3,15 @@
 - todo list in sidebar
 - add "what is this" page
 
-## next up
-
-- nginx caching of graphql queries?
-- server side caching
-  - invalidate on login/out
-  - move maxAge values into config
-
 ## bugs
 
 - http://localhost:4000/new 404s directly
 
 - in unnested mode, showReply applies to all
+
+- server side caching
+  - invalidate on login/logout?
+  - move to redis?
 
 - load more doesn't refresh everything
 - don't reload all data on change
