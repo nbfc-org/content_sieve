@@ -29,7 +29,7 @@ export class Vote {
     readonly id: number;
 
     @Field(type => ID)
-    @Column({ type: 'uuid', default: () => 'uuid_generate_v4()' })
+    @Column({ type: 'uuid', unique: true, default: () => 'uuid_generate_v4()' })
     voteId: string;
 
     @Field(type => VoteType)

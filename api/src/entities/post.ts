@@ -54,7 +54,7 @@ export class Post {
     readonly id: number;
 
     @Field(type => ID)
-    @Column('uuid')
+    @Column({ type: 'uuid', unique: true })
     postId: string;
 
     @Field(type => Content)
