@@ -2,6 +2,7 @@ import "reflect-metadata";
 
 import * as express from 'express';
 import { ApolloServer } from "apollo-server-express";
+// import responseCachePlugin from 'apollo-server-plugin-response-cache';
 
 import * as jwt from 'express-jwt';
 import * as jwksRsa from 'jwks-rsa';
@@ -101,10 +102,22 @@ export async function bootstrap(generate_db) {
                     req,
                 };
             },
+            tracing: true,
+            cacheControl: {
+                defaultMaxAge: 5, // 5 seconds
+            },
+            persistedQueries: {
+                ttl: 300,
+            },
+            // plugins: [responseCachePlugin({
+            // plugins: [responseCachePlugin({
+                // sessionId: (requestContext) => (requestContext.request.http.headers.get('sessionid') || null),
+            // })],
             formatError: (err) => {
                 // Don't give the specific errors to the client.
                 // if (err.message.startsWith('Database Error: ')) {
-                return new Error('Internal server error');
+                // TODO: PERSISTED_QUERY_NOT_FOUND
+                // return new Error('Internal server error');
                 return err;
             },
         });

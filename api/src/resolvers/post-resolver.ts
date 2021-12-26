@@ -15,6 +15,7 @@ import { TopLevelInput } from "./types/top-level-input.js";
 import { Context } from "./types/context.js";
 
 import { invalidateCache, addPostPure } from "../helpers.js";
+import { CacheControl } from "../entities/cache-control.js";
 
 import * as uuid62 from 'uuid62';
 import { HackerNews } from "../entities/hn.js";
@@ -34,6 +35,7 @@ export class PostResolver {
     ) {}
 
     @Query(returns => Post, { nullable: true })
+    @CacheControl({ maxAge: 60 })
     async post(@Arg("postId", type => ID) postId: string, @Ctx() { req }: Context) {
         const id = uuid62.decode(postId);
         const post = await this.postRepository.findOne({ postId: id });
@@ -73,9 +75,12 @@ export class PostResolver {
     }
 
     @Query(returns => [Post])
+    @CacheControl({ maxAge: 60 })
     async postsWithTag(@Arg("tli", type => TopLevelInput) tli: TopLevelInput, @Ctx() { req }: Context): Promise<Post[]> {
         const take = 20;
         const skip = tli.page * take
+
+        console.log('ahoy');
 
         let query = this.postRepository
             .createQueryBuilder("post")

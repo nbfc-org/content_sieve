@@ -5,6 +5,7 @@ import { ManyToMany, JoinTable } from "typeorm";
 import { AfterInsert, AfterLoad } from "typeorm";
 import { createUnionType, Authorized } from "type-graphql";
 import { Tree, TreeChildren, TreeParent } from "typeorm";
+import { CacheScope } from "apollo-cache-control";
 
 import * as uuid62 from 'uuid62';
 
@@ -17,6 +18,7 @@ import { Vote } from "./vote.js";
 import { PostType, PostTypeEnum } from "./post_type.js";
 import { Tag } from "./tag.js";
 import { Lazy, getSlowPostData } from "../helpers.js";
+import { CacheControl } from "./cache-control.js";
 
 export enum SortType {
     NEWEST,
@@ -70,6 +72,7 @@ export class Post {
     depth: number;
 
     @Field(type => Float)
+    @CacheControl({ maxAge: 100 })
     @CreateDateColumn({type: 'timestamp with time zone'})
     createdAt: Date;
 
@@ -78,6 +81,7 @@ export class Post {
     type: PostType;
 
     @Field(type => [Vote], { nullable: true })
+    // @CacheControl({ maxAge: 100, scope: CacheScope.Private })
     @Authorized()
     @OneToMany(type => Vote, vote => vote.post, { lazy: true, cascade: ["insert"] })
     votes: Lazy<Vote[]>;

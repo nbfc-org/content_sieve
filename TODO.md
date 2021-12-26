@@ -3,6 +3,11 @@
 - todo list in sidebar
 - add "what is this" page
 
+## next up
+
+- nginx caching of graphql queries?
+- https://www.apollographql.com/docs/apollo-server/v2/performance/caching/
+
 ## bugs
 
 - http://localhost:4000/new 404s directly
@@ -62,9 +67,6 @@ property: "title"
 ​​​​​
 target: Object { postId: "3WfHRmvVV08TAoa8MnVnGI", title:
 ```
-
-- nginx caching of graphql queries?
-- https://www.apollographql.com/docs/apollo-server/v2/performance/caching/
 
 - edit for 5 minutes
 
