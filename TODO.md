@@ -3,9 +3,15 @@
 - todo list in sidebar
 - add "what is this" page
 
-## bugs
+- consolidate nginx config
+
+- load more doesn't refresh everything
+- don't reload all data on change
+- fix optimistic post responses
 
 - http://localhost:4000/new 404s directly
+
+## bugs
 
 - in unnested mode, showReply applies to all
 
@@ -13,13 +19,7 @@
   - invalidate on login/logout?
   - move to redis?
 
-- load more doesn't refresh everything
-- don't reload all data on change
-- fix optimistic post responses
-
 ## optional below here
-
-- consolidate nginx config
 
 - add summary mode for list / toplevel view
 
