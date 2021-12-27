@@ -10,6 +10,7 @@
 import { getPost, getOwnUserInfo, flattenPost, getSort } from '../lib/queries.js';
 import Post from './Post.vue';
 import { mapState } from 'vuex';
+import uuid62 from 'uuid62';
 
 export default {
     components: {
@@ -54,7 +55,9 @@ export default {
             // this.thread.remove(post.postId);
             */
             this.version++;
-            this.$apollo.queries.getPost.refetch();
+            this.$apollo.queries.getPost.refetch({
+                nonce: uuid62.v4(),
+            });
         },
         loadMore(postId) {
             this.$apollo.queries.getPost.fetchMore({

@@ -71,8 +71,7 @@ export default {
             return this.$keycloak.ready && this.$keycloak.authenticated;
         },
         logout() {
-            const basePath = window.location.toString();
-            this.$keycloak.logoutFn({ redirectUri: basePath });
+            this.$keycloak.logoutFn({ redirectUri: `${window.location.origin}/` });
             this.$store.dispatch('logoutSession');
         },
     },

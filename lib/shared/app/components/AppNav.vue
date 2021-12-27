@@ -57,12 +57,11 @@
 import pkg from '../../../../web/package.json';
 
 import { mdiAccountCog, mdiBallot, mdiNotePlus } from '@mdi/js';
-import { mdiLoginVariant, mdiLogoutVariant } from '@mdi/js';
+import { mdiLoginVariant } from '@mdi/js';
 
 export default {
     data: function() {
         return {
-            mdiLogoutVariant,
             mdiLoginVariant,
             mdiAccountCog,
             menuItems: [
@@ -95,11 +94,6 @@ export default {
         login() {
             const basePath = window.location.toString();
             this.$keycloak.login({ redirectUri: basePath });
-        },
-        logout() {
-            const basePath = window.location.toString();
-            this.$keycloak.logoutFn({ redirectUri: basePath });
-            this.$store.dispatch('logoutSession');
         },
     },
 }

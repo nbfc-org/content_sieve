@@ -1,11 +1,11 @@
-import { Resolver, Query, Authorized, Arg, Mutation, Ctx, ID } from "type-graphql";
+import { Resolver, Query, Authorized, Arg, Mutation, Ctx, Info } from "type-graphql";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository, IsNull, Not } from "typeorm";
 
 import { Vote } from "../entities/vote.js";
 import { VoteInput } from "./types/vote-input.js";
-import { Post, SortType } from "../entities/post.js";
+import { Post } from "../entities/post.js";
 import { findOrCreateUser } from "../entities/user.js";
 import { Context } from "./types/context.js";
 import { invalidateCache } from "../helpers.js";
@@ -22,7 +22,8 @@ export class VoteResolver {
 
     @Authorized(['admin'])
     @Query(returns => [Vote])
-    async votes(@Ctx() { req }: Context): Promise<Vote[]> {
+    async votes(@Ctx() { req }: Context, @Info() info): Promise<Vote[]> {
+        info.cacheControl.setCacheHint({ maxAge: 0, scope: 'PRIVATE' });
         return this.voteRepository.find({
             where: {
                 post: Not(IsNull()),

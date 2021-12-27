@@ -13,6 +13,7 @@ import Post from './Post.vue';
 import { mapState } from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
 import { delay } from 'lodash-es';
+import uuid62 from 'uuid62';
 
 export default {
     components: {
@@ -54,7 +55,9 @@ export default {
             return this.$keycloak.ready && this.$keycloak.authenticated;
         },
         reloadPost(cache, post) {
-            this.$apollo.queries.postsWithTag.refetch();
+            this.$apollo.queries.postsWithTag.refetch({
+                nonce: uuid62.v4(),
+            });
         },
         loadMore($state) {
             if (this.lastPage) {

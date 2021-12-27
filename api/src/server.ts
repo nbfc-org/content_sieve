@@ -3,6 +3,9 @@ import "reflect-metadata";
 import * as express from 'express';
 import { ApolloServer } from "apollo-server-express";
 
+import responseCachePlugin from 'apollo-server-plugin-response-cache';
+import { ApolloServerPluginCacheControl } from 'apollo-server-core';
+
 import * as jwt from 'express-jwt';
 import * as jwksRsa from 'jwks-rsa';
 import * as cors from 'cors';
@@ -101,11 +104,25 @@ export async function bootstrap(generate_db) {
                     req,
                 };
             },
+            persistedQueries: {
+                ttl: 300,
+            },
+            // plugins: [responseCachePlugin({
+            plugins: [
+                responseCachePlugin({
+                    sessionId: (requestContext) => {
+                        const { user } = requestContext.context.req;
+                        return user ? user.sub : null;
+                    },
+                }),
+                ApolloServerPluginCacheControl({ defaultMaxAge: config.api.cache.defaultMaxAge }),
+            ],
             formatError: (err) => {
-                // Don't give the specific errors to the client.
+                if (err.message == 'PersistedQueryNotFound') {
+                    return err;
+                }
                 // if (err.message.startsWith('Database Error: ')) {
                 return new Error('Internal server error');
-                return err;
             },
         });
 

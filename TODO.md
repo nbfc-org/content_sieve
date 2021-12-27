@@ -3,19 +3,23 @@
 - todo list in sidebar
 - add "what is this" page
 
-## bugs
-
-- http://localhost:4000/new 404s directly
-
-- in unnested mode, showReply applies to all
+- consolidate nginx config
 
 - load more doesn't refresh everything
 - don't reload all data on change
 - fix optimistic post responses
 
-## optional below here
+- http://localhost:4000/new 404s directly
 
-- consolidate nginx config
+## bugs
+
+- in unnested mode, showReply applies to all
+
+- server side caching
+  - invalidate on login/logout?
+  - move to redis?
+
+## optional below here
 
 - add summary mode for list / toplevel view
 
@@ -62,9 +66,6 @@ property: "title"
 ​​​​​
 target: Object { postId: "3WfHRmvVV08TAoa8MnVnGI", title:
 ```
-
-- nginx caching of graphql queries?
-- https://www.apollographql.com/docs/apollo-server/v2/performance/caching/
 
 - edit for 5 minutes
 

@@ -1,4 +1,4 @@
-import { Resolver, Query, Authorized, Arg, Mutation, Ctx, ID } from "type-graphql";
+import { Resolver, Query, Authorized, Info, Arg, Mutation, Ctx, ID } from "type-graphql";
 import { Repository, getManager } from "typeorm";
 import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
@@ -15,6 +15,8 @@ import { TopLevelInput } from "./types/top-level-input.js";
 import { Context } from "./types/context.js";
 
 import { invalidateCache, addPostPure } from "../helpers.js";
+
+import { config } from "@nbfc/shared/config";
 
 import * as uuid62 from 'uuid62';
 import { HackerNews } from "../entities/hn.js";
@@ -34,7 +36,7 @@ export class PostResolver {
     ) {}
 
     @Query(returns => Post, { nullable: true })
-    async post(@Arg("postId", type => ID) postId: string, @Ctx() { req }: Context) {
+    async post(@Arg("postId", type => ID) postId: string, @Ctx() { req }: Context, @Info() info) {
         const id = uuid62.decode(postId);
         const post = await this.postRepository.findOne({ postId: id });
 
@@ -43,6 +45,10 @@ export class PostResolver {
         const relations = ["type", "tags", "author", "parent"];
 
         if (req.user) {
+            info.cacheControl.setCacheHint({
+                maxAge: config.api.cache.authedVotesMaxAge,
+                scope: 'PRIVATE',
+            });
             relations.push("votes");
         }
 
@@ -73,7 +79,7 @@ export class PostResolver {
     }
 
     @Query(returns => [Post])
-    async postsWithTag(@Arg("tli", type => TopLevelInput) tli: TopLevelInput, @Ctx() { req }: Context): Promise<Post[]> {
+    async postsWithTag(@Arg("tli", type => TopLevelInput) tli: TopLevelInput, @Ctx() { req }: Context, @Info() info): Promise<Post[]> {
         const take = 20;
         const skip = tli.page * take
 
@@ -91,6 +97,10 @@ export class PostResolver {
             .leftJoinAndSelect("post.parent", "parent");
 
         if (req.user) {
+            info.cacheControl.setCacheHint({
+                maxAge: config.api.cache.authedVotesMaxAge,
+                scope: 'PRIVATE',
+            });
             const user = await findOrCreateUser(req.user);
             query = query.leftJoinAndSelect("post.votes", "myvotes", `myvotes.userId=${user.id}`);
         }
