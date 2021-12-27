@@ -5,11 +5,9 @@
   "description": "Not Bad for Commenting",
   "version": "0.0.0",
   "scripts": {
-    "dev": "poi --serve",
-    "build": "poi",
-    "build_prod": "poi --prod",
-    "report": "poi --prod --bundle-report",
-    "serve": "serve dist --single",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
     "test": "echo 1"
   },
   "author": {
@@ -45,13 +43,18 @@
   },
   "devDependencies": {
     "@mdi/js": "^6.3.95",
+    "@vitejs/plugin-vue": "^2.0.1",
     "deepmerge": "^4.2.2",
+    "eslint": "^8.5.0",
+    "eslint-plugin-vue": "^8.2.0",
     "poi": "^12.10.3",
     "poi-preset-babel-minify": "^1.0.3",
     "poi-preset-bundle-report": "^2.0.0",
     "sass": "^1.32.13",
     "sass-loader": "^7.1.0",
     "serve": "^13.0.2",
+    "vite": "^2.7.7",
+    "vite-plugin-vue2": "^1.9.0",
     "vuetify-loader": "^1.7.3",
     "webpack-bundle-analyzer": "^4.5.0"
   }
