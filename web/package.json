@@ -22,6 +22,7 @@
     "apollo-link-context": "^1.0.20",
     "apollo-link-error": "^1.1.13",
     "apollo-link-http": "^1.5.17",
+    "apollo-link-persisted-queries": "^0.2.5",
     "base36": "^1.0.0",
     "github-markdown-css": "^4.0.0",
     "graphql": "^15.5.0",
@@ -43,6 +44,8 @@
   },
   "devDependencies": {
     "@mdi/js": "^6.3.95",
+    "@originjs/vite-plugin-commonjs": "^1.0.1",
+    "@vitejs/plugin-legacy": "^1.6.4",
     "@vitejs/plugin-vue": "^2.0.1",
     "deepmerge": "^4.2.2",
     "eslint": "^8.5.0",
@@ -54,6 +57,8 @@
     "sass-loader": "^7.1.0",
     "serve": "^13.0.2",
     "vite": "^2.7.7",
+    "vite-plugin-components": "^0.13.3",
+    "vite-plugin-html": "^2.1.2",
     "vite-plugin-vue2": "^1.9.0",
     "vuetify-loader": "^1.7.3",
     "webpack-bundle-analyzer": "^4.5.0"

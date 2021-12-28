@@ -1,8 +1,8 @@
 import Vue from 'vue';
-import store from '@nbfc/shared/app/lib/store.js';
+import store from './lib/store.js';
 import { config } from '@nbfc/shared/config.js';
 
-import createApp from '@nbfc/shared/app/app';
+import createApp from './app.js';
 
 import VueKeyCloak from '@dsb-norge/vue-keycloak-js';
 

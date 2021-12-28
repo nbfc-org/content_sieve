@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import pkg from '../../../../web/package.json';
+import pkg from '../../package.json';
 
 import { mdiAccountCog, mdiBallot, mdiNotePlus } from '@mdi/js';
 import { mdiLoginVariant } from '@mdi/js';
