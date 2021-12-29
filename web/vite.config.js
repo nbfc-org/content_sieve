@@ -9,6 +9,8 @@ import { esbuildCommonjs } from '@originjs/vite-plugin-commonjs';
 
 import pkg from './package.json';
 
+import analyze from 'rollup-plugin-analyzer';
+
 import viteComponents, {
   VuetifyResolver,
 } from 'vite-plugin-components';
@@ -34,16 +36,44 @@ export default defineConfig({
         },
       },
     }),
+    /*
     legacy({
       targets: ['ie >= 11'],
       additionalLegacyPolyfills: ['regenerator-runtime/runtime']
     }),
+    */
   ],
   build: {
     polyfillModulePreload: false,
+    // cssCodeSplit: true,
+    rollupOptions: {
+      plugins: [analyze()],
+      output: {
+        manualChunks: (id) => {
+          console.log(id);
+          if (id.includes("node_modules")) {
+            if (id.includes("@aws-amplify")) {
+              return "vendor_aws";
+            } else if (id.includes("@material-ui")) {
+              return "vendor_mui";
+            } else if (id.includes("vuetify/lib")) {
+              return "vendor_vuetify";
+            } else if (id.includes("vuetify/src")) {
+              return "vendor_vuetify_src";
+            } else if (id.includes("vue")) {
+              return "vendor_vue_misc";
+            } else if (id.includes("apollo")) {
+              return "vendor_apollo";
+            }
+
+            return "vendor"; // all other package goes here
+          }
+        },
+      },
+    },
   },
+  // css: { preprocessorOptions: { scss: { charset: false } } },
   /*
-  // css: { preprocessorOptions: { css: { charset: false } } },
   build: {
     rollupOptions: {
       // external: 'buffer',
