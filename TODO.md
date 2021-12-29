@@ -4,9 +4,12 @@
 - add "what is this" page
 
 - vite
-  - make bundle smaller
+  - lazy load components
 
 - getVotes is broken
+  - vote-resolver.js
+  - MetaVote.vue
+  - queries.js
 
 - consolidate nginx config
 

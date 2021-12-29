@@ -205,28 +205,35 @@ const VOTE = gql`mutation ($vote: VoteInput!) {
 }`;
 
 const GET_VOTES = gql`
-${postFields}
-query ($authed: Boolean!) {
+query {
   votes {
     type
     date
     voteId
-    post {
-      ...PostFields
-    }
   }
 }`;
+
+/*
+  query ($authed: Boolean!) {
+  votes {
+  ${postFields}
+post {
+  ...PostFields
+}
+*/
 
 const getVotes = {
   query: GET_VOTES,
   update(data) {
     return data.votes;
   },
+  /*
   variables() {
     return {
       authed: true,
     };
   },
+  */
 };
 
 

@@ -37,10 +37,12 @@ export default {
                 { text: 'Date', value: 'date' },
                 { text: 'Type', value: 'type' },
                 { text: 'Vote ID', value: 'voteId' },
-                { text: 'Post ID', value: 'post.postId' },
-                { text: 'Text', value: 'post.content.rendered' },
-                { text: 'URL', value: 'post.content.url' },
-                { text: 'Vote', value: 'vote' },
+                /*
+                  { text: 'Post ID', value: 'post.postId' },
+                  { text: 'Text', value: 'post.content.rendered' },
+                  { text: 'URL', value: 'post.content.url' },
+                  { text: 'Vote', value: 'vote' },
+                */
             ],
         };
     },

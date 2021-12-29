@@ -26,7 +26,7 @@ export class VoteResolver {
         info.cacheControl.setCacheHint({ maxAge: 0, scope: 'PRIVATE' });
         return this.voteRepository.find({
             where: {
-                post: Not(IsNull()),
+                // post: Not(IsNull()),
             },
         });
     }
