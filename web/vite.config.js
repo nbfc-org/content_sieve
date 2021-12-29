@@ -11,9 +11,11 @@ import pkg from './package.json';
 
 import analyze from 'rollup-plugin-analyzer';
 
+/*
 import viteComponents, {
   VuetifyResolver,
 } from 'vite-plugin-components';
+*/
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -23,11 +25,13 @@ export default defineConfig({
   plugins: [
     vue(),
     minifyHtml(),
+    /*
     viteComponents({
       customComponentResolvers: [
         VuetifyResolver(),
       ],
     }),
+    */
     injectHtml({
       injectData: {
         html: {

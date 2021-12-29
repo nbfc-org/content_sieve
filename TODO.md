@@ -6,6 +6,8 @@
 - vite
   - make bundle smaller
 
+- getVotes is broken
+
 - consolidate nginx config
 
 - load more doesn't refresh everything

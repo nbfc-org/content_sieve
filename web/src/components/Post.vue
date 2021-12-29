@@ -2,7 +2,7 @@
   <v-card v-if="post.content" flat class="rounded-0">
     <details class="comment" open>
       <v-row dense>
-        <v-col :id="`post-${post.postId}`" :cols="post.tags.length ? 8 : 12">
+        <v-col v-ripple :id="`post-${post.postId}`" :cols="post.tags.length ? 8 : 12">
           <v-card-text v-if="post.content.rendered">
             <div class="markdown-body" v-html="post.content.rendered" />
           </v-card-text>
@@ -292,8 +292,7 @@ export default {
                 var elementPosition = el.getBoundingClientRect().top;
                 var offsetPosition = elementPosition - headerOffset;
 
-                // <v-col v-ripple :id="`post-${post.postId}`" :cols="post.tags.length ? 8 : 12">
-                // setTimeout(() => this.ripple(el, 800), 400)
+                setTimeout(() => this.ripple(el, 800), 400)
 
                 window.scrollTo({
                     top: offsetPosition,
