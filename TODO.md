@@ -5,8 +5,8 @@
 
 - vite
   - POI config.js
-  - title and description
   - build per-env in Dockerfile
+  - make bundle smaller
 
 - consolidate nginx config
 

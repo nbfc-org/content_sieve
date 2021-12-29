@@ -1,11 +1,13 @@
 import { defineConfig } from "vite";
 // import vue from '@vitejs/plugin-vue' // vue 3
 import { createVuePlugin as vue } from "vite-plugin-vue2"; //vue 2
-const path = require("path");
+import * as path from 'path';
 
 import { minifyHtml, injectHtml } from 'vite-plugin-html';
 import legacy from '@vitejs/plugin-legacy';
 import { esbuildCommonjs } from '@originjs/vite-plugin-commonjs';
+
+import pkg from './package.json';
 
 import viteComponents, {
   VuetifyResolver,
@@ -27,8 +29,8 @@ export default defineConfig({
     injectHtml({
       injectData: {
         html: {
-          title: 'ProjectName',
-          description: 'A single page application created using Vue.js',
+          title: pkg.productName,
+          description: pkg.description,
         },
       },
     }),
