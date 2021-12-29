@@ -118,6 +118,9 @@ export async function bootstrap(generate_db) {
                 ApolloServerPluginCacheControl({ defaultMaxAge: config.api.cache.defaultMaxAge }),
             ],
             formatError: (err) => {
+                if (['localdocker', 'development'].includes(process.env.NODE_ENV)) {
+                    return err;
+                }
                 if (err.message == 'PersistedQueryNotFound') {
                     return err;
                 }

@@ -17,6 +17,7 @@ import { renderMarkdown, splitTags } from '@nbfc/shared/validation';
 import { JSDOM, VirtualConsole } from "jsdom";
 import * as createDOMPurify from "dompurify";
 import * as marked from 'marked';
+import * as slugFn from 'slug';
 
 import * as cacheManager from "cache-manager";
 import { PostInput } from "./resolvers/types/post-input.js";
@@ -196,7 +197,7 @@ export async function addPostPure(newPost: NewPost, user: User, conn: any): Prom
 
     if (postInput.tagString) {
         const tags = [];
-        for (const slug of splitTags(postInput.tagString)) {
+        for (const slug of splitTags(postInput.tagString, slugFn)) {
             let tag;
             let tt;
 
