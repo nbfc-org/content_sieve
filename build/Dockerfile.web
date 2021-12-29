@@ -15,9 +15,8 @@ WORKDIR /build/web
 RUN npm i
 
 ARG nodeenv
-ENV POI_APP_NODE_ENV $nodeenv
 
-RUN npm run build_prod
+RUN npx vite build -m $nodeenv
 
 FROM nginx:alpine
 

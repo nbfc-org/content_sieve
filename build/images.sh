@@ -8,4 +8,4 @@ echo "building ${NODE_ENV} ..."
 
 docker-compose \
     -f "${SCRIPT_DIR}/docker-compose.yml" \
-    -f "${SCRIPT_DIR}/local/override.yml" build
+    -f "${SCRIPT_DIR}/localdocker/override.yml" build

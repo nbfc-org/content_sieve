@@ -4,8 +4,6 @@
 - add "what is this" page
 
 - vite
-  - POI config.js
-  - build per-env in Dockerfile
   - make bundle smaller
 
 - consolidate nginx config

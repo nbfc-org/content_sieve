@@ -21,7 +21,7 @@ export default [
         ...common,
     },
     {
-        "name": "local",
+        "name": "localdocker",
         "type": "postgres",
         "username": "postgres",
         password,
