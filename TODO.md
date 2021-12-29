@@ -3,6 +3,11 @@
 - todo list in sidebar
 - add "what is this" page
 
+- vite
+  - POI config.js
+  - title and description
+  - build per-env in Dockerfile
+
 - consolidate nginx config
 
 - load more doesn't refresh everything

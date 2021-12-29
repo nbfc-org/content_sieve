@@ -24,6 +24,7 @@
     "apollo-link-http": "^1.5.17",
     "apollo-link-persisted-queries": "file:apollo-link-persisted-queries",
     "base36": "^1.0.0",
+    "buffer": "^6.0.3",
     "github-markdown-css": "^4.0.0",
     "graphql": "^15.5.0",
     "graphql-tag": "^2.12.6",

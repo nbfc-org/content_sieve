@@ -37,15 +37,23 @@ export default defineConfig({
       additionalLegacyPolyfills: ['regenerator-runtime/runtime']
     }),
   ],
+  /*
+  // css: { preprocessorOptions: { css: { charset: false } } },
   build: {
     rollupOptions: {
+      // external: 'buffer',
+    },
+    commonjsOptions: {},
+    //     include: [/uuid62/, /node_modules/]
     },
   },
+  */
   optimizeDeps:{
     include: [
       'uuid62',
       'base-x',
       'base36',
+      'buffer',
     ],
     /*
       <script>window.require = () => {}</script>
