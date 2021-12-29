@@ -39,6 +39,9 @@ export default defineConfig({
       additionalLegacyPolyfills: ['regenerator-runtime/runtime']
     }),
   ],
+  build: {
+    polyfillModulePreload: false,
+  },
   /*
   // css: { preprocessorOptions: { css: { charset: false } } },
   build: {
