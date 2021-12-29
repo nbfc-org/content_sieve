@@ -22,7 +22,7 @@
     "apollo-link-context": "^1.0.20",
     "apollo-link-error": "^1.1.13",
     "apollo-link-http": "^1.5.17",
-    "apollo-link-persisted-queries": "^0.2.5",
+    "apollo-link-persisted-queries": "file:apollo-link-persisted-queries",
     "base36": "^1.0.0",
     "github-markdown-css": "^4.0.0",
     "graphql": "^15.5.0",

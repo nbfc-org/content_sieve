@@ -46,8 +46,6 @@ export default defineConfig({
       'uuid62',
       'base-x',
       'base36',
-      'hash.js',
-      'hash.js/lib/hash/sha/256',
     ],
     /*
       <script>window.require = () => {}</script>

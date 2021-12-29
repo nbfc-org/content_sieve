@@ -191,7 +191,7 @@ import { mapState } from 'vuex';
 
 import { mdiReply, mdiDownloadCircle, mdiArrowTopLeft, mdiCommentTextMultiple, mdiLink, mdiPlusBox, mdiLabel, mdiClose } from '@mdi/js';
 
-import * as pluralize from 'pluralize';
+import pluralize from 'pluralize';
 
 export default {
     name: 'Post',

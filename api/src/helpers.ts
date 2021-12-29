@@ -16,6 +16,7 @@ import { renderMarkdown, splitTags } from '@nbfc/shared/validation';
 
 import { JSDOM, VirtualConsole } from "jsdom";
 import * as createDOMPurify from "dompurify";
+import * as marked from 'marked';
 
 import * as cacheManager from "cache-manager";
 import { PostInput } from "./resolvers/types/post-input.js";
@@ -35,7 +36,7 @@ const jsdom = new JSDOM(data, {
 const DOMPurify = createDOMPurify(jsdom.window);
 
 export function renderMD(body) {
-    return renderMarkdown(body, DOMPurify.sanitize);
+    return renderMarkdown(body, DOMPurify.sanitize, marked);
 }
 
 // TODO: move this to shared memory
