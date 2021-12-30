@@ -11,11 +11,9 @@ import pkg from './package.json';
 
 import analyze from 'rollup-plugin-analyzer';
 
-/*
 import viteComponents, {
   VuetifyResolver,
 } from 'vite-plugin-components';
-*/
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -25,13 +23,11 @@ export default defineConfig({
   plugins: [
     vue(),
     minifyHtml(),
-    /*
     viteComponents({
       customComponentResolvers: [
         VuetifyResolver(),
       ],
     }),
-    */
     injectHtml({
       injectData: {
         html: {
@@ -49,12 +45,15 @@ export default defineConfig({
   ],
   build: {
     polyfillModulePreload: false,
-    // cssCodeSplit: true,
     rollupOptions: {
       plugins: [analyze()],
+    },
+    // cssCodeSplit: true,
+    /*
+      1.35 with split & manual vue comps
+      1.40 with no split & manual vue comps
       output: {
         manualChunks: (id) => {
-          console.log(id);
           if (id.includes("node_modules")) {
             if (id.includes("@aws-amplify")) {
               return "vendor_aws";
@@ -75,6 +74,7 @@ export default defineConfig({
         },
       },
     },
+    */
   },
   // css: { preprocessorOptions: { scss: { charset: false } } },
   /*

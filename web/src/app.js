@@ -2,6 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 
+import Vuetify from 'vuetify/lib';
+/*
 import Vuetify, {
   VCard,
   VCardText,
@@ -30,6 +32,8 @@ import Vuetify, {
   VSwitch,
   VDataTable,
 } from 'vuetify/lib';
+*/
+
 import colors from 'vuetify/lib/util/colors';
 import { Ripple } from 'vuetify/lib/directives';
 
@@ -48,6 +52,7 @@ Vue.use(Vuetify, {
   directives: {
     Ripple,
   },
+  /*
   components: {
     VCard,
     VCardText,
@@ -76,6 +81,7 @@ Vue.use(Vuetify, {
     VSwitch,
     VDataTable,
   },
+  */
 });
 
 function createApp(context) {
