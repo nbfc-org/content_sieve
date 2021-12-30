@@ -11,6 +11,8 @@
   - MetaVote.vue
   - queries.js
 
+- permalinks / parent links not working
+
 - consolidate nginx config
 
 - load more doesn't refresh everything

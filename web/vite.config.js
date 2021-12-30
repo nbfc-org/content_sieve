@@ -45,19 +45,10 @@ export default defineConfig({
     polyfillModulePreload: false,
     rollupOptions: {
       plugins: [analyze()],
-    },
-    // cssCodeSplit: true,
-    /*
-      1.35 with split & manual vue comps
-      1.40 with no split & manual vue comps
       output: {
         manualChunks: (id) => {
           if (id.includes("node_modules")) {
-            if (id.includes("@aws-amplify")) {
-              return "vendor_aws";
-            } else if (id.includes("@material-ui")) {
-              return "vendor_mui";
-            } else if (id.includes("vuetify/lib")) {
+            if (id.includes("vuetify/lib")) {
               return "vendor_vuetify";
             } else if (id.includes("vuetify/src")) {
               return "vendor_vuetify_src";
@@ -72,7 +63,6 @@ export default defineConfig({
         },
       },
     },
-    */
   },
   // css: { preprocessorOptions: { scss: { charset: false } } },
   /*
