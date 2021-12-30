@@ -36,12 +36,10 @@ export default defineConfig({
         },
       },
     }),
-    /*
     legacy({
       targets: ['ie >= 11'],
       additionalLegacyPolyfills: ['regenerator-runtime/runtime']
     }),
-    */
   ],
   build: {
     polyfillModulePreload: false,
