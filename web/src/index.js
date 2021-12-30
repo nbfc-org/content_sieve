@@ -16,9 +16,10 @@ Vue.use(VueKeyCloak, {
     silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
   },
   onReady: (kc) => {
-    createApp({
-      ssr: false,
-    });
     store.dispatch('loadUser', { kc });
   },
+});
+
+createApp({
+  ssr: false,
 });
