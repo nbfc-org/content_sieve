@@ -50,6 +50,8 @@ export default defineConfig({
           if (id.includes("node_modules")) {
             if (id.includes("vuetify/lib")) {
               return "vendor_vuetify";
+            } else if (id.includes("vuetify/src/components")) {
+              return "vendor_vuetify_components";
             } else if (id.includes("vuetify/src")) {
               return "vendor_vuetify_src";
             } else if (id.includes("vue")) {
