@@ -45,25 +45,24 @@ export default defineConfig({
     polyfillModulePreload: false,
     rollupOptions: {
       plugins: [analyze()],
+      /*
       output: {
         manualChunks: (id) => {
           if (id.includes("node_modules")) {
-            if (id.includes("vuetify/lib")) {
-              return "vendor_vuetify";
-            } else if (id.includes("vuetify/src/components")) {
-              return "vendor_vuetify_components";
-            } else if (id.includes("vuetify/src")) {
-              return "vendor_vuetify_src";
-            } else if (id.includes("vue")) {
-              return "vendor_vue_misc";
-            } else if (id.includes("apollo")) {
-              return "vendor_apollo";
+            if (id.includes("apollo")) {
+              return "apollo";
+            } else if (id.includes("graphql")) {
+              return "apollo";
+            } else if (id.includes("marked")) {
+              return "texteditor";
+            } else if (id.includes("dompurify")) {
+              return "texteditor";
             }
-
             return "vendor"; // all other package goes here
           }
         },
       },
+      */
     },
   },
   // css: { preprocessorOptions: { scss: { charset: false } } },
