@@ -9,7 +9,7 @@ import { ApolloLink } from 'apollo-link';
 import { onError } from "apollo-link-error";
 import { createPersistedQueryLink } from "apollo-link-persisted-queries";
 
-import { config } from '../../config.js';
+import { config } from '@nbfc/shared/config.js';
 
 import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import introspectionQueryResultData from '../fragmentTypes.json';

@@ -5,7 +5,6 @@ services:
       dockerfile: build/Dockerfile.web
       args:
         - nodeenv=${NODE_ENV}
-        - webgraphql=/api
     ports:
       - "8080:80"
   api:

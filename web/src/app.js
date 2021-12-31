@@ -3,7 +3,39 @@ import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 
 import Vuetify from 'vuetify/lib';
+/*
+import Vuetify, {
+  VCard,
+  VCardText,
+  VCardActions,
+  VApp,
+  VAppBar,
+  VToolbar,
+  VToolbarItems,
+  VToolbarTitle,
+  VBtn,
+  VRow,
+  VCol,
+  VItemGroup,
+  VTooltip,
+  VIcon,
+  VMain,
+  VSpacer,
+  VExpandTransition,
+  VContainer,
+  VChip,
+  VForm,
+  VTextField,
+  VDivider,
+  VRadioGroup,
+  VRadio,
+  VSwitch,
+  VDataTable,
+} from 'vuetify/lib';
+*/
+
 import colors from 'vuetify/lib/util/colors';
+import { Ripple } from 'vuetify/lib/directives';
 
 import VueApollo from "vue-apollo";
 import { getApolloClient } from './lib/apollo.js';
@@ -12,11 +44,45 @@ import App from './components/App.vue';
 import router from './lib/router.js';
 import store from './lib/store.js';
 
-import { config } from '../config.js';
+import { config } from '@nbfc/shared/config.js';
 
 Vue.config.productionTip = false;
 
-Vue.use(Vuetify);
+Vue.use(Vuetify, {
+  directives: {
+    Ripple,
+  },
+  /*
+  components: {
+    VCard,
+    VCardText,
+    VCardActions,
+    VApp,
+    VAppBar,
+    VToolbar,
+    VToolbarItems,
+    VToolbarTitle,
+    VBtn,
+    VRow,
+    VCol,
+    VItemGroup,
+    VTooltip,
+    VIcon,
+    VMain,
+    VSpacer,
+    VExpandTransition,
+    VContainer,
+    VChip,
+    VForm,
+    VTextField,
+    VDivider,
+    VRadioGroup,
+    VRadio,
+    VSwitch,
+    VDataTable,
+  },
+  */
+});
 
 function createApp(context) {
 

@@ -3,6 +3,16 @@
 - todo list in sidebar
 - add "what is this" page
 
+- vite
+  - lazy load components
+
+- getVotes is broken
+  - vote-resolver.js
+  - MetaVote.vue
+  - queries.js
+
+- permalinks / parent links not working
+
 - consolidate nginx config
 
 - load more doesn't refresh everything

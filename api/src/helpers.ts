@@ -16,6 +16,8 @@ import { renderMarkdown, splitTags } from '@nbfc/shared/validation';
 
 import { JSDOM, VirtualConsole } from "jsdom";
 import * as createDOMPurify from "dompurify";
+import * as marked from 'marked';
+import * as slugFn from 'slug';
 
 import * as cacheManager from "cache-manager";
 import { PostInput } from "./resolvers/types/post-input.js";
@@ -35,7 +37,7 @@ const jsdom = new JSDOM(data, {
 const DOMPurify = createDOMPurify(jsdom.window);
 
 export function renderMD(body) {
-    return renderMarkdown(body, DOMPurify.sanitize);
+    return renderMarkdown(body, DOMPurify.sanitize, marked);
 }
 
 // TODO: move this to shared memory
@@ -195,7 +197,7 @@ export async function addPostPure(newPost: NewPost, user: User, conn: any): Prom
 
     if (postInput.tagString) {
         const tags = [];
-        for (const slug of splitTags(postInput.tagString)) {
+        for (const slug of splitTags(postInput.tagString, slugFn)) {
             let tag;
             let tt;
 
