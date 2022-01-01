@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client/core';
 import base36 from 'base36';
 import uuid62 from 'uuid62';
 

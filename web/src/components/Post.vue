@@ -39,7 +39,7 @@
         <v-card-text>
         {{ post.author.username }}
         &bull;
-        <v-tooltip bottom>
+        <v-tooltip v-if="0" bottom>
           <template v-slot:activator="{ on, attrs }">
             <span v-on="on">
               {{ ago }}
@@ -59,7 +59,7 @@
         </v-card-text>
       </summary>
       <v-card-actions>
-        <v-item-group v-if="justOnePost">
+        <v-item-group v-if="0 && justOnePost">
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -188,6 +188,8 @@ import { addPost, getSort } from '../lib/queries.js';
 import TextEditor from './TextEditor.vue';
 import VoteButton from './VoteButton.vue';
 import { mapState } from 'vuex';
+
+// TODO: reenable tooltips
 
 import { mdiReply, mdiDownloadCircle, mdiArrowTopLeft, mdiCommentTextMultiple, mdiLink, mdiPlusBox, mdiLabel, mdiClose } from '@mdi/js';
 

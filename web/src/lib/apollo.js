@@ -1,20 +1,19 @@
 import Vue from 'vue';
-import VueApollo from "vue-apollo";
 
-import ApolloClient from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { setContext } from 'apollo-link-context';
-import { HttpLink } from 'apollo-link-http';
-import { ApolloLink } from 'apollo-link';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
+import { ApolloLink } from '@apollo/client/core';
+// import { setContext } from 'apollo-link-context';
+// import { ApolloLink } from 'apollo-link';
 import { onError } from "apollo-link-error";
-import { createPersistedQueryLink } from "apollo-link-persisted-queries";
+
+//import { createPersistedQueryLink } from "apollo-link-persisted-queries";
 
 import { config } from '@nbfc/shared/config.js';
 
-import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
-import introspectionQueryResultData from '../fragmentTypes.json';
+// import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
+// import possibleTypes from '../fragmentTypes.json';
 
-Vue.use(VueApollo);
+// Vue.use(VueApollo);
 
 let _apolloClient = undefined;
 
@@ -22,16 +21,23 @@ export function getApolloClient(ssr=false) {
 
   if( !_apolloClient) {
 
+    /*
     const fragmentMatcher = new IntrospectionFragmentMatcher({
       introspectionQueryResultData,
     });
+    */
 
-    const cache = new InMemoryCache({ fragmentMatcher });
+    const cache = new InMemoryCache({
+      possibleTypes: {
+        Content: ["Link", "Text"],
+      },
+    });
 
     const httpLink = new HttpLink({
       uri: config.web.graphql,
     });
 
+    /*
     const authLink = setContext(async (_, { headers }) => {
       let authorizationHeader = {};
 
@@ -49,6 +55,7 @@ export function getApolloClient(ssr=false) {
         },
       };
     });
+    */
 
     const errorLink = onError(({ graphQLErrors, networkError, response, operation }) => {
       /*
@@ -72,9 +79,12 @@ export function getApolloClient(ssr=false) {
       }
     });
 
-    const pql = createPersistedQueryLink({ useGETForHashedQueries: true });
+    // const pql = createPersistedQueryLink({ useGETForHashedQueries: true });
 
-    const link = authLink.concat(errorLink).concat(pql).concat(httpLink);
+    // TODO: reenambe authLink and persistedQueryLink
+    // const link = authLink.concat(errorLink).concat(pql).concat(httpLink);
+    // const link = errorLink.concat(pql).concat(httpLink);
+    const link = errorLink.concat(httpLink);
 
     /*
     // If on the client, recover the injected state

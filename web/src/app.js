@@ -35,7 +35,8 @@ import Vuetify, {
 import colors from 'vuetify/lib/util/colors';
 import { Ripple } from 'vuetify/lib/directives';
 
-import VueApollo from "vue-apollo";
+// import VueApollo from "vue-apollo";
+import { createApolloProvider } from '@vue/apollo-option';
 import { getApolloClient } from './lib/apollo.js';
 
 import App from './components/App.vue';
@@ -115,7 +116,7 @@ function createApp(context) {
   */
 
   const apolloClient = getApolloClient(context.ssr);
-  const apolloProvider = new VueApollo({
+  const apolloProvider = createApolloProvider({
     defaultClient: apolloClient,
   });
 
