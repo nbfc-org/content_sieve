@@ -1,7 +1,5 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
-
-Vue.use(Vuex);
+import { createStore } from 'vuex';
 
 import { getApolloClient } from './apollo.js';
 
@@ -24,7 +22,7 @@ const storeToSession = (key, context, data) => {
   context.commit('set', {key, data});
 };
 
-export default new Vuex.Store({
+export default createStore({
   state: {
     token: '',
     userid: '',

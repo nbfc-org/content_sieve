@@ -121,7 +121,6 @@ function createApp(context) {
   });
 
   const app = Vue.createApp({
-    store,
     vuetify,
     /*
     el: '#app',
@@ -131,6 +130,7 @@ function createApp(context) {
   });
   app.use(apolloProvider);
   app.use(router);
+  app.use(store);
   // app.use(store);
   // app.use(vuetify);
   app.mount('#app');
