@@ -1,6 +1,4 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Vuex from 'vuex';
 
 import Vuetify from 'vuetify/lib';
 /*
@@ -121,14 +119,20 @@ function createApp(context) {
     defaultClient: apolloClient,
   });
 
-  const app = new Vue({
-      el: '#app',
-      router,
-      store,
-      vuetify,
-      apolloProvider,
-      ...App,
+  const app = Vue.createApp({
+    store,
+    vuetify,
+    /*
+    el: '#app',
+    router,
+    */
+    ...App,
   });
+  app.use(apolloProvider);
+  app.use(router);
+  // app.use(store);
+  // app.use(vuetify);
+  app.mount('#app');
 
   return {
     app,

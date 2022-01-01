@@ -37,7 +37,7 @@
           <v-toolbar-items class="hidden-xs-only">
             -->
       <v-toolbar-items>
-        <v-btn x-small v-for="item in menuItems" v-if="item.test()" :key="item.title" :to="item.path">
+        <v-btn x-small v-for="item in testedItems" :key="item.title" :to="item.path">
           {{ item.title }}
         </v-btn>
       </v-toolbar-items>
@@ -82,6 +82,9 @@ export default {
     computed: {
         title() {
             return pkg.productName;
+        },
+        testedItems() {
+            return this.menuItems.filter(i => i.test());
         },
     },
     methods: {

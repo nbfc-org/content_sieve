@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 
 import PostWithChildren from '../components/PostWithChildren.vue';
 import PostsWithTag from '../components/PostsWithTag.vue';
@@ -7,8 +7,6 @@ import NotFoundComponent from '../components/NotFoundComponent.vue';
 import NewPost from '../components/NewPost.vue';
 import Settings from '../components/Settings.vue';
 import MetaVote from '../components/MetaVote.vue';
-
-Vue.use(VueRouter);
 
 const routes = [
   { path: '/post/:postId',
@@ -53,8 +51,8 @@ const routes = [
   },
 ];
 
-const router = new VueRouter({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHistory(),
   routes
 });
 

@@ -175,7 +175,7 @@
         </v-btn>
       </v-card-actions>
       <div class="replies">
-        <Post @reloadPost="reloadPost" @loadMore="loadMore" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" v-if="children" />
+        <Post @reloadPost="reloadPost" @loadMore="loadMore" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" />
       </div>
     </details>
   </v-card>

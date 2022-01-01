@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
-// import vue from '@vitejs/plugin-vue' // vue 3
-import { createVuePlugin as vue } from "vite-plugin-vue2"; //vue 2
+import vue from '@vitejs/plugin-vue' // vue 3
+// import { createVuePlugin as vue } from "vite-plugin-vue2"; //vue 2
 import * as path from 'path';
 
 import { minifyHtml, injectHtml } from 'vite-plugin-html';
@@ -21,7 +21,15 @@ export default defineConfig({
     port: 4000,
   },
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          compatConfig: {
+            MODE: 2,
+          },
+        },
+      },
+    }),
     minifyHtml(),
     viteComponents({
       customComponentResolvers: [
@@ -36,10 +44,12 @@ export default defineConfig({
         },
       },
     }),
+    /*
     legacy({
       targets: ['ie >= 11'],
       additionalLegacyPolyfills: ['regenerator-runtime/runtime']
     }),
+    */
   ],
   build: {
     polyfillModulePreload: false,
@@ -101,6 +111,7 @@ export default defineConfig({
   resolve: {
     // extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     alias: {
+      vue: '@vue/compat',
       "@": path.resolve(__dirname, "./src"),
     },
   },
