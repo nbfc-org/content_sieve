@@ -39,6 +39,7 @@
         <v-card-text>
         {{ post.author.username }}
         &bull;
+        <span>{{ ago }}</span>
         <v-tooltip v-if="0" bottom>
           <template v-slot:activator="{ on, attrs }">
             <span v-on="on">
@@ -59,37 +60,35 @@
         </v-card-text>
       </summary>
       <v-card-actions>
-        <v-item-group v-if="0 && justOnePost">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+        <v-item-group v-if="justOnePost">
               <v-btn
                 x-small
                 plain
                 exact
                 :to="`/post/${post.postId}`"
                 color="primary"
-                v-on="on"
                 >
                 <v-icon left dark>{{ mdiCommentTextMultiple }}</v-icon>
                 {{ post.replies }}
               </v-btn>
+          <v-tooltip v-if="0" bottom>
+            <template v-slot:activator="{ on, attrs }">
             </template>
             <span>View {{ pluralize("Comment", post.replies, true) }}</span>
           </v-tooltip>&nbsp;
         </v-item-group>
         <v-item-group v-if="!justOnePost">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
               <v-btn
                 x-small
                 icon
                 color="primary"
                 @click="openReply"
                 :data-target="`comment-${post.postId}-reply-form`"
-                v-on="on"
                 >
                 <v-icon left dark>{{ mdiReply }}</v-icon>
               </v-btn>&nbsp;
+          <v-tooltip v-if="0" bottom>
+            <template v-slot:activator="{ on, attrs }">
             </template>
             <span>Reply</span>
           </v-tooltip>
@@ -100,35 +99,33 @@
           <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="flag" />&nbsp;
         </v-item-group>
         <v-item-group v-if="post.parent">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
               <v-btn
                 x-small
                 icon
                 exact
                 @click="gotoParent(post.parent.postId)"
                 color="primary"
-                v-on="on"
                 >
                 <v-icon left dark>{{ mdiArrowTopLeft }}</v-icon>
               </v-btn>&nbsp;
+          <v-tooltip v-if="0" bottom>
+            <template v-slot:activator="{ on, attrs }">
             </template>
             <span>Go to parent</span>
           </v-tooltip>
         </v-item-group>
         <v-item-group v-if="!justOnePost">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
               <v-btn
                 x-small
                 icon
                 exact
                 :to="`/post/${post.postId}`"
                 color="primary"
-                v-on="on"
                 >
                 <v-icon left dark>{{ mdiLink }}</v-icon>
               </v-btn>&nbsp;
+          <v-tooltip v-if="0" bottom>
+            <template v-slot:activator="{ on, attrs }">
             </template>
             <span>Permalink</span>
           </v-tooltip>
