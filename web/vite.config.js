@@ -20,6 +20,9 @@ export default defineConfig({
   server: {
     port: 4000,
   },
+  define: {
+    'process.env': process.env,
+  },
   plugins: [
     vue({
       template: {
