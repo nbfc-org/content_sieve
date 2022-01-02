@@ -44,7 +44,7 @@ export default {
         },
         sortedPosts() {
             const posts = this.postsWithTag;
-            if (this.settings.sortType === undefined) {
+            if (!this.settings.sortType) {
                 return posts;
             }
             return [...posts.sort(getSort(this.settings.sortType))];

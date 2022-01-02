@@ -1,6 +1,5 @@
 <template>
-  <v-tooltip bottom>
-    <template v-slot:activator="{ on, attrs }">
+  <div>
       <v-btn
         :color="color"
         x-small
@@ -10,9 +9,12 @@
         >
         <v-icon left dark>{{ icon }}</v-icon>
       </v-btn>
+  <v-tooltip v-if="0" bottom>
+    <template v-slot:activator="{ on, attrs }">
     </template>
     <span>Vote {{ which }}</span>
   </v-tooltip>
+  </div>
 </template>
 <script>
 

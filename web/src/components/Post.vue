@@ -246,7 +246,7 @@ export default {
         },
         children: function() {
             const kids = this.post.children || [];
-            if (this.sortBy === undefined) {
+            if (!this.sortBy) {
                 return kids;
             }
             return kids.sort(getSort(this.sortBy));

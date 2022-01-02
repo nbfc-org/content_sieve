@@ -1,27 +1,19 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
 import { ApolloLink } from '@apollo/client/core';
-// import { setContext } from 'apollo-link-context';
-// import { ApolloLink } from 'apollo-link';
+import { setContext } from '@apollo/client/link/context';
 import { onError } from "apollo-link-error";
+
+import Vue from 'vue';
 
 //import { createPersistedQueryLink } from "apollo-link-persisted-queries";
 
 import { config } from '@nbfc/shared/config.js';
-
-// import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
-// import possibleTypes from '../fragmentTypes.json';
 
 let _apolloClient = undefined;
 
 export function getApolloClient(ssr=false) {
 
   if( !_apolloClient) {
-
-    /*
-    const fragmentMatcher = new IntrospectionFragmentMatcher({
-      introspectionQueryResultData,
-    });
-    */
 
     const cache = new InMemoryCache({
       possibleTypes: {
@@ -33,7 +25,6 @@ export function getApolloClient(ssr=false) {
       uri: config.web.graphql,
     });
 
-    /*
     const authLink = setContext(async (_, { headers }) => {
       let authorizationHeader = {};
 
@@ -51,7 +42,6 @@ export function getApolloClient(ssr=false) {
         },
       };
     });
-    */
 
     const errorLink = onError(({ graphQLErrors, networkError, response, operation }) => {
       /*
@@ -78,9 +68,8 @@ export function getApolloClient(ssr=false) {
     // const pql = createPersistedQueryLink({ useGETForHashedQueries: true });
 
     // TODO: reenambe authLink and persistedQueryLink
-    // const link = authLink.concat(errorLink).concat(pql).concat(httpLink);
     // const link = errorLink.concat(pql).concat(httpLink);
-    const link = errorLink.concat(httpLink);
+    const link = authLink.concat(errorLink).concat(httpLink);
 
     /*
     // If on the client, recover the injected state
