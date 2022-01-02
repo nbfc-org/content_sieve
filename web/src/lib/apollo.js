@@ -1,11 +1,11 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
 import { ApolloLink } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
-import { onError } from "apollo-link-error";
+import { onError } from "@apollo/client/link/error";
+import { createPersistedQueryLink } from "@apollo/client/link/persisted-queries";
+import { sha256 } from 'crypto-hash';
 
 import Vue from 'vue';
-
-//import { createPersistedQueryLink } from "apollo-link-persisted-queries";
 
 import { config } from '@nbfc/shared/config.js';
 
@@ -65,11 +65,8 @@ export function getApolloClient(ssr=false) {
       }
     });
 
-    // const pql = createPersistedQueryLink({ useGETForHashedQueries: true });
-
-    // TODO: reenambe authLink and persistedQueryLink
-    // const link = errorLink.concat(pql).concat(httpLink);
-    const link = authLink.concat(errorLink).concat(httpLink);
+    const pql = createPersistedQueryLink({ sha256, useGETForHashedQueries: true });
+    const link = authLink.concat(errorLink).concat(pql).concat(httpLink);
 
     /*
     // If on the client, recover the injected state
