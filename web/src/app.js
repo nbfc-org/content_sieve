@@ -45,8 +45,6 @@ import store from './lib/store.js';
 
 import { config } from '@nbfc/shared/config.js';
 
-Vue.config.productionTip = false;
-
 Vue.use(Vuetify, {
   directives: {
     Ripple,

@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
 import { ApolloLink } from '@apollo/client/core';
 // import { setContext } from 'apollo-link-context';
@@ -12,8 +10,6 @@ import { config } from '@nbfc/shared/config.js';
 
 // import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 // import possibleTypes from '../fragmentTypes.json';
-
-// Vue.use(VueApollo);
 
 let _apolloClient = undefined;
 
