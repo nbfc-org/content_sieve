@@ -36,7 +36,10 @@ export class PostResolver {
     ) {}
 
     @Query(returns => Post, { nullable: true })
-    async post(@Arg("postId", type => ID) postId: string, @Ctx() { req }: Context, @Info() info) {
+    async post(
+        @Arg("postId", type => ID) postId: string,
+        @Arg("nonce", type => String, {nullable: true}) nonce: string,
+        @Ctx() { req }: Context, @Info() info) {
         const id = uuid62.decode(postId);
         const post = await this.postRepository.findOne({ postId: id });
 
@@ -79,7 +82,10 @@ export class PostResolver {
     }
 
     @Query(returns => [Post])
-    async postsWithTag(@Arg("tli", type => TopLevelInput) tli: TopLevelInput, @Ctx() { req }: Context, @Info() info): Promise<Post[]> {
+    async postsWithTag(
+        @Arg("tli", type => TopLevelInput) tli: TopLevelInput,
+        @Arg("nonce", type => String, {nullable: true}) nonce: string,
+        @Ctx() { req }: Context, @Info() info): Promise<Post[]> {
         const take = 20;
         const skip = tli.page * take
 

@@ -59,8 +59,8 @@ const postFields = gql`
 
 const GET_POST_RECURSIVE = gql`
 ${postFields}
-query ($postId: ID!, $authed: Boolean!) {
-  post(postId: $postId) {
+query ($postId: ID!, $authed: Boolean!, $nonce: String) {
+  post(postId: $postId, nonce: $nonce) {
     ...PostFields
     children {
       ...PostFields
@@ -91,8 +91,8 @@ query ($postId: ID!, $authed: Boolean!) {
 
 const GET_POSTS_WITH_TAG = gql`
 ${postFields}
-query ($tli: TopLevelInput!, $authed: Boolean!) {
-  postsWithTag(tli: $tli) {
+query ($tli: TopLevelInput!, $authed: Boolean!, $nonce: String) {
+  postsWithTag(tli: $tli, nonce: $nonce) {
     ...PostFields
   }
 }`;

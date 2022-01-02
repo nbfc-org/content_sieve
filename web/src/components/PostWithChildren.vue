@@ -55,6 +55,7 @@ export default {
             // this.thread.remove(post.postId);
             */
             this.version++;
+            console.log('reload');
             this.$apollo.queries.getPost.refetch({
                 nonce: uuid62.v4(),
             });

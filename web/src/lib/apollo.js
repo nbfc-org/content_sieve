@@ -81,7 +81,17 @@ export function getApolloClient(ssr=false) {
     }
     */
 
+    const defaultOptions = {
+      watchQuery: {
+        fetchPolicy: 'no-cache',
+      },
+      query: {
+        fetchPolicy: 'no-cache',
+      },
+    };
+
     _apolloClient = new ApolloClient({
+      // defaultOptions,
       cache,
       link,
         /*
