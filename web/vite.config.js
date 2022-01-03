@@ -7,13 +7,10 @@ import { minifyHtml, injectHtml } from 'vite-plugin-html';
 import legacy from '@vitejs/plugin-legacy';
 import { esbuildCommonjs } from '@originjs/vite-plugin-commonjs';
 
+import Vuetify from '@vuetify/vite-plugin';
 import pkg from './package.json';
 
 import analyze from 'rollup-plugin-analyzer';
-
-import viteComponents, {
-  VuetifyResolver,
-} from 'vite-plugin-components';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,6 +21,7 @@ export default defineConfig({
     'process.env': process.env,
   },
   plugins: [
+    Vuetify({ autoImport: true }),
     vue({
       template: {
         compilerOptions: {
@@ -50,11 +48,6 @@ export default defineConfig({
       },
     }),
     minifyHtml(),
-    viteComponents({
-      customComponentResolvers: [
-        VuetifyResolver(),
-      ],
-    }),
     injectHtml({
       injectData: {
         html: {
@@ -73,6 +66,7 @@ export default defineConfig({
   build: {
     polyfillModulePreload: false,
     rollupOptions: {
+      // external: ['vuetify/lib/directives'],
       plugins: [analyze()],
       /*
       output: {
@@ -106,6 +100,12 @@ export default defineConfig({
   },
   */
   optimizeDeps:{
+    /*
+    exclude: [
+      '@vuetify/loader-shared/runtime',
+      'vuetify',
+    ],
+    */
     include: [
       'uuid62',
       'base-x',

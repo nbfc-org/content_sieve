@@ -67,6 +67,7 @@ export function getApolloClient(ssr=false) {
 
     const pql = createPersistedQueryLink({ sha256, useGETForHashedQueries: true });
     const link = authLink.concat(errorLink).concat(pql).concat(httpLink);
+    // const link = authLink.concat(errorLink).concat(httpLink);
 
     /*
     // If on the client, recover the injected state

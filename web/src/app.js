@@ -1,6 +1,5 @@
 import Vue from 'vue';
 
-import Vuetify from 'vuetify/lib';
 /*
 import Vuetify, {
   VCard,
@@ -32,8 +31,16 @@ import Vuetify, {
 } from 'vuetify/lib';
 */
 
+
+import { createVuetify } from 'vuetify';
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
+import 'vuetify/styles';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
 import colors from 'vuetify/lib/util/colors';
+/*
 import { Ripple } from 'vuetify/lib/directives';
+*/
 
 // import VueApollo from "vue-apollo";
 import { createApolloProvider } from '@vue/apollo-option';
@@ -45,11 +52,11 @@ import store from './lib/store.js';
 
 import { config } from '@nbfc/shared/config.js';
 
+/*
 Vue.use(Vuetify, {
   directives: {
     Ripple,
   },
-  /*
   components: {
     VCard,
     VCardText,
@@ -78,12 +85,21 @@ Vue.use(Vuetify, {
     VSwitch,
     VDataTable,
   },
-  */
 });
+*/
 
 function createApp(context) {
 
-  const vuetify = new Vuetify({
+  const vuetify = createVuetify({
+    icons: {
+      defaultSet: 'mdi',
+      aliases,
+      sets: {
+        mdi,
+      },
+    },
+    directives,
+    components,
     theme: {
       themes: {
         light: {
@@ -97,9 +113,6 @@ function createApp(context) {
           primary: colors.blue.lighten3,
         },
       },
-    },
-    icons: {
-      iconfont: 'mdiSvg',
     },
   });
 
@@ -119,7 +132,6 @@ function createApp(context) {
   });
 
   const app = Vue.createApp({
-    vuetify,
     /*
     el: '#app',
     router,
@@ -130,7 +142,7 @@ function createApp(context) {
   app.use(router);
   app.use(store);
   // app.use(store);
-  // app.use(vuetify);
+  app.use(vuetify);
   app.mount('#app');
 
   return {
