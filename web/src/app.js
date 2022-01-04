@@ -37,7 +37,7 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
 import 'vuetify/styles';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
-import colors from 'vuetify/lib/util/colors';
+// import colors from 'vuetify/lib/util/colors';
 /*
 import { Ripple } from 'vuetify/lib/directives';
 */
@@ -100,7 +100,10 @@ function createApp(context) {
     },
     directives,
     components,
+    theme: false,
+    /*
     theme: {
+      defaultTheme: 'dark',
       themes: {
         light: {
           primary: colors.green.darken1,
@@ -114,6 +117,7 @@ function createApp(context) {
         },
       },
     },
+    */
   });
 
   /*
