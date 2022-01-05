@@ -5,13 +5,13 @@ import { onError } from "@apollo/client/link/error";
 import { createPersistedQueryLink } from "@apollo/client/link/persisted-queries";
 import { sha256 } from 'crypto-hash';
 
-import Vue from 'vue';
+import { getCurrentInstance } from 'vue';
 
 import { config } from '@nbfc/shared/config.js';
 
 let _apolloClient = undefined;
 
-export function getApolloClient(ssr=false) {
+export function getApolloClient(ssr=false, app=undefined) {
 
   if( !_apolloClient) {
 
@@ -28,7 +28,7 @@ export function getApolloClient(ssr=false) {
     const authLink = setContext(async (_, { headers }) => {
       let authorizationHeader = {};
 
-      const kc = Vue.prototype.$keycloak;
+      const kc = app && app.config ? app.config.globalProperties.$keycloak : undefined;
       if (kc && kc.authenticated) {
         const token = kc.token;
         authorizationHeader = {

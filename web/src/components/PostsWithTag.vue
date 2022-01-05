@@ -3,7 +3,6 @@
     <v-col xl="8" lg="9" md="10" cols="12">
       <div v-if="tag" class="text-h6">Posts tagged with: <span class="text-button">{{ tag }}</span></div>
       <Post @reloadPost="reloadPost" :key="`${post.postId}`" :post="post" :topLevel="true" v-for="post in sortedPosts" />
-      <infinite-loading v-if="!$apollo.loading" @infinite="loadMore"></infinite-loading>
     </v-col>
   </v-row>
 </template>
@@ -15,6 +14,9 @@ import InfiniteLoading from 'vue-infinite-loading';
 import { delay } from 'lodash-es';
 import uuid62 from 'uuid62';
 
+// TODO: reenable infinite loading
+// https://github.com/ts-pro/vue-eternal-loading
+// <infinite-loading v-if="!$apollo.loading" @infinite="loadMore"></infinite-loading>
 export default {
     components: {
         Post,

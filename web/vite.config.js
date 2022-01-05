@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import vue from '@vitejs/plugin-vue' // vue 3
+import vue from '@vitejs/plugin-vue'; // vue 3
 // import { createVuePlugin as vue } from "vite-plugin-vue2"; //vue 2
 import * as path from 'path';
 
@@ -22,31 +22,7 @@ export default defineConfig({
   },
   plugins: [
     Vuetify({ autoImport: true }),
-    vue({
-      template: {
-        compilerOptions: {
-          compatConfig: {
-            MODE: 3,
-            GLOBAL_EXTEND: true,
-            GLOBAL_OBSERVABLE: true,
-            GLOBAL_PROTOTYPE: true,
-            INSTANCE_EVENT_HOOKS: true,
-            RENDER_FUNCTION: true,
-            INSTANCE_LISTENERS: true,
-            INSTANCE_SCOPED_SLOTS: true,
-            COMPONENT_FUNCTIONAL: true,
-            PROPS_DEFAULT_THIS: true,
-            OPTIONS_DATA_MERGE: true,
-            OPTIONS_BEFORE_DESTROY: true,
-            OPTIONS_DESTROYED: true,
-            ATTR_FALSE_VALUE: true,
-            CUSTOM_DIR: true,
-            INSTANCE_SET: true,
-            WATCH_ARRAY: true,
-          },
-        },
-      },
-    }),
+    vue(),
     minifyHtml(),
     injectHtml({
       injectData: {
@@ -130,7 +106,6 @@ export default defineConfig({
   resolve: {
     // extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     alias: {
-      vue: '@vue/compat',
       "@": path.resolve(__dirname, "./src"),
     },
   },

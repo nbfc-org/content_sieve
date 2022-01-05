@@ -19,7 +19,6 @@
     "@dsb-norge/vue-keycloak-js": "^2.0.1-beta",
     "@nbfc/shared": "file:../lib/shared",
     "@vue/apollo-option": "^4.0.0-alpha.16",
-    "@vue/compat": "^3.2.26",
     "base36": "^1.0.0",
     "buffer": "^6.0.3",
     "crypto-hash": "^2.0.1",

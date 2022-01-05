@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { getCurrentInstance } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 import PostWithChildren from '../components/PostWithChildren.vue';
@@ -60,9 +60,10 @@ router.beforeEach((to, from, next) => {
   if (to.meta.isAuthenticated) {
     // Get the actual url of the app, it's needed for Keycloak
     const basePath = window.location.toString();
-    const kc = Vue.prototype.$keycloak;
+    const app = getCurrentInstance();
+    const kc = (app && app.config) ? app.config.globalProperties.$keycloak : undefined;
 
-    if (kc.ready && kc.authenticated) {
+    if (kc && kc.ready && kc.authenticated) {
       const roles = to.meta.roles;
       if (roles) {
         let role_match = false;
@@ -79,7 +80,7 @@ router.beforeEach((to, from, next) => {
       } else {
         next();
       }
-    } else if (kc.ready && !kc.authenticated) {
+    } else if (kc && kc.ready && !kc.authenticated) {
       // The page is protected and the user is not authenticated. Force a login.
       kc.login({ redirectUri: window.location.origin + to.path });
     } else {

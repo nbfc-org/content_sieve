@@ -1,4 +1,6 @@
-import Vue from 'vue';
+import { createApp as _createApp } from 'vue';
+
+import VueKeyCloak from '@dsb-norge/vue-keycloak-js';
 
 /*
 import Vuetify, {
@@ -100,10 +102,9 @@ function createApp(context) {
     },
     directives,
     components,
-    theme: false,
-    /*
     theme: {
-      defaultTheme: 'dark',
+      defaultTheme: 'light',
+      /*
       themes: {
         light: {
           primary: colors.green.darken1,
@@ -116,8 +117,8 @@ function createApp(context) {
           primary: colors.blue.lighten3,
         },
       },
+      */
     },
-    */
   });
 
   /*
@@ -130,18 +131,33 @@ function createApp(context) {
   }
   */
 
-  const apolloClient = getApolloClient(context.ssr);
-  const apolloProvider = createApolloProvider({
-    defaultClient: apolloClient,
-  });
-
-  const app = Vue.createApp({
+  const app = _createApp({
     /*
     el: '#app',
     router,
     */
     ...App,
   });
+
+  const apolloClient = getApolloClient(context.ssr, app);
+  const apolloProvider = createApolloProvider({
+    defaultClient: apolloClient,
+  });
+
+  app.use(VueKeyCloak, {
+    config: config.keycloak,
+    logout: {
+      redirectUri: window.location.origin,
+    },
+    init: {
+      onLoad: 'check-sso',
+      silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
+    },
+    onReady: (kc) => {
+      store.dispatch('loadUser', { kc });
+    },
+  });
+
   app.use(apolloProvider);
   app.use(router);
   app.use(store);
