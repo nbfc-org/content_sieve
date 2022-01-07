@@ -41,10 +41,10 @@
         &bull;
         <span>{{ ago }}</span>
         <v-tooltip v-if="0" bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <span v-on="on">
+          <template v-slot:activator="{ props }">
+            <v-container v-bind="props">
               {{ ago }}
-            </span>
+            </v-container>
           </template>
           <span>{{ localTime }}</span>
         </v-tooltip>

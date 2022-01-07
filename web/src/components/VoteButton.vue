@@ -5,7 +5,6 @@
         x-small
         icon
         @click="click"
-        v-on="on"
         >
         <v-icon left dark>{{ icon }}</v-icon>
       </v-btn>
