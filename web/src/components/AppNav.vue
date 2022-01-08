@@ -6,7 +6,7 @@
 
       <v-spacer/>
 
-      <v-btn size="x-small" v-for="item in testedItems()" :key="item.title" :to="item.path">
+      <v-btn size="x-small" v-for="item in testedItems" :key="item.title" :to="item.path">
         {{ item.title }}
       </v-btn>
 

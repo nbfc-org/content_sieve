@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.5.6",
-    "@dsb-norge/vue-keycloak-js": "^2.0.1-beta",
+    "@dsb-norge/vue-keycloak-js": "^2.1.2-beta",
     "@nbfc/shared": "file:../lib/shared",
     "@vue/apollo-option": "^4.0.0-alpha.16",
     "base36": "^1.0.0",
