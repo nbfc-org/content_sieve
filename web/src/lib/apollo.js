@@ -1,32 +1,25 @@
-import Vue from 'vue';
-import VueApollo from "vue-apollo";
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
+import { ApolloLink } from '@apollo/client/core';
+import { setContext } from '@apollo/client/link/context';
+import { onError } from "@apollo/client/link/error";
+import { createPersistedQueryLink } from "@apollo/client/link/persisted-queries";
+import { sha256 } from 'crypto-hash';
 
-import ApolloClient from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { setContext } from 'apollo-link-context';
-import { HttpLink } from 'apollo-link-http';
-import { ApolloLink } from 'apollo-link';
-import { onError } from "apollo-link-error";
-import { createPersistedQueryLink } from "apollo-link-persisted-queries";
+import { getCurrentInstance } from 'vue';
 
 import { config } from '@nbfc/shared/config.js';
 
-import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
-import introspectionQueryResultData from '../fragmentTypes.json';
-
-Vue.use(VueApollo);
-
 let _apolloClient = undefined;
 
-export function getApolloClient(ssr=false) {
+export function getApolloClient(ssr=false, app=undefined) {
 
   if( !_apolloClient) {
 
-    const fragmentMatcher = new IntrospectionFragmentMatcher({
-      introspectionQueryResultData,
+    const cache = new InMemoryCache({
+      possibleTypes: {
+        Content: ["Link", "Text"],
+      },
     });
-
-    const cache = new InMemoryCache({ fragmentMatcher });
 
     const httpLink = new HttpLink({
       uri: config.web.graphql,
@@ -35,7 +28,7 @@ export function getApolloClient(ssr=false) {
     const authLink = setContext(async (_, { headers }) => {
       let authorizationHeader = {};
 
-      const kc = Vue.prototype.$keycloak;
+      const kc = app && app.config ? app.config.globalProperties.$keycloak : undefined;
       if (kc && kc.authenticated) {
         const token = kc.token;
         authorizationHeader = {
@@ -72,9 +65,9 @@ export function getApolloClient(ssr=false) {
       }
     });
 
-    const pql = createPersistedQueryLink({ useGETForHashedQueries: true });
-
+    const pql = createPersistedQueryLink({ sha256, useGETForHashedQueries: true });
     const link = authLink.concat(errorLink).concat(pql).concat(httpLink);
+    // const link = authLink.concat(errorLink).concat(httpLink);
 
     /*
     // If on the client, recover the injected state
@@ -89,7 +82,17 @@ export function getApolloClient(ssr=false) {
     }
     */
 
+    const defaultOptions = {
+      watchQuery: {
+        fetchPolicy: 'no-cache',
+      },
+      query: {
+        fetchPolicy: 'no-cache',
+      },
+    };
+
     _apolloClient = new ApolloClient({
+      // defaultOptions,
       cache,
       link,
         /*

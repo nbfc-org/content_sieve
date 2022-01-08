@@ -1,33 +1,29 @@
 import { defineConfig } from "vite";
-// import vue from '@vitejs/plugin-vue' // vue 3
-import { createVuePlugin as vue } from "vite-plugin-vue2"; //vue 2
+import vue from '@vitejs/plugin-vue'; // vue 3
+// import { createVuePlugin as vue } from "vite-plugin-vue2"; //vue 2
 import * as path from 'path';
 
 import { minifyHtml, injectHtml } from 'vite-plugin-html';
 import legacy from '@vitejs/plugin-legacy';
 import { esbuildCommonjs } from '@originjs/vite-plugin-commonjs';
 
+import Vuetify from '@vuetify/vite-plugin';
 import pkg from './package.json';
 
 import analyze from 'rollup-plugin-analyzer';
-
-import viteComponents, {
-  VuetifyResolver,
-} from 'vite-plugin-components';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
     port: 4000,
   },
+  define: {
+    'process.env': process.env,
+  },
   plugins: [
+    Vuetify({ autoImport: true }),
     vue(),
     minifyHtml(),
-    viteComponents({
-      customComponentResolvers: [
-        VuetifyResolver(),
-      ],
-    }),
     injectHtml({
       injectData: {
         html: {
@@ -36,14 +32,17 @@ export default defineConfig({
         },
       },
     }),
+    /*
     legacy({
       targets: ['ie >= 11'],
       additionalLegacyPolyfills: ['regenerator-runtime/runtime']
     }),
+    */
   ],
   build: {
     polyfillModulePreload: false,
     rollupOptions: {
+      // external: ['vuetify/lib/directives'],
       plugins: [analyze()],
       /*
       output: {
@@ -77,6 +76,12 @@ export default defineConfig({
   },
   */
   optimizeDeps:{
+    /*
+    exclude: [
+      '@vuetify/loader-shared/runtime',
+      'vuetify',
+    ],
+    */
     include: [
       'uuid62',
       'base-x',

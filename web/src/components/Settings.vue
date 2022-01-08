@@ -15,7 +15,7 @@
       </v-card>
       <v-divider class="mb-3 mt-3" />
       <v-col class="text-right">
-        <v-btn color="primary" small outlined v-if="authed()" @click="logout">
+        <v-btn color="primary" size="small" outlined v-if="authed()" @click="logout">
           Log out
         </v-btn>
       </v-col>
@@ -23,7 +23,6 @@
   </v-card>
 </template>
 <script>
-
 import { mapState } from 'vuex';
 import { sortTypes } from '../lib/queries.js';
 

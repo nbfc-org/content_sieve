@@ -1,16 +1,22 @@
 <template>
   <div class="editor">
-    <textarea :class="$vuetify.breakpoint.xs ? 'vertical' : 'horizontal'" :value="input" ref="area" rows="8" placeholder="plain text or markdown ..." @input="update"></textarea>
-    <div :class="$vuetify.breakpoint.xs ? 'vertical markdown-body' : 'horizontal markdown-body'" v-html="compiledMarkdown"></div>
+    <textarea :value="input" :class="smAndUp ? 'horizontal' : 'vertical'" ref="area" rows="8" placeholder="plain text or markdown ..." @input="update"></textarea>
+    <div :class="smAndUp ? 'horizontal markdown-body' : 'vertical markdown-body'" v-html="compiledMarkdown"></div>
   </div>
 </template>
 <script>
 import { renderMarkdown } from '@nbfc/shared/validation.js';
+import { useDisplay } from 'vuetify';
 
 export default {
     props: [
         'text',
     ],
+    setup() {
+        const { smAndUp } = useDisplay();
+
+        return { smAndUp };
+    },
     data: function() {
         return {
             input: this.text,

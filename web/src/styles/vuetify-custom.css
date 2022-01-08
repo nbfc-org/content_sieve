@@ -12,23 +12,25 @@ details.comment summary::-webkit-details-marker {
   display: none;
 }
 
-details .v-card__text {
+details .v-card-text {
   padding: .25em .5em !important;
 }
 
-details > .v-card__text {
+details > .v-card-text {
   padding: .25em 1.5em !important;
 }
 
-div.replies > .v-sheet {
+div.replies {
   border-left: thin solid rgba(0, 0, 0, 0.12) !important;
 }
 
-summary .v-card__text {
+/*
+summary .v-card-text {
   margin-top: 1em !important;
 }
+*/
 
-.v-card__actions {
+.v-card-actions {
   margin-left: 1.25em;
   padding: 0 !important;
 }
@@ -39,7 +41,7 @@ button.v-btn--icon {
 }
 
 /*
-.v-card__actions {
+.v-card-actions {
   border-bottom: thin solid rgba(0, 0, 0, 0.12) !important;
 }
 

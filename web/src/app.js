@@ -1,8 +1,7 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Vuex from 'vuex';
+import { createApp as _createApp } from 'vue';
 
-import Vuetify from 'vuetify/lib';
+import VueKeyCloak from '@dsb-norge/vue-keycloak-js';
+
 /*
 import Vuetify, {
   VCard,
@@ -34,25 +33,32 @@ import Vuetify, {
 } from 'vuetify/lib';
 */
 
-import colors from 'vuetify/lib/util/colors';
-import { Ripple } from 'vuetify/lib/directives';
 
-import VueApollo from "vue-apollo";
+import { createVuetify } from 'vuetify';
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
+import 'vuetify/styles';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+import colors from 'vuetify/lib/util/colors';
+/*
+import { Ripple } from 'vuetify/lib/directives';
+*/
+
+// import VueApollo from "vue-apollo";
+import { createApolloProvider } from '@vue/apollo-option';
 import { getApolloClient } from './lib/apollo.js';
 
 import App from './components/App.vue';
-import router from './lib/router.js';
+import createRouter from './lib/router.js';
 import store from './lib/store.js';
 
 import { config } from '@nbfc/shared/config.js';
 
-Vue.config.productionTip = false;
-
+/*
 Vue.use(Vuetify, {
   directives: {
     Ripple,
   },
-  /*
   components: {
     VCard,
     VCardText,
@@ -81,28 +87,40 @@ Vue.use(Vuetify, {
     VSwitch,
     VDataTable,
   },
-  */
 });
+*/
 
 function createApp(context) {
 
-  const vuetify = new Vuetify({
+  const vuetify = createVuetify({
+    icons: {
+      defaultSet: 'mdi',
+      aliases,
+      sets: {
+        mdi,
+      },
+    },
+    directives,
+    components,
     theme: {
+      //defaultTheme: 'light',
       themes: {
         light: {
-          primary: colors.green.darken1,
-          // anchor: colors.purple.darken2,
-          secondary: colors.grey.darken1,
-          accent: colors.shades.black,
-          error: colors.red.accent3,
+          dark: false,
+          colors: {
+            primary: colors.green.darken1,
+            // anchor: colors.purple.darken2,
+            secondary: colors.grey.darken1,
+            accent: colors.shades.black,
+            error: colors.red.accent3,
+          },
         },
+        /*
         dark: {
           primary: colors.blue.lighten3,
         },
+        */
       },
-    },
-    icons: {
-      iconfont: 'mdiSvg',
     },
   });
 
@@ -116,19 +134,37 @@ function createApp(context) {
   }
   */
 
-  const apolloClient = getApolloClient(context.ssr);
-  const apolloProvider = new VueApollo({
+  const app = _createApp({
+    ...App,
+  });
+
+  const apolloClient = getApolloClient(context.ssr, app);
+  const apolloProvider = createApolloProvider({
     defaultClient: apolloClient,
   });
 
-  const app = new Vue({
-      el: '#app',
-      router,
-      store,
-      vuetify,
-      apolloProvider,
-      ...App,
+  app.use(VueKeyCloak, {
+    config: config.keycloak,
+    logout: {
+      redirectUri: window.location.origin,
+    },
+    init: {
+      onLoad: 'check-sso',
+      silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
+    },
+    onReady: (kc) => {
+      store.dispatch('loadUser', { kc });
+    },
   });
+
+  const router = createRouter(app);
+
+  app.use(apolloProvider);
+  app.use(router);
+  app.use(store);
+  app.use(vuetify);
+
+  app.mount('#app');
 
   return {
     app,

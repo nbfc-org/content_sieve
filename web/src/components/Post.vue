@@ -16,8 +16,8 @@
             <v-chip
               color="primary"
               class="ml-2"
-              outlined
-              small
+              variant="outlined"
+              size="x-small"
               label
               :key="`tag_${tag.canonical.slug}`"
               v-for="tag in post.tags">
@@ -35,15 +35,16 @@
           </v-card>
         </v-col>
       </v-row>
-      <summary class="text--secondary grey lighten-4" @click="details">
+      <summary class="text-secondary bg-grey-lighten-4" @click="details">
         <v-card-text>
         {{ post.author.username }}
         &bull;
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <span v-on="on">
+        <span>{{ ago }}</span>
+        <v-tooltip v-if="0" bottom>
+          <template v-slot:activator="{ props }">
+            <v-container v-bind="props">
               {{ ago }}
-            </span>
+            </v-container>
           </template>
           <span>{{ localTime }}</span>
         </v-tooltip>
@@ -60,75 +61,66 @@
       </summary>
       <v-card-actions>
         <v-item-group v-if="justOnePost">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
               <v-btn
-                x-small
+                size="x-small"
                 plain
                 exact
                 :to="`/post/${post.postId}`"
                 color="primary"
-                v-on="on"
                 >
                 <v-icon left dark>{{ mdiCommentTextMultiple }}</v-icon>
                 {{ post.replies }}
               </v-btn>
+          <v-tooltip v-if="0" bottom>
+            <template v-slot:activator="{ on, attrs }">
             </template>
             <span>View {{ pluralize("Comment", post.replies, true) }}</span>
-          </v-tooltip>&nbsp;
+          </v-tooltip>
         </v-item-group>
         <v-item-group v-if="!justOnePost">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
               <v-btn
-                x-small
-                icon
+                size="x-small"
+                :icon="mdiReply"
                 color="primary"
                 @click="openReply"
                 :data-target="`comment-${post.postId}-reply-form`"
-                v-on="on"
-                >
-                <v-icon left dark>{{ mdiReply }}</v-icon>
-              </v-btn>&nbsp;
+                />
+          <v-tooltip v-if="0" bottom>
+            <template v-slot:activator="{ on, attrs }">
             </template>
             <span>Reply</span>
           </v-tooltip>
         </v-item-group>
+        &nbsp;
         <v-item-group v-if="showVotes()">
           <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="up" />
           <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="down" />
-          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="flag" />&nbsp;
+          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="flag" />
         </v-item-group>
         <v-item-group v-if="post.parent">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
               <v-btn
-                x-small
-                icon
+                size="x-small"
+                :icon="mdiArrowTopLeft"
                 exact
                 @click="gotoParent(post.parent.postId)"
                 color="primary"
-                v-on="on"
-                >
-                <v-icon left dark>{{ mdiArrowTopLeft }}</v-icon>
-              </v-btn>&nbsp;
+                />
+          <v-tooltip v-if="0" bottom>
+            <template v-slot:activator="{ on, attrs }">
             </template>
             <span>Go to parent</span>
           </v-tooltip>
         </v-item-group>
         <v-item-group v-if="!justOnePost">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
               <v-btn
-                x-small
-                icon
+                size="x-small"
+                :icon="mdiLink"
                 exact
                 :to="`/post/${post.postId}`"
                 color="primary"
-                v-on="on"
-                >
-                <v-icon left dark>{{ mdiLink }}</v-icon>
-              </v-btn>&nbsp;
+                />
+          <v-tooltip v-if="0" bottom>
+            <template v-slot:activator="{ on, attrs }">
             </template>
             <span>Permalink</span>
           </v-tooltip>
@@ -146,7 +138,7 @@
           </v-card-text>
           <v-card-actions class="pt-0">
             <v-btn
-              x-small
+              size="x-small"
               outlined
               color="primary"
               @click="postReply"
@@ -154,7 +146,7 @@
               <v-icon left dark>{{ mdiPlusBox }}</v-icon>Add reply
             </v-btn>
             <v-btn
-              x-small
+              size="x-small"
               outlined
               color="error"
               @click="reply"
@@ -166,7 +158,7 @@
       </v-expand-transition>
       <v-card-actions v-if="hasMore">
         <v-btn
-          x-small
+          size="x-small"
           outlined
           color="primary"
           @click="loadIt"
@@ -175,7 +167,7 @@
         </v-btn>
       </v-card-actions>
       <div class="replies">
-        <Post @reloadPost="reloadPost" @loadMore="loadMore" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" v-if="children" />
+        <Post @reloadPost="reloadPost" @loadMore="loadMore" :key="`${child.postId}`" v-for="child in children" :post="child" :sortBy="sortBy" />
       </div>
     </details>
   </v-card>
@@ -188,6 +180,8 @@ import { addPost, getSort } from '../lib/queries.js';
 import TextEditor from './TextEditor.vue';
 import VoteButton from './VoteButton.vue';
 import { mapState } from 'vuex';
+
+// TODO: reenable tooltips
 
 import { mdiReply, mdiDownloadCircle, mdiArrowTopLeft, mdiCommentTextMultiple, mdiLink, mdiPlusBox, mdiLabel, mdiClose } from '@mdi/js';
 
@@ -246,11 +240,13 @@ export default {
             return this.post.nested_kids_length || this.children.length;
         },
         children: function() {
-            const kids = this.post.children || [];
-            if (this.sortBy === undefined) {
+            let kids = this.post.children || [];
+            if (!this.sortBy) {
                 return kids;
             }
-            return kids.sort(getSort(this.sortBy));
+            kids = [...kids];
+            kids.sort(getSort(this.sortBy));
+            return kids;
         },
         ago: function() {
             return DateTime.fromMillis(this.post.createdAt).toRelative();

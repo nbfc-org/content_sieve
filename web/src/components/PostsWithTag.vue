@@ -43,11 +43,13 @@ export default {
             return sortTypes[this.settings.sortType || 0];
         },
         sortedPosts() {
-            const posts = this.postsWithTag;
-            if (this.settings.sortType === undefined) {
+            let posts = this.postsWithTag;
+            if (!this.settings.sortType) {
                 return posts;
             }
-            return [...posts.sort(getSort(this.settings.sortType))];
+            posts = [...posts];
+            posts.sort(getSort(this.settings.sortType));
+            return posts;
         },
     },
     methods: {
