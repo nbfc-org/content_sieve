@@ -6,16 +6,16 @@
 
       <v-spacer/>
 
-      <v-btn size="x-small" v-for="item in testedItems" :key="item.title" :to="item.path">
+      <v-btn v-for="item in testedItems" :key="item.title" :to="item.path">
         {{ item.title }}
       </v-btn>
 
       <v-divider inset vertical></v-divider>
 
-      <v-btn v-if="authed()" size="x-small" to="/user/settings">
+      <v-btn v-if="authed()" to="/user/settings">
         <v-icon>{{ mdiAccountCog }}</v-icon>
       </v-btn>
-      <v-btn v-if="!authed()" size="x-small" @click="login">
+      <v-btn v-if="!authed()" @click="login">
         <v-icon>{{ mdiLoginVariant }}</v-icon>
       </v-btn>
 
