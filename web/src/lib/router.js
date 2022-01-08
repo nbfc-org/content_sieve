@@ -1,5 +1,4 @@
-import { getCurrentInstance } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter as _createRouter, createWebHistory } from 'vue-router';
 
 import PostWithChildren from '../components/PostWithChildren.vue';
 import PostsWithTag from '../components/PostsWithTag.vue';
@@ -51,7 +50,8 @@ const routes = [
   },
 ];
 
-const router = createRouter({
+const createRouter = (app) => {
+const router = _createRouter({
   history: createWebHistory(),
   routes
 });
@@ -60,7 +60,6 @@ router.beforeEach((to, from, next) => {
   if (to.meta.isAuthenticated) {
     // Get the actual url of the app, it's needed for Keycloak
     const basePath = window.location.toString();
-    const app = getCurrentInstance();
     const kc = (app && app.config) ? app.config.globalProperties.$keycloak : undefined;
 
     if (kc && kc.ready && kc.authenticated) {
@@ -93,5 +92,7 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+  return router;
+}
 
-export default router;
+export default createRouter;

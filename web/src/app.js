@@ -39,7 +39,7 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
 import 'vuetify/styles';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
-// import colors from 'vuetify/lib/util/colors';
+import colors from 'vuetify/lib/util/colors';
 /*
 import { Ripple } from 'vuetify/lib/directives';
 */
@@ -49,7 +49,7 @@ import { createApolloProvider } from '@vue/apollo-option';
 import { getApolloClient } from './lib/apollo.js';
 
 import App from './components/App.vue';
-import router from './lib/router.js';
+import createRouter from './lib/router.js';
 import store from './lib/store.js';
 
 import { config } from '@nbfc/shared/config.js';
@@ -103,21 +103,24 @@ function createApp(context) {
     directives,
     components,
     theme: {
-      defaultTheme: 'light',
-      /*
+      //defaultTheme: 'light',
       themes: {
         light: {
-          primary: colors.green.darken1,
-          // anchor: colors.purple.darken2,
-          secondary: colors.grey.darken1,
-          accent: colors.shades.black,
-          error: colors.red.accent3,
+          dark: false,
+          colors: {
+            primary: colors.green.darken1,
+            // anchor: colors.purple.darken2,
+            secondary: colors.grey.darken1,
+            accent: colors.shades.black,
+            error: colors.red.accent3,
+          },
         },
+        /*
         dark: {
           primary: colors.blue.lighten3,
         },
+        */
       },
-      */
     },
   });
 
@@ -132,10 +135,6 @@ function createApp(context) {
   */
 
   const app = _createApp({
-    /*
-    el: '#app',
-    router,
-    */
     ...App,
   });
 
@@ -158,11 +157,13 @@ function createApp(context) {
     },
   });
 
+  const router = createRouter(app);
+
   app.use(apolloProvider);
   app.use(router);
   app.use(store);
-  // app.use(store);
   app.use(vuetify);
+
   app.mount('#app');
 
   return {

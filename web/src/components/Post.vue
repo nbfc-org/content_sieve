@@ -16,8 +16,8 @@
             <v-chip
               color="primary"
               class="ml-2"
-              outlined
-              small
+              variant="outlined"
+              size="x-small"
               label
               :key="`tag_${tag.canonical.slug}`"
               v-for="tag in post.tags">
@@ -35,7 +35,7 @@
           </v-card>
         </v-col>
       </v-row>
-      <summary class="text--secondary grey lighten-4" @click="details">
+      <summary class="text-secondary bg-grey-lighten-4" @click="details">
         <v-card-text>
         {{ post.author.username }}
         &bull;
@@ -62,7 +62,7 @@
       <v-card-actions>
         <v-item-group v-if="justOnePost">
               <v-btn
-                x-small
+                size="x-small"
                 plain
                 exact
                 :to="`/post/${post.postId}`"
@@ -79,7 +79,7 @@
         </v-item-group>
         <v-item-group v-if="!justOnePost">
               <v-btn
-                x-small
+                size="x-small"
                 icon
                 color="primary"
                 @click="openReply"
@@ -100,7 +100,7 @@
         </v-item-group>
         <v-item-group v-if="post.parent">
               <v-btn
-                x-small
+                size="x-small"
                 icon
                 exact
                 @click="gotoParent(post.parent.postId)"
@@ -116,7 +116,7 @@
         </v-item-group>
         <v-item-group v-if="!justOnePost">
               <v-btn
-                x-small
+                size="x-small"
                 icon
                 exact
                 :to="`/post/${post.postId}`"
@@ -143,7 +143,7 @@
           </v-card-text>
           <v-card-actions class="pt-0">
             <v-btn
-              x-small
+              size="x-small"
               outlined
               color="primary"
               @click="postReply"
@@ -151,7 +151,7 @@
               <v-icon left dark>{{ mdiPlusBox }}</v-icon>Add reply
             </v-btn>
             <v-btn
-              x-small
+              size="x-small"
               outlined
               color="error"
               @click="reply"
@@ -163,7 +163,7 @@
       </v-expand-transition>
       <v-card-actions v-if="hasMore">
         <v-btn
-          x-small
+          size="x-small"
           outlined
           color="primary"
           @click="loadIt"
