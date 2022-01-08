@@ -4,7 +4,6 @@
         size="x-small"
         :icon="icon"
         @click="click"
-        v-bind="props"
         />
 </template>
 <script>
@@ -18,6 +17,7 @@ import { mdiArrowDownBoldOutline, mdiArrowDownBold } from '@mdi/js';
   <v-tooltip>
   <template v-slot:activator="{ props }">
   </template>
+  v-bind="props"
   <span>Vote {{ which }}</span>
   </v-tooltip>
   <div>

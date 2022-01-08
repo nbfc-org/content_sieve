@@ -91,6 +91,7 @@
             <span>Reply</span>
           </v-tooltip>
         </v-item-group>
+        &nbsp;
         <v-item-group v-if="showVotes()">
           <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="up" />
           <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="down" />
