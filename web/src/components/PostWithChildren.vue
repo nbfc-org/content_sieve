@@ -43,12 +43,14 @@ export default {
             return this.$keycloak.ready && this.$keycloak.authenticated;
         },
         flatten(post) {
-            const posts = flattenPost(post);
+            let posts = flattenPost(post);
             if (this.settings.sortType === undefined) {
                 return posts;
             }
             const first = posts.shift();
-            return [first, ...posts.sort(getSort(this.settings.sortType))];
+            posts.sort(getSort(this.settings.sortType));
+            posts.unshift(first);
+            return posts;
         },
         reloadPost(cache, post) {
             /*

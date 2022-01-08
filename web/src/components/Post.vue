@@ -239,11 +239,13 @@ export default {
             return this.post.nested_kids_length || this.children.length;
         },
         children: function() {
-            const kids = this.post.children || [];
+            let kids = this.post.children || [];
             if (!this.sortBy) {
                 return kids;
             }
-            return kids.sort(getSort(this.sortBy));
+            kids = [...kids];
+            kids.sort(getSort(this.sortBy));
+            return kids;
         },
         ago: function() {
             return DateTime.fromMillis(this.post.createdAt).toRelative();
