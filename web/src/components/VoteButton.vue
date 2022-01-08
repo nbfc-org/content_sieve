@@ -4,6 +4,7 @@
         size="x-small"
         :icon="icon"
         @click="click"
+        v-bind="props"
         />
 </template>
 <script>
@@ -14,13 +15,12 @@ import { mdiFlagOutline, mdiFlag } from '@mdi/js';
 import { mdiArrowUpBoldOutline, mdiArrowUpBold } from '@mdi/js';
 import { mdiArrowDownBoldOutline, mdiArrowDownBold } from '@mdi/js';
 /*
-    <div>
-    <v-tooltip v-if="0" bottom>
-    <template v-slot:activator="{ on, attrs }">
-    </template>
-    <span>Vote {{ which }}</span>
-    </v-tooltip>
-    </div>
+  <v-tooltip>
+  <template v-slot:activator="{ props }">
+  </template>
+  <span>Vote {{ which }}</span>
+  </v-tooltip>
+  <div>
     */
 const icon_map = {
     down: {

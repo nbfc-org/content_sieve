@@ -75,18 +75,16 @@
             <template v-slot:activator="{ on, attrs }">
             </template>
             <span>View {{ pluralize("Comment", post.replies, true) }}</span>
-          </v-tooltip>&nbsp;
+          </v-tooltip>
         </v-item-group>
         <v-item-group v-if="!justOnePost">
               <v-btn
                 size="x-small"
-                icon
+                :icon="mdiReply"
                 color="primary"
                 @click="openReply"
                 :data-target="`comment-${post.postId}-reply-form`"
-                >
-                <v-icon left dark>{{ mdiReply }}</v-icon>
-              </v-btn>&nbsp;
+                />
           <v-tooltip v-if="0" bottom>
             <template v-slot:activator="{ on, attrs }">
             </template>
@@ -96,18 +94,16 @@
         <v-item-group v-if="showVotes()">
           <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="up" />
           <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="down" />
-          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="flag" />&nbsp;
+          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="flag" />
         </v-item-group>
         <v-item-group v-if="post.parent">
               <v-btn
                 size="x-small"
-                icon
+                :icon="mdiArrowTopLeft"
                 exact
                 @click="gotoParent(post.parent.postId)"
                 color="primary"
-                >
-                <v-icon left dark>{{ mdiArrowTopLeft }}</v-icon>
-              </v-btn>&nbsp;
+                />
           <v-tooltip v-if="0" bottom>
             <template v-slot:activator="{ on, attrs }">
             </template>
@@ -117,13 +113,11 @@
         <v-item-group v-if="!justOnePost">
               <v-btn
                 size="x-small"
-                icon
+                :icon="mdiLink"
                 exact
                 :to="`/post/${post.postId}`"
                 color="primary"
-                >
-                <v-icon left dark>{{ mdiLink }}</v-icon>
-              </v-btn>&nbsp;
+                />
           <v-tooltip v-if="0" bottom>
             <template v-slot:activator="{ on, attrs }">
             </template>
