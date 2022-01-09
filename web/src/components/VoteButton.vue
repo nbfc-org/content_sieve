@@ -1,10 +1,13 @@
 <template>
-      <v-btn
-        :color="color"
-        size="x-small"
-        :icon="icon"
-        @click="click"
-        />
+  <v-btn
+    size="x-small"
+    @click="click"
+    >
+    <v-icon
+      :color="color"
+      >{{ icon }}
+    </v-icon>
+  </v-btn>
 </template>
 <script>
 

@@ -65,3 +65,7 @@ a:hover {
 a:active {
   text-decoration: underline;
 }
+
+.v-card-actions .v-btn ~ .v-btn {
+  margin-inline-start: 0rem;
+}
