@@ -71,6 +71,7 @@ export default {
                         let children = post.children || [];
                         if (post.postId === target.postId) {
                             children = target.children;
+                            // TODO: this.set is broken
                             this.$set(post, 'children', children);
                         }
                         return {

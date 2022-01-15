@@ -19,6 +19,7 @@
 
 - consolidate nginx config
 
+- load more is broken
 - load more doesn't refresh everything
 - don't reload all data on change
 - fix optimistic post responses
