@@ -6,6 +6,14 @@
 - vue3 issues
   - tooltops are buggy / broken
 
+- login
+  - add email verification
+  - add recapthca
+  - get rid of first/last/email?
+
+- auth from hn/mefi
+  - claim account with token
+
 - getVotes is broken
   - vote-resolver.js
   - MetaVote.vue
