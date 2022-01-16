@@ -3,22 +3,22 @@
 - todo list in sidebar
 - add "what is this" page
 
-- vite
-  - lazy load components
-
 - vue3 issues
   - tooltops are buggy / broken
-  - settings form is faded out?
 
 - getVotes is broken
   - vote-resolver.js
   - MetaVote.vue
   - queries.js
 
+- apollo updateQuery callback for fetchmore is deprecated
+
 - permalinks / parent links not working
+  - wrong from backend?
 
 - consolidate nginx config
 
+- load more is broken
 - load more doesn't refresh everything
 - don't reload all data on change
 - fix optimistic post responses

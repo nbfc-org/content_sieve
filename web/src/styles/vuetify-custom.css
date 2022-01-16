@@ -32,7 +32,8 @@ summary .v-card-text {
 
 .v-card-actions {
   margin-left: 1.25em;
-  padding: 0 !important;
+  padding: .5em 0 !important;
+  min-height: 0 !important;
 }
 
 button.v-btn--icon {
@@ -40,6 +41,9 @@ button.v-btn--icon {
 
 }
 
+.v-card-actions .v-btn ~ .v-btn {
+  margin-inline-start: 0rem;
+}
 /*
 .v-card-actions {
   border-bottom: thin solid rgba(0, 0, 0, 0.12) !important;
@@ -64,4 +68,8 @@ a:hover {
 
 a:active {
   text-decoration: underline;
+}
+
+.v-theme--light {
+  --v-medium-emphasis-opacity: 1 !important;
 }

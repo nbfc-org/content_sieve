@@ -26,7 +26,7 @@
               </v-icon>
               <router-link
                 :to="`/tag/${tag.canonical.slug}`"
-                class="nav-item nav-link"
+                class="text-primary"
                 active-class="active"
                 exact
                 >{{ tag.canonical.slug }}</router-link>
@@ -60,70 +60,17 @@
         </v-card-text>
       </summary>
       <v-card-actions>
-        <v-item-group v-if="justOnePost">
-              <v-btn
-                size="x-small"
-                plain
-                exact
-                :to="`/post/${post.postId}`"
-                color="primary"
-                >
-                <v-icon left dark>{{ mdiCommentTextMultiple }}</v-icon>
-                {{ post.replies }}
-              </v-btn>
-          <v-tooltip v-if="0" bottom>
-            <template v-slot:activator="{ on, attrs }">
-            </template>
-            <span>View {{ pluralize("Comment", post.replies, true) }}</span>
-          </v-tooltip>
-        </v-item-group>
-        <v-item-group v-if="!justOnePost">
-              <v-btn
-                size="x-small"
-                :icon="mdiReply"
-                color="primary"
-                @click="openReply"
-                :data-target="`comment-${post.postId}-reply-form`"
-                />
-          <v-tooltip v-if="0" bottom>
-            <template v-slot:activator="{ on, attrs }">
-            </template>
-            <span>Reply</span>
-          </v-tooltip>
-        </v-item-group>
-        &nbsp;
-        <v-item-group v-if="showVotes()">
-          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="up" />
-          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="down" />
-          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="flag" />
-        </v-item-group>
-        <v-item-group v-if="post.parent">
-              <v-btn
-                size="x-small"
-                :icon="mdiArrowTopLeft"
-                exact
-                @click="gotoParent(post.parent.postId)"
-                color="primary"
-                />
-          <v-tooltip v-if="0" bottom>
-            <template v-slot:activator="{ on, attrs }">
-            </template>
-            <span>Go to parent</span>
-          </v-tooltip>
-        </v-item-group>
-        <v-item-group v-if="!justOnePost">
-              <v-btn
-                size="x-small"
-                :icon="mdiLink"
-                exact
-                :to="`/post/${post.postId}`"
-                color="primary"
-                />
-          <v-tooltip v-if="0" bottom>
-            <template v-slot:activator="{ on, attrs }">
-            </template>
-            <span>Permalink</span>
-          </v-tooltip>
+        <v-item-group>
+          <template v-for="(child, index) in buttons(post)" :key="child.name">
+            <v-item>
+              <component :is="child.name" v-bind="child.props" v-on="child.on || {}">
+                <v-icon v-if="child.icon" :color="child.icon.color">
+                  {{ child.icon.name }}
+                </v-icon>
+                {{ child.icon.text || '' }}
+              </component>
+            </v-item>
+          </template>
         </v-item-group>
       </v-card-actions>
       <v-expand-transition>
@@ -332,6 +279,82 @@ export default {
         },
         loadIt: function() {
             this.$emit('loadMore', this.postId);
+        },
+        buttons(p) {
+            const replyButton = {
+                name: 'VBtn',
+                props: {
+                    size: "x-small",
+                    // variant: "outlined",
+                    'data-target': `comment-${p.postId}-reply-form`,
+                },
+                icon: {
+                    name: mdiReply,
+                    color: "primary",
+                },
+                on: { click: this.openReply },
+            };
+
+            const goToPost = {
+                name: 'VBtn',
+                props: {
+                    size: "x-small",
+                    to: `/post/${p.postId}`,
+                },
+                icon: {
+                    name: mdiCommentTextMultiple,
+                    text: p.replies,
+                    color: "primary",
+                },
+            };
+
+            const voteButtons = this.showVotes() ? ["up", "down", "flag"] : [];
+
+            const allButtons = [
+                this.justOnePost ? goToPost : replyButton,
+                ...voteButtons.map( which => {
+                    return {
+                        name: 'VoteButton',
+                        props: {
+                            postId: p.postId,
+                            which,
+                            vote: p.votes && p.votes[0],
+                        },
+                        on: { reloadPost: this.reloadPost },
+                    };
+                }),
+            ];
+
+            if (p.parent) {
+                allButtons.push({
+                    name: 'VBtn',
+                    props: {
+                        size: "x-small",
+                    },
+                    icon: {
+                        name: mdiArrowTopLeft,
+                        color: "primary",
+                    },
+                    on: { click: () => this.gotoParent(p.parent.postId) },
+                });
+            }
+
+            if (!this.justOnePost) {
+                allButtons.push({
+                    name: 'VBtn',
+                    props: {
+                        size: "x-small",
+                        to: `/post/${p.postId}`,
+                    },
+                    icon: {
+                        name: mdiLink,
+                        color: "primary",
+                    },
+                });
+            }
+
+            return allButtons;
+
         },
     },
 }
