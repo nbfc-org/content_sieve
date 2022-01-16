@@ -5,7 +5,6 @@
 
 - vue3 issues
   - tooltops are buggy / broken
-  - settings form is faded out?
 
 - getVotes is broken
   - vote-resolver.js

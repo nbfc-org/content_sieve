@@ -69,3 +69,7 @@ a:hover {
 a:active {
   text-decoration: underline;
 }
+
+.v-theme--light {
+  --v-medium-emphasis-opacity: 1 !important;
+}

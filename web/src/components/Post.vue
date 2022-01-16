@@ -26,7 +26,7 @@
               </v-icon>
               <router-link
                 :to="`/tag/${tag.canonical.slug}`"
-                class="nav-item nav-link"
+                class="text-primary"
                 active-class="active"
                 exact
                 >{{ tag.canonical.slug }}</router-link>
