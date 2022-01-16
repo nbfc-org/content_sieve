@@ -10,15 +10,15 @@
     <p>
       Please post either a fully composed chunk of
       <TextEditor @saveContent="saveContent" :text="body" />
-      <strong>or</strong> a single
-      <v-text-field v-model="url" placeholder="url ..." />
-      with a
-      <v-text-field v-model="title" placeholder="title ..." type="text" />
+      <strong>or</strong> a single url:
+      <v-text-field v-model="url" />
+      with a title:
+      <v-text-field v-model="title" type="text" />
     </p>
 
     <p>
-    Optionally, add a whitespace delimited list of
-    <v-text-field v-model="tagString" placeholder="tags ..." />
+    Optionally, add a whitespace delimited list of tags:
+    <v-text-field v-model="tagString" />
     </p>
     Then
     <v-btn type="submit" color="primary" outlined>submit</v-btn>
