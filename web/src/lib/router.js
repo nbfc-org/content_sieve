@@ -1,4 +1,5 @@
 import { createRouter as _createRouter, createWebHistory } from 'vue-router';
+import { toRaw } from 'vue';
 
 import PostWithChildren from '../components/PostWithChildren.vue';
 import PostsWithTag from '../components/PostsWithTag.vue';
@@ -44,55 +45,57 @@ const routes = [
     },
   },
   {
-    path: '/:catchAll(.*)',
+    path: '/:pathMatch(.*)*',
     component: NotFoundComponent,
     name: 'NotFound'
   },
 ];
 
 const createRouter = (app) => {
-const router = _createRouter({
-  history: createWebHistory(),
-  routes
-});
+  const router = _createRouter({
+    history: createWebHistory(),
+    routes
+  });
 
-router.beforeEach((to, from, next) => {
-  if (to.meta.isAuthenticated) {
-    // Get the actual url of the app, it's needed for Keycloak
-    const basePath = window.location.toString();
-    const kc = (app && app.config) ? app.config.globalProperties.$keycloak : undefined;
+  router.beforeEach((to, from, next) => {
+    if (to.meta.isAuthenticated) {
+      // Get the actual url of the app, it's needed for Keycloak
+      const basePath = window.location.toString();
+      const kc = (app && app.config) ? app.config.globalProperties.$keycloak : {};
+      const { ready, authenticated } = {...kc};
 
-    if (kc && kc.ready && kc.authenticated) {
-      const roles = to.meta.roles;
-      if (roles) {
-        let role_match = false;
-        for (const role of roles) {
-          if (kc.hasResourceRole(role)) {
-            role_match = true;
+      if (ready && authenticated) {
+        const roles = to.meta.roles;
+        if (roles) {
+          let role_match = false;
+          for (const role of roles) {
+            if (kc.hasResourceRole(role)) {
+              role_match = true;
+            }
           }
-        }
-        if (role_match) {
-          next();
+          if (role_match) {
+            next();
+          } else {
+            next({ name: 'NotFound' });
+          }
         } else {
-          next({ name: 'NotFound' });
+          next();
         }
+      } else if (ready && !authenticated) {
+        // The page is protected and the user is not authenticated. Force a login.
+        kc.login({ redirectUri: window.location.origin + to.path });
       } else {
-        next();
+        // The user was authenticated, but did not have the correct role
+        // Redirect to an error page
+        next({ name: 'NotFound' });
       }
-    } else if (kc && kc.ready && !kc.authenticated) {
-      // The page is protected and the user is not authenticated. Force a login.
-      kc.login({ redirectUri: window.location.origin + to.path });
     } else {
-      // The user was authenticated, but did not have the correct role
-      // Redirect to an error page
-      next({ name: 'NotFound' });
+      // This page did not require authentication
+      next();
     }
-  } else {
-    // This page did not require authentication
-    next();
-  }
-});
+  });
+
   return router;
-}
+};
 
 export default createRouter;

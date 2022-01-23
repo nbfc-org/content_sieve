@@ -6,11 +6,6 @@
 - vue3 issues
   - tooltops are buggy / broken
 
-- login
-  - add email verification
-  - add recapthca
-  - get rid of first/last/email?
-
 - auth from hn/mefi
   - claim account with token
 
@@ -39,6 +34,8 @@
   - move to redis?
 
 ## optional below here
+
+- add recaptcha?
 
 - add summary mode for list / toplevel view
 
