@@ -19,19 +19,18 @@
   - MetaVote.vue
   - queries.js
 
-- apollo updateQuery callback for fetchmore is deprecated
-
 - permalinks / parent links not working
   - wrong from backend?
 
 - consolidate nginx config
 
-- load more is broken
+## bugs
+
+- reenable loadMore
+- apollo updateQuery callback for fetchmore is deprecated
 - load more doesn't refresh everything
 - don't reload all data on change
 - fix optimistic post responses
-
-## bugs
 
 - in unnested mode, showReply applies to all
 

@@ -122,7 +122,7 @@
 
 <script>
 import { DateTime } from 'luxon';
-import { addPost, getSort } from '../lib/queries.js';
+import { addPost, getSort, REPLY_DEPTH } from '../lib/queries.js';
 
 import TextEditor from './TextEditor.vue';
 import VoteButton from './VoteButton.vue';
@@ -181,6 +181,8 @@ export default {
             return this.post.postId;
         },
         hasMore: function() {
+            return 0;
+            // TODO: consider restoring loadMore when apollo actually works
             return !this.justOnePost && this.post.replies > 0 && !this.childrenLength;
         },
         childrenLength: function() {
@@ -310,8 +312,15 @@ export default {
 
             const voteButtons = this.showVotes() ? ["up", "down", "flag"] : [];
 
+            const baseButtons = [];
+            if (this.justOnePost) {
+                baseButtons.push(goToPost);
+            } else if (p.depth < REPLY_DEPTH) {
+                baseButtons.push(replyButton);
+            }
+
             const allButtons = [
-                this.justOnePost ? goToPost : replyButton,
+                ...baseButtons,
                 ...voteButtons.map( which => {
                     return {
                         name: 'VoteButton',
