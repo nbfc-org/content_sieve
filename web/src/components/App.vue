@@ -1,11 +1,13 @@
 <template>
   <v-app>
+  <v-layout>
     <app-nav></app-nav>
     <v-main>
       <v-container fluid>
         <router-view></router-view>
       </v-container>
     </v-main>
+  </v-layout>
   </v-app>
 </template>
 

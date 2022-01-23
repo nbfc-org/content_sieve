@@ -1,25 +1,23 @@
 <template>
-    <v-app-bar app density="compact">
-      <v-app-bar-title>
-        <v-btn to="/" exact>{{ title }}</v-btn>
-      </v-app-bar-title>
+  <v-app-bar app density="compact" absolute>
+    <v-app-bar-title>
+      <v-btn to="/" exact>{{ title }}</v-btn>
+    </v-app-bar-title>
 
-      <v-spacer/>
+    <v-spacer/>
 
-      <v-btn v-for="item in testedItems" :key="item.title" :to="item.path">
-        {{ item.title }}
-      </v-btn>
+    <v-btn v-for="item in testedItems" :key="item.title" :to="item.path">
+      {{ item.title }}
+    </v-btn>
 
-      <v-divider inset vertical></v-divider>
+    <v-btn v-if="authed()" to="/user/settings">
+      <v-icon>{{ mdiAccountCog }}</v-icon>
+    </v-btn>
+    <v-btn v-else @click="login">
+      <v-icon>{{ mdiLoginVariant }}</v-icon>
+    </v-btn>
 
-      <v-btn v-if="authed()" to="/user/settings">
-        <v-icon>{{ mdiAccountCog }}</v-icon>
-      </v-btn>
-      <v-btn v-if="!authed()" @click="login">
-        <v-icon>{{ mdiLoginVariant }}</v-icon>
-      </v-btn>
-
-    </v-app-bar>
+  </v-app-bar>
 </template>
 
 <script>
