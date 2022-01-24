@@ -1,7 +1,7 @@
 <template>
-  <v-card class="d-flex flex-row">
+  <v-card>
     <v-card-text>
-      <h3>User Page</h3>
+      <h3>Settings</h3>
       <v-divider class="mb-3 mt-3" />
       <v-card flat>
         <v-card-text>
@@ -13,12 +13,14 @@
           <v-switch v-model="nested" inset label="Nested?" />
         </v-card-text>
       </v-card>
-      <v-divider class="mb-3 mt-3" />
-      <v-col class="text-right">
-        <v-btn color="primary" size="small" outlined v-if="authed()" @click="logout">
-          Log out
-        </v-btn>
-      </v-col>
+      <v-container v-if="authed()">
+        <v-divider class="mb-3 mt-3" />
+        <v-col class="text-right">
+          <v-btn color="primary" size="small" outlined v-if="authed()" @click="logout">
+            Log out
+          </v-btn>
+        </v-col>
+      </v-container>
     </v-card-text>
   </v-card>
 </template>

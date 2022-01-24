@@ -43,7 +43,6 @@ export default {
                   test: this.isAdmin,
                 },
             ],
-            sidebar: false,
         };
     },
     computed: {
