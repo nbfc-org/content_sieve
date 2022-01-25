@@ -3,25 +3,27 @@
     <p v-if="errors.length">
       <b>Please correct the following error(s):</b>
       <ul>
-        <li v-for="error in errors">{{ error }}</li>
+        <li class="text-error" v-for="error in errors">{{ error }}</li>
       </ul>
+      <v-divider class="mb-3 mt-3" />
     </p>
 
     <p>
-      Please post either a fully composed chunk of
+      Please post
+      <span class="text-h6 font-weight-bold">either</span>
+      a fully composed chunk of
       <TextEditor @saveContent="saveContent" :text="body" />
-      <strong>or</strong> a single url:
-      <v-text-field v-model="url" />
-      with a title:
-      <v-text-field v-model="title" type="text" />
+      <span class="text-h6 font-weight-bold">or</span>
+      <v-text-field v-model="url" label="a single url" />
+      <v-text-field v-model="title" label="with a title" />
     </p>
 
     <p>
-    Optionally, add a whitespace delimited list of tags:
-    <v-text-field v-model="tagString" />
+    Optionally, add a whitespace delimited:
+    <v-text-field v-model="tagString" label="list of tags"/>
     </p>
     Then
-    <v-btn type="submit" color="primary" outlined>submit</v-btn>
+    <v-btn type="submit" size="small" color="primary" outlined>submit</v-btn>
     your post. Thank you.
   </v-form>
 </template>
