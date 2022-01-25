@@ -26,13 +26,13 @@
 </template>
 <script>
 import { mapState } from 'vuex';
-import { sortTypes } from '../lib/queries.js';
+import { sortTypes as _st } from '../lib/queries.js';
 import { capitalCase } from 'capital-case';
 
 export default {
     computed: {
         sortTypes: function() {
-            return sortTypes.map(s => [s, capitalCase(s)]);
+            return _st.map(s => [s, capitalCase(s)]);
         },
         ...mapState({
             settings: state => {
@@ -56,10 +56,10 @@ export default {
         },
         sortType: {
             get() {
-                return this.sortTypes[this.settings.sortType || 0];
+                return this.sortTypes[this.settings.sortType || 0][0];
             },
             set(sortType) {
-                const settings = { ...this.settings, sortType: this.sortTypes.indexOf(sortType) };
+                const settings = { ...this.settings, sortType: _st.indexOf(sortType) };
                 delete settings.__typename;
                 this.$store.dispatch('saveSettings', {
                     kc: this.$keycloak,

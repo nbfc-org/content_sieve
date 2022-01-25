@@ -6,9 +6,6 @@
 - vue3 issues
   - tooltops are buggy / broken
 
-- auth from hn/mefi
-  - claim account with token
-
 - getVotes is broken
   - vote-resolver.js
   - MetaVote.vue
@@ -20,6 +17,9 @@
 - consolidate nginx config
 
 ## bugs
+
+- auth from hn/mefi
+  - claim account with token
 
 - reenable loadMore
 - apollo updateQuery callback for fetchmore is deprecated
