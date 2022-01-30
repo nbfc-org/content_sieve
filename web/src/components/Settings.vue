@@ -13,14 +13,6 @@
           <v-switch v-model="nested" inset label="Nested?" />
         </v-card-text>
       </v-card>
-      <v-container v-if="authed()">
-        <v-divider class="mb-3 mt-3" />
-        <v-col class="text-right">
-          <v-btn color="primary" size="small" outlined v-if="authed()" @click="logout">
-            Log out
-          </v-btn>
-        </v-col>
-      </v-container>
     </v-card-text>
   </v-card>
 </template>
@@ -66,15 +58,6 @@ export default {
                     settings,
                 });
             },
-        },
-    },
-    methods: {
-        authed() {
-            return this.$keycloak.ready && this.$keycloak.authenticated;
-        },
-        logout() {
-            this.$keycloak.logoutFn({ redirectUri: `${window.location.origin}/` });
-            this.$store.dispatch('logoutSession');
         },
     },
 };

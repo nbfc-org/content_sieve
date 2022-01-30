@@ -12,17 +12,16 @@
       Please post
       <span class="text-h6 font-weight-bold">either</span>
       a fully composed chunk of
-      <TextEditor @saveContent="saveContent" :text="body" />
+      <TextEditor @saveContent="saveContent" :text="body" :narrow="narrow" />
       <span class="text-h6 font-weight-bold">or</span>
       <v-text-field v-model="url" label="a single url" />
       <v-text-field v-model="title" label="with a title" />
     </p>
 
     <p>
-    Optionally, add a whitespace delimited:
+    Optionally, add a whitespace delimited
     <v-text-field v-model="tagString" label="list of tags"/>
     </p>
-    Then
     <v-btn type="submit" size="small" color="primary" outlined>submit</v-btn>
     your post. Thank you.
   </v-form>
@@ -36,6 +35,9 @@ export default {
     components: {
         TextEditor,
     },
+    props: [
+        'narrow',
+    ],
     data: function() {
         return {
             errors: [],

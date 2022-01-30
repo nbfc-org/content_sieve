@@ -6,7 +6,7 @@
           <v-card-text>
             <h3>New Post</h3>
             <v-divider class="mb-3 mt-3" />
-            <new-post/>
+            <new-post :narrow="true" />
         </v-card-text>
       </v-card>
       </v-col>
@@ -31,8 +31,6 @@ export default {
     components: {
         Settings,
         NewPost,
-    },
-    computed: {
     },
     methods: {
         authed() {
