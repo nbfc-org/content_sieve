@@ -15,6 +15,8 @@
 
 ## bugs
 
+- fix bot user in prod ... it's indeterminate
+
 - reenable loadMore
 - apollo updateQuery callback for fetchmore is deprecated
 - load more doesn't refresh everything
@@ -23,11 +25,11 @@
 
 - in unnested mode, showReply applies to all
 
+## optional below here
+
 - server side caching
   - invalidate on login/logout?
   - move to redis?
-
-## optional below here
 
 - auth from hn/mefi
   - claim account with token
@@ -37,6 +39,8 @@
 - add summary mode for list / toplevel view
 
 - rate limiting: https://docs.nginx.com/nginx/admin-guide/security-controls/controlling-access-proxied-http/
+
+- nginx content caching: https://docs.nginx.com/nginx/admin-guide/content-cache/content-caching/
 
 - admin mode
 -- hide posts / soft delete
