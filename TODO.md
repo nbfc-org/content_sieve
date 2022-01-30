@@ -13,8 +13,6 @@
 - permalinks / parent links not working
   - wrong from backend?
 
-- consolidate nginx config
-
 ## bugs
 
 - reenable loadMore
