@@ -1,7 +1,6 @@
 ## blocks prod
 
 - todo list in sidebar
-- add "what is this" page
 
 - vue3 issues
   - tooltops are buggy / broken
@@ -18,9 +17,6 @@
 
 ## bugs
 
-- auth from hn/mefi
-  - claim account with token
-
 - reenable loadMore
 - apollo updateQuery callback for fetchmore is deprecated
 - load more doesn't refresh everything
@@ -35,11 +31,12 @@
 
 ## optional below here
 
+- auth from hn/mefi
+  - claim account with token
+
 - add recaptcha?
 
 - add summary mode for list / toplevel view
-
-- add user info page
 
 - rate limiting: https://docs.nginx.com/nginx/admin-guide/security-controls/controlling-access-proxied-http/
 
