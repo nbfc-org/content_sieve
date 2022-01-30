@@ -31,6 +31,8 @@ import TextEditor from './TextEditor.vue';
 import { addPost } from '../lib/queries.js';
 import { validatePost } from '@nbfc/shared/validation.js';
 
+import { useRoute } from 'vue-router';
+
 export default {
     components: {
         TextEditor,
@@ -38,12 +40,17 @@ export default {
     props: [
         'narrow',
     ],
+    setup() {
+        const route = useRoute();
+        const { tag } = route.params;
+        return { tag };
+    },
     data: function() {
         return {
             errors: [],
             title: '',
             url: '',
-            tagString: '',
+            tagString: this.tag,
             body: '',
         };
     },

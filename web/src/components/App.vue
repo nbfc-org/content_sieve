@@ -9,7 +9,7 @@
               <router-view></router-view>
             </v-col>
             <v-col cols="12" sm="4">
-              <side-bar/>
+              <side-bar />
             </v-col>
           </v-row>
         </v-container>

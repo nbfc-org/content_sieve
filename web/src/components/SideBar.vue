@@ -6,7 +6,7 @@
           <v-card-text>
             <h3>New Post</h3>
             <v-divider class="mb-3 mt-3" />
-            <new-post :narrow="true" />
+            <new-post :narrow="true" :key="$route.fullPath" />
         </v-card-text>
       </v-card>
       </v-col>
@@ -25,7 +25,6 @@ import NewPost from '../components/NewPost.vue';
 export default {
     data: function() {
         return {
-            sidebar: true,
         };
     },
     components: {
