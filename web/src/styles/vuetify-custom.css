@@ -41,10 +41,10 @@ button.v-btn--icon {
 
 }
 
+/*
 .v-card-actions .v-btn ~ .v-btn {
   margin-inline-start: 0rem;
 }
-/*
 .v-card-actions {
   border-bottom: thin solid rgba(0, 0, 0, 0.12) !important;
 }

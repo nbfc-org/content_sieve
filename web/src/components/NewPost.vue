@@ -22,7 +22,9 @@
     Optionally, add a whitespace delimited
     <v-text-field v-model="tagString" label="list of tags"/>
     </p>
-    <v-btn type="submit" size="small" color="primary" outlined>submit</v-btn>
+    and <v-btn type="submit" size="small" color="primary" outlined>
+      <v-icon left>{{ mdiPlusBox }}</v-icon>submit
+    </v-btn>
     your post. Thank you.
   </v-form>
 </template>
@@ -32,6 +34,7 @@ import { addPost } from '../lib/queries.js';
 import { validatePost } from '@nbfc/shared/validation.js';
 
 import { useRoute } from 'vue-router';
+import { mdiPlusBox } from '@mdi/js';
 
 export default {
     components: {
@@ -50,6 +53,7 @@ export default {
             errors: [],
             title: '',
             url: '',
+            mdiPlusBox,
             tagString: this.tag,
             body: '',
         };
