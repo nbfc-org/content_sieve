@@ -1,1 +1,16 @@
-../staging/override.yml
+services:
+  web:
+    volumes:
+      - /root/data/cloudflare:/etc/ssl/cloudflare
+    ports:
+      - "443:443"
+    environment:
+      - SERVER_NAME=nbfc.org
+  postgres:
+    volumes:
+      - /root/data/content_sieve:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  keycloak_db:
+    volumes:
+      - /root/data/keycloak:/var/lib/postgresql/data
