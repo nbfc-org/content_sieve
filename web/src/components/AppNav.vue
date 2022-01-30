@@ -10,10 +10,12 @@
       {{ item.title }}
     </v-btn>
 
-    <v-btn v-if="authed()" to="/user/settings">
+    <v-btn v-if="authed()" to="/user/profile">
       <v-icon>{{ mdiAccountCog }}</v-icon>
+      {{ $keycloak.userName }}
     </v-btn>
     <v-btn v-else @click="login">
+      Login
       <v-icon>{{ mdiLoginVariant }}</v-icon>
     </v-btn>
 
@@ -32,18 +34,19 @@ export default {
             mdiLoginVariant,
             mdiAccountCog,
             menuItems: [
+                /*
                 { title: "New Post",
                   path: "/new",
                   icon: mdiNotePlus,
                   test: this.authed,
                 },
+                */
                 { title: "Meta Vote",
                   path: "/user/metavote",
                   icon: mdiBallot,
                   test: this.isAdmin,
                 },
             ],
-            sidebar: false,
         };
     },
     computed: {

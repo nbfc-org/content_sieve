@@ -4,8 +4,9 @@ import { toRaw } from 'vue';
 import PostWithChildren from '../components/PostWithChildren.vue';
 import PostsWithTag from '../components/PostsWithTag.vue';
 import NotFoundComponent from '../components/NotFoundComponent.vue';
-import NewPost from '../components/NewPost.vue';
-import Settings from '../components/Settings.vue';
+// import NewPost from '../components/NewPost.vue';
+// import Settings from '../components/Settings.vue';
+import Profile from '../components/Profile.vue';
 import MetaVote from '../components/MetaVote.vue';
 
 const routes = [
@@ -25,10 +26,18 @@ const routes = [
     component: PostsWithTag,
     props: true,
   },
+  { path: '/user/profile',
+    component: Profile,
+    meta: {
+      isAuthenticated: true
+    },
+  },
+  /*
   { path: '/user/settings',
     component: Settings,
     props: true,
   },
+  */
   { path: '/user/metavote',
     component: MetaVote,
     props: true,
@@ -37,6 +46,7 @@ const routes = [
       roles: ['admin'],
     },
   },
+  /*
   {
     path: '/new',
     component: NewPost,
@@ -44,6 +54,7 @@ const routes = [
       isAuthenticated: true
     },
   },
+  */
   {
     path: '/:pathMatch(.*)*',
     component: NotFoundComponent,

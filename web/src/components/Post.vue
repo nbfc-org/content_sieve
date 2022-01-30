@@ -85,20 +85,18 @@
           </v-card-text>
           <v-card-actions class="pt-0">
             <v-btn
-              size="x-small"
-              outlined
+              size="small"
               color="primary"
               @click="postReply"
               >
               <v-icon left dark>{{ mdiPlusBox }}</v-icon>Add reply
             </v-btn>
             <v-btn
-              size="x-small"
-              outlined
+              size="small"
               color="error"
               @click="reply"
               >
-              <v-icon left dark>{{ mdiClose }}</v-icon>Close reply
+              <v-icon left>{{ mdiClose }}</v-icon>Close reply
             </v-btn>
           </v-card-actions>
         </v-card>

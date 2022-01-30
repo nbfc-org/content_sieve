@@ -1,13 +1,9 @@
 ## blocks prod
 
 - todo list in sidebar
-- add "what is this" page
 
 - vue3 issues
   - tooltops are buggy / broken
-
-- auth from hn/mefi
-  - claim account with token
 
 - getVotes is broken
   - vote-resolver.js
@@ -35,11 +31,12 @@
 
 ## optional below here
 
+- auth from hn/mefi
+  - claim account with token
+
 - add recaptcha?
 
 - add summary mode for list / toplevel view
-
-- add user info page
 
 - rate limiting: https://docs.nginx.com/nginx/admin-guide/security-controls/controlling-access-proxied-http/
 
