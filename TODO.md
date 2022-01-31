@@ -10,9 +10,6 @@
   - MetaVote.vue
   - queries.js
 
-- permalinks / parent links not working
-  - wrong from backend?
-
 ## bugs
 
 - fix bot user in prod ... it's indeterminate

@@ -60,7 +60,7 @@ export class PostResolver {
         const parents = await repo.findAncestors(post, { relations });
 
         if (parents.length > 1) {
-            p.parent = parents[parents.length-2];
+            p.parent = parents[1];
         }
 
         if (req.user) {

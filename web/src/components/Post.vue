@@ -1,5 +1,6 @@
 <template>
   <v-card v-if="post.content" flat class="rounded-0">
+    <div :id="post.postId" />
     <details class="comment" open>
       <v-row dense>
         <v-col v-ripple :id="`post-${post.postId}`" :cols="post.tags.length ? 8 : 12">
@@ -231,16 +232,8 @@ export default {
             const refName = `post-${postId}`;
             const el = document.getElementById(refName);
             if(el) {
-                var headerOffset = 45;
-                var elementPosition = el.getBoundingClientRect().top;
-                var offsetPosition = elementPosition - headerOffset;
-
+                this.$router.push({ hash: `#${postId}` });
                 setTimeout(() => this.ripple(el, 800), 400)
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth"
-                });
             } else {
                 this.$router.push({ path: `/post/${postId}` });
             }
