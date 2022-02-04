@@ -2,49 +2,13 @@ import { createApp as _createApp } from 'vue';
 
 import VueKeyCloak from '@dsb-norge/vue-keycloak-js';
 
-/*
-import Vuetify, {
-  VCard,
-  VCardText,
-  VCardActions,
-  VApp,
-  VAppBar,
-  VToolbar,
-  VToolbarItems,
-  VToolbarTitle,
-  VBtn,
-  VRow,
-  VCol,
-  VItemGroup,
-  VTooltip,
-  VIcon,
-  VMain,
-  VSpacer,
-  VExpandTransition,
-  VContainer,
-  VChip,
-  VForm,
-  VTextField,
-  VDivider,
-  VRadioGroup,
-  VRadio,
-  VSwitch,
-  VDataTable,
-} from 'vuetify/lib';
-*/
-
-
 import { createVuetify } from 'vuetify';
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
 import 'vuetify/styles';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import colors from 'vuetify/lib/util/colors';
-/*
-import { Ripple } from 'vuetify/lib/directives';
-*/
 
-// import VueApollo from "vue-apollo";
 import { createApolloProvider } from '@vue/apollo-option';
 import { getApolloClient } from './lib/apollo.js';
 
@@ -53,42 +17,6 @@ import createRouter from './lib/router.js';
 import store from './lib/store.js';
 
 import { config } from '@nbfc/shared/config.js';
-
-/*
-Vue.use(Vuetify, {
-  directives: {
-    Ripple,
-  },
-  components: {
-    VCard,
-    VCardText,
-    VCardActions,
-    VApp,
-    VAppBar,
-    VToolbar,
-    VToolbarItems,
-    VToolbarTitle,
-    VBtn,
-    VRow,
-    VCol,
-    VItemGroup,
-    VTooltip,
-    VIcon,
-    VMain,
-    VSpacer,
-    VExpandTransition,
-    VContainer,
-    VChip,
-    VForm,
-    VTextField,
-    VDivider,
-    VRadioGroup,
-    VRadio,
-    VSwitch,
-    VDataTable,
-  },
-});
-*/
 
 function createApp(context) {
 

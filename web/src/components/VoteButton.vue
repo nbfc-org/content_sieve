@@ -16,15 +16,7 @@ import { VOTE } from '../lib/queries.js';
 import { mdiFlagOutline, mdiFlag } from '@mdi/js';
 import { mdiArrowUpBoldOutline, mdiArrowUpBold } from '@mdi/js';
 import { mdiArrowDownBoldOutline, mdiArrowDownBold } from '@mdi/js';
-/*
-  <v-tooltip>
-  <template v-slot:activator="{ props }">
-  </template>
-  v-bind="props"
-  <span>Vote {{ which }}</span>
-  </v-tooltip>
-  <div>
-    */
+
 const icon_map = {
     down: {
         no: mdiArrowDownBoldOutline,

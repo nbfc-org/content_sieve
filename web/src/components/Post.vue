@@ -40,12 +40,11 @@
         <v-card-text>
         {{ post.author.username }}
         &bull;
-        <span>{{ ago }}</span>
-        <v-tooltip v-if="0" bottom>
+        <v-tooltip anchor="bottom center" origin="auto" :activator="`#time_${post.postId}`">
           <template v-slot:activator="{ props }">
-            <v-container v-bind="props">
+            <span :id="`time_${post.postId}`">
               {{ ago }}
-            </v-container>
+            </span>
           </template>
           <span>{{ localTime }}</span>
         </v-tooltip>
@@ -64,12 +63,17 @@
         <v-item-group>
           <template v-for="(child, index) in buttons(post)" :key="child.name">
             <v-item>
-              <component :is="child.name" v-bind="child.props" v-on="child.on || {}">
-                <v-icon v-if="child.icon" :color="child.icon.color">
-                  {{ child.icon.name }}
-                </v-icon>
-                {{ child.icon.text || '' }}
-              </component>
+              <v-tooltip anchor="bottom center" origin="auto" :activator="`#${child.id}`">
+                <template v-slot:activator="{ props }">
+                  <component :is="child.name" :id="child.id" v-bind="child.props" v-on="child.on || {}">
+                    <v-icon v-if="child.icon" :color="child.icon.color">
+                      {{ child.icon.name }}
+                    </v-icon>
+                    {{ child.icon.text || '' }}
+                  </component>
+                </template>
+                <span>{{ child.tooltip }}</span>
+              </v-tooltip>
             </v-item>
           </template>
         </v-item-group>
@@ -121,13 +125,13 @@
 
 <script>
 import { DateTime } from 'luxon';
+import { capitalCase } from 'capital-case';
+
 import { addPost, getSort, REPLY_DEPTH } from '../lib/queries.js';
 
 import TextEditor from './TextEditor.vue';
 import VoteButton from './VoteButton.vue';
 import { mapState } from 'vuex';
-
-// TODO: reenable tooltips
 
 import { mdiReply, mdiDownloadCircle, mdiArrowTopLeft, mdiCommentTextMultiple, mdiLink, mdiPlusBox, mdiLabel, mdiClose } from '@mdi/js';
 
@@ -276,6 +280,8 @@ export default {
         buttons(p) {
             const replyButton = {
                 name: 'VBtn',
+                id: `reply_${p.postId}`,
+                tooltip: "Reply",
                 props: {
                     size: "x-small",
                     // variant: "outlined",
@@ -290,6 +296,8 @@ export default {
 
             const goToPost = {
                 name: 'VBtn',
+                id: `goto_${p.postId}`,
+                tooltip: "View Comments",
                 props: {
                     size: "x-small",
                     to: `/post/${p.postId}`,
@@ -315,6 +323,8 @@ export default {
                 ...voteButtons.map( which => {
                     return {
                         name: 'VoteButton',
+                        id: `${which}_${p.postId}`,
+                        tooltip: capitalCase(which),
                         props: {
                             postId: p.postId,
                             which,
@@ -328,6 +338,8 @@ export default {
             if (p.parent) {
                 allButtons.push({
                     name: 'VBtn',
+                    id: `parent_${p.postId}`,
+                    tooltip: "Jump to parent",
                     props: {
                         size: "x-small",
                     },
@@ -342,6 +354,8 @@ export default {
             if (!this.justOnePost) {
                 allButtons.push({
                     name: 'VBtn',
+                    id: `link_${p.postId}`,
+                    tooltip: "Permalink",
                     props: {
                         size: "x-small",
                         to: `/post/${p.postId}`,

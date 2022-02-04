@@ -2,9 +2,6 @@
 
 - todo list in sidebar
 
-- vue3 issues
-  - tooltops are buggy / broken
-
 - getVotes is broken
   - vote-resolver.js
   - MetaVote.vue
