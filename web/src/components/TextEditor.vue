@@ -11,7 +11,7 @@ import { useDisplay } from 'vuetify';
 export default {
     props: [
         'text',
-        'narrow',
+        'sidebar',
     ],
     setup() {
         const { smAndUp } = useDisplay();
@@ -24,14 +24,16 @@ export default {
         }
     },
     mounted: function() {
-        this.$refs["area"].focus();
+        if (!this.sidebar) {
+            this.$refs["area"].focus();
+        }
     },
     computed: {
         compiledMarkdown: function() {
             return renderMarkdown(this.input);
         },
         horizontal: function() {
-            if (this.narrow) {
+            if (this.sidebar) {
                 return false;
             }
             return this.smAndUp;

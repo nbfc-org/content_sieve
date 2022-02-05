@@ -12,7 +12,7 @@
       Please post
       <span class="text-h6 font-weight-bold">either</span>
       a fully composed chunk of
-      <TextEditor @saveContent="saveContent" :text="body" :narrow="narrow" />
+      <TextEditor @saveContent="saveContent" :text="body" :sidebar="sidebar" />
       <span class="text-h6 font-weight-bold">or</span>
       <v-text-field v-model="url" label="a single url" />
       <v-text-field v-model="title" label="with a title" />
@@ -41,7 +41,7 @@ export default {
         TextEditor,
     },
     props: [
-        'narrow',
+        'sidebar',
     ],
     setup() {
         const route = useRoute();
