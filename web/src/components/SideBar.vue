@@ -7,12 +7,18 @@
             <h3>About <span class="text-overline">nbfc.org</span></h3>
 
             <p>
-              <v-divider class="mb-3 mt-3" /> If you took 3
+              <v-divider class="mb-3 mt-3" /> Take 3
               parts <a href="https://www.metafilter.com/">MetaFilter</a>, 2
-              parts <a href="https://news.ycombinator.com/">Hacker News</a>, and
-              1
+              parts <a href="https://news.ycombinator.com/">Hacker News</a>, 1
               part <a href="https://spec.commonmark.org/current/">markdown</a>,
-              that's us!
+              and keep the UI simple!
+            </p>
+
+            <p>
+              <v-divider class="mb-3 mt-3" /> Assuming this community achieves
+              critical mass, we'll create a not-for-profit entity to own and
+              operate <span class="text-overline">nbfc.org</span> in accordance
+              with a system of collective governance.
             </p>
 
             <p v-if="!authed()">
