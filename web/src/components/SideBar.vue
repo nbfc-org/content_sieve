@@ -21,6 +21,10 @@
               with a system of collective governance.
             </p>
 
+            <p>
+              <v-divider class="mb-3 mt-3" /> All posts copyright their original authors.
+            </p>
+
             <p v-if="!authed()">
               <v-divider class="mb-3 mt-3" />
               Please register or login using the link above in order to post or comment.
