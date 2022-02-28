@@ -15,7 +15,7 @@
     "email": "n/a"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.6",
+    "@apollo/client": "^3.5.9",
     "@dsb-norge/vue-keycloak-js": "^2.1.2-beta",
     "@nbfc/shared": "file:../lib/shared",
     "@vue/apollo-option": "^4.0.0-alpha.16",
@@ -24,12 +24,12 @@
     "capital-case": "^1.0.4",
     "crypto-hash": "^2.0.1",
     "github-markdown-css": "^4.0.0",
-    "graphql": "^16.2.0",
+    "graphql": "^16.3.0",
     "lodash-es": "^4.17.21",
-    "luxon": "^2.0.1",
+    "luxon": "^2.3.1",
     "object-assign": "^4.1.1",
     "pluralize": "^8.0.0",
-    "uuid62": "^1.0.1",
+    "uuid62": "^1.0.2",
     "vue": "^3.2.26",
     "vue-infinite-loading": "^3.0.0-alpha.0-0",
     "vue-router": "^4.0.12",
@@ -37,7 +37,7 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@mdi/js": "^6.3.95",
+    "@mdi/js": "^6.5.95",
     "@originjs/vite-plugin-commonjs": "^1.0.1",
     "@vitejs/plugin-legacy": "^1.6.4",
     "@vitejs/plugin-vue": "^2.0.1",
