@@ -38,9 +38,9 @@
   },
   "devDependencies": {
     "@mdi/js": "^6.5.95",
-    "@originjs/vite-plugin-commonjs": "^1.0.1",
-    "@vitejs/plugin-legacy": "^1.6.4",
-    "@vitejs/plugin-vue": "^2.0.1",
+    "@originjs/vite-plugin-commonjs": "^1.0.3",
+    "@vitejs/plugin-legacy": "^1.7.1",
+    "@vitejs/plugin-vue": "^2.2.2",
     "@vue/compiler-sfc": "^3.2.26",
     "@vuetify/vite-plugin": "^1.0.0-alpha.10",
     "deepmerge": "^4.2.2",
@@ -51,7 +51,7 @@
     "sass": "^1.49.9",
     "sass-loader": "^12.6.0",
     "serve": "^13.0.2",
-    "vite": "^2.7.7",
+    "vite": "^2.8.4",
     "vite-plugin-html": "^2.1.2",
     "vuetify-loader": "^1.7.3",
     "webpack-bundle-analyzer": "^4.5.0"
