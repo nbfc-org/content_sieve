@@ -1,7 +1,7 @@
 <template>
   <div class="editor">
-    <textarea :value="input" :class="smAndUp ? 'horizontal' : 'vertical'" ref="area" rows="8" placeholder="plain text or markdown ..." @input="update"></textarea>
-    <div :class="smAndUp ? 'horizontal markdown-body' : 'vertical markdown-body'" v-html="compiledMarkdown"></div>
+    <textarea :value="input" :class="horizontal ? 'horizontal' : 'vertical'" ref="area" rows="8" placeholder="plain text or markdown ..." @input="update"></textarea>
+    <div :class="horizontal ? 'horizontal markdown-body' : 'vertical markdown-body'" v-html="compiledMarkdown"></div>
   </div>
 </template>
 <script>
@@ -11,6 +11,7 @@ import { useDisplay } from 'vuetify';
 export default {
     props: [
         'text',
+        'sidebar',
     ],
     setup() {
         const { smAndUp } = useDisplay();
@@ -23,11 +24,19 @@ export default {
         }
     },
     mounted: function() {
-        this.$refs["area"].focus();
+        if (!this.sidebar) {
+            this.$refs["area"].focus();
+        }
     },
     computed: {
         compiledMarkdown: function() {
             return renderMarkdown(this.input);
+        },
+        horizontal: function() {
+            if (this.sidebar) {
+                return false;
+            }
+            return this.smAndUp;
         },
     },
     methods: {

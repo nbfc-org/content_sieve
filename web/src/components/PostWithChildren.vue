@@ -57,7 +57,6 @@ export default {
             // this.thread.remove(post.postId);
             */
             this.version++;
-            console.log('reload');
             this.$apollo.queries.getPost.refetch({
                 nonce: uuid62.v4(),
             });
@@ -72,6 +71,7 @@ export default {
                         let children = post.children || [];
                         if (post.postId === target.postId) {
                             children = target.children;
+                            // TODO: this.set is broken
                             this.$set(post, 'children', children);
                         }
                         return {

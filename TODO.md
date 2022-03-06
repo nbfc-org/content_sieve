@@ -1,43 +1,40 @@
 ## blocks prod
 
 - todo list in sidebar
-- add "what is this" page
-
-- vite
-  - lazy load components
-
-- vue3 issues
-  - tooltops are buggy / broken
-  - settings form is faded out?
 
 - getVotes is broken
   - vote-resolver.js
   - MetaVote.vue
   - queries.js
 
-- permalinks / parent links not working
+## bugs
 
-- consolidate nginx config
+- fix bot user in prod ... it's indeterminate
 
+- reenable loadMore
+- apollo updateQuery callback for fetchmore is deprecated
 - load more doesn't refresh everything
 - don't reload all data on change
 - fix optimistic post responses
 
-## bugs
-
 - in unnested mode, showReply applies to all
+
+## optional below here
 
 - server side caching
   - invalidate on login/logout?
   - move to redis?
 
-## optional below here
+- auth from hn/mefi
+  - claim account with token
+
+- add recaptcha?
 
 - add summary mode for list / toplevel view
 
-- add user info page
-
 - rate limiting: https://docs.nginx.com/nginx/admin-guide/security-controls/controlling-access-proxied-http/
+
+- nginx content caching: https://docs.nginx.com/nginx/admin-guide/content-cache/content-caching/
 
 - admin mode
 -- hide posts / soft delete

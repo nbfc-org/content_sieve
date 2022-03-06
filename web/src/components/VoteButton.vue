@@ -1,10 +1,13 @@
 <template>
-      <v-btn
-        :color="color"
-        size="x-small"
-        :icon="icon"
-        @click="click"
-        />
+  <v-btn
+    size="x-small"
+    @click="click"
+    >
+    <v-icon
+      :color="color"
+      >{{ icon }}
+    </v-icon>
+  </v-btn>
 </template>
 <script>
 
@@ -13,15 +16,7 @@ import { VOTE } from '../lib/queries.js';
 import { mdiFlagOutline, mdiFlag } from '@mdi/js';
 import { mdiArrowUpBoldOutline, mdiArrowUpBold } from '@mdi/js';
 import { mdiArrowDownBoldOutline, mdiArrowDownBold } from '@mdi/js';
-/*
-  <v-tooltip>
-  <template v-slot:activator="{ props }">
-  </template>
-  v-bind="props"
-  <span>Vote {{ which }}</span>
-  </v-tooltip>
-  <div>
-    */
+
 const icon_map = {
     down: {
         no: mdiArrowDownBoldOutline,

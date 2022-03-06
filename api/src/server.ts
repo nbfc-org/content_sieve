@@ -4,7 +4,7 @@ import * as express from 'express';
 import { ApolloServer } from "apollo-server-express";
 
 import responseCachePlugin from 'apollo-server-plugin-response-cache';
-import { ApolloServerPluginCacheControl } from 'apollo-server-core';
+import { ApolloServerPluginCacheControl, ApolloServerPluginLandingPageDisabled } from 'apollo-server-core';
 
 import * as jwt from 'express-jwt';
 import * as jwksRsa from 'jwks-rsa';
@@ -116,6 +116,7 @@ export async function bootstrap(generate_db) {
                     },
                 }),
                 ApolloServerPluginCacheControl({ defaultMaxAge: config.api.cache.defaultMaxAge }),
+                ApolloServerPluginLandingPageDisabled(),
             ],
             formatError: (err) => {
                 if (['localdocker', 'development'].includes(process.env.NODE_ENV)) {

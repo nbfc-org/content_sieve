@@ -57,35 +57,21 @@ const postFields = gql`
   }
 `;
 
+const nestedChildren = (depth) => {
+  let kids = '';
+  if (depth > 0) {
+    kids = `children { ${nestedChildren(depth - 1)} }`;
+  }
+  return `...PostFields ${kids}`;
+};
+
+const REPLY_DEPTH = 32;
+
 const GET_POST_RECURSIVE = gql`
 ${postFields}
 query ($postId: ID!, $authed: Boolean!, $nonce: String) {
   post(postId: $postId, nonce: $nonce) {
-    ...PostFields
-    children {
-      ...PostFields
-      children {
-        ...PostFields
-        children {
-          ...PostFields
-          children {
-            ...PostFields
-            children {
-              ...PostFields
-              children {
-                ...PostFields
-                children {
-                  ...PostFields
-                  children {
-                    ...PostFields
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+    ${nestedChildren(REPLY_DEPTH)}
   }
 }`;
 
@@ -302,4 +288,5 @@ export {
   VOTE, getVotes,
   getOwnUserInfo,
   flattenPost, sortTypes, getSort,
+  REPLY_DEPTH,
 };

@@ -44,6 +44,10 @@ WORKDIR /usr/share/nginx/html
 
 ARG nodeenv
 
+ENV ESC='$'
+
 COPY --from=webbuild /build/web/dist .
 COPY --from=presite /home/someuser/.presite ./presite
-COPY build/$nodeenv/router.conf /etc/nginx/conf.d/default.conf
+COPY build/$nodeenv/nginx.tmpl /etc/nginx/nginx.tmpl
+
+CMD /bin/sh -c "envsubst < /etc/nginx/nginx.tmpl > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;' || cat /etc/nginx/conf.d/default.conf"

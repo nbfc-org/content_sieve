@@ -1,5 +1,6 @@
 <template>
   <v-card v-if="post.content" flat class="rounded-0">
+    <div :id="post.postId" />
     <details class="comment" open>
       <v-row dense>
         <v-col v-ripple :id="`post-${post.postId}`" :cols="post.tags.length ? 8 : 12">
@@ -26,7 +27,7 @@
               </v-icon>
               <router-link
                 :to="`/tag/${tag.canonical.slug}`"
-                class="nav-item nav-link"
+                class="text-primary"
                 active-class="active"
                 exact
                 >{{ tag.canonical.slug }}</router-link>
@@ -39,12 +40,11 @@
         <v-card-text>
         {{ post.author.username }}
         &bull;
-        <span>{{ ago }}</span>
-        <v-tooltip v-if="0" bottom>
+        <v-tooltip anchor="bottom center" origin="auto" :activator="`#time_${post.postId}`">
           <template v-slot:activator="{ props }">
-            <v-container v-bind="props">
+            <span :id="`time_${post.postId}`">
               {{ ago }}
-            </v-container>
+            </span>
           </template>
           <span>{{ localTime }}</span>
         </v-tooltip>
@@ -60,70 +60,22 @@
         </v-card-text>
       </summary>
       <v-card-actions>
-        <v-item-group v-if="justOnePost">
-              <v-btn
-                size="x-small"
-                plain
-                exact
-                :to="`/post/${post.postId}`"
-                color="primary"
-                >
-                <v-icon left dark>{{ mdiCommentTextMultiple }}</v-icon>
-                {{ post.replies }}
-              </v-btn>
-          <v-tooltip v-if="0" bottom>
-            <template v-slot:activator="{ on, attrs }">
-            </template>
-            <span>View {{ pluralize("Comment", post.replies, true) }}</span>
-          </v-tooltip>
-        </v-item-group>
-        <v-item-group v-if="!justOnePost">
-              <v-btn
-                size="x-small"
-                :icon="mdiReply"
-                color="primary"
-                @click="openReply"
-                :data-target="`comment-${post.postId}-reply-form`"
-                />
-          <v-tooltip v-if="0" bottom>
-            <template v-slot:activator="{ on, attrs }">
-            </template>
-            <span>Reply</span>
-          </v-tooltip>
-        </v-item-group>
-        &nbsp;
-        <v-item-group v-if="showVotes()">
-          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="up" />
-          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="down" />
-          <VoteButton @reloadPost="reloadPost" :vote="post.votes && post.votes[0]" :postId="post.postId" which="flag" />
-        </v-item-group>
-        <v-item-group v-if="post.parent">
-              <v-btn
-                size="x-small"
-                :icon="mdiArrowTopLeft"
-                exact
-                @click="gotoParent(post.parent.postId)"
-                color="primary"
-                />
-          <v-tooltip v-if="0" bottom>
-            <template v-slot:activator="{ on, attrs }">
-            </template>
-            <span>Go to parent</span>
-          </v-tooltip>
-        </v-item-group>
-        <v-item-group v-if="!justOnePost">
-              <v-btn
-                size="x-small"
-                :icon="mdiLink"
-                exact
-                :to="`/post/${post.postId}`"
-                color="primary"
-                />
-          <v-tooltip v-if="0" bottom>
-            <template v-slot:activator="{ on, attrs }">
-            </template>
-            <span>Permalink</span>
-          </v-tooltip>
+        <v-item-group>
+          <template v-for="(child, index) in buttons(post)" :key="child.name">
+            <v-item>
+              <v-tooltip anchor="bottom center" origin="auto" :activator="`#${child.id}`">
+                <template v-slot:activator="{ props }">
+                  <component :is="child.name" :id="child.id" v-bind="child.props" v-on="child.on || {}">
+                    <v-icon v-if="child.icon" :color="child.icon.color">
+                      {{ child.icon.name }}
+                    </v-icon>
+                    {{ child.icon.text || '' }}
+                  </component>
+                </template>
+                <span>{{ child.tooltip }}</span>
+              </v-tooltip>
+            </v-item>
+          </template>
         </v-item-group>
       </v-card-actions>
       <v-expand-transition>
@@ -138,20 +90,18 @@
           </v-card-text>
           <v-card-actions class="pt-0">
             <v-btn
-              size="x-small"
-              outlined
+              size="small"
               color="primary"
               @click="postReply"
               >
               <v-icon left dark>{{ mdiPlusBox }}</v-icon>Add reply
             </v-btn>
             <v-btn
-              size="x-small"
-              outlined
+              size="small"
               color="error"
               @click="reply"
               >
-              <v-icon left dark>{{ mdiClose }}</v-icon>Close reply
+              <v-icon left>{{ mdiClose }}</v-icon>Close reply
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -175,13 +125,13 @@
 
 <script>
 import { DateTime } from 'luxon';
-import { addPost, getSort } from '../lib/queries.js';
+import { capitalCase } from 'capital-case';
+
+import { addPost, getSort, REPLY_DEPTH } from '../lib/queries.js';
 
 import TextEditor from './TextEditor.vue';
 import VoteButton from './VoteButton.vue';
 import { mapState } from 'vuex';
-
-// TODO: reenable tooltips
 
 import { mdiReply, mdiDownloadCircle, mdiArrowTopLeft, mdiCommentTextMultiple, mdiLink, mdiPlusBox, mdiLabel, mdiClose } from '@mdi/js';
 
@@ -234,6 +184,8 @@ export default {
             return this.post.postId;
         },
         hasMore: function() {
+            return 0;
+            // TODO: consider restoring loadMore when apollo actually works
             return !this.justOnePost && this.post.replies > 0 && !this.childrenLength;
         },
         childrenLength: function() {
@@ -284,16 +236,8 @@ export default {
             const refName = `post-${postId}`;
             const el = document.getElementById(refName);
             if(el) {
-                var headerOffset = 45;
-                var elementPosition = el.getBoundingClientRect().top;
-                var offsetPosition = elementPosition - headerOffset;
-
+                this.$router.push({ hash: `#${postId}` });
                 setTimeout(() => this.ripple(el, 800), 400)
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth"
-                });
             } else {
                 this.$router.push({ path: `/post/${postId}` });
             }
@@ -332,6 +276,99 @@ export default {
         },
         loadIt: function() {
             this.$emit('loadMore', this.postId);
+        },
+        buttons(p) {
+            const replyButton = {
+                name: 'VBtn',
+                id: `reply_${p.postId}`,
+                tooltip: "Reply",
+                props: {
+                    size: "x-small",
+                    // variant: "outlined",
+                    'data-target': `comment-${p.postId}-reply-form`,
+                },
+                icon: {
+                    name: mdiReply,
+                    color: "primary",
+                },
+                on: { click: this.openReply },
+            };
+
+            const goToPost = {
+                name: 'VBtn',
+                id: `goto_${p.postId}`,
+                tooltip: "View Comments",
+                props: {
+                    size: "x-small",
+                    to: `/post/${p.postId}`,
+                },
+                icon: {
+                    name: mdiCommentTextMultiple,
+                    text: p.replies,
+                    color: "primary",
+                },
+            };
+
+            const voteButtons = this.showVotes() ? ["up", "down", "flag"] : [];
+
+            const baseButtons = [];
+            if (this.justOnePost) {
+                baseButtons.push(goToPost);
+            } else if (p.depth < REPLY_DEPTH) {
+                baseButtons.push(replyButton);
+            }
+
+            const allButtons = [
+                ...baseButtons,
+                ...voteButtons.map( which => {
+                    return {
+                        name: 'VoteButton',
+                        id: `${which}_${p.postId}`,
+                        tooltip: capitalCase(which),
+                        props: {
+                            postId: p.postId,
+                            which,
+                            vote: p.votes && p.votes[0],
+                        },
+                        on: { reloadPost: this.reloadPost },
+                    };
+                }),
+            ];
+
+            if (p.parent) {
+                allButtons.push({
+                    name: 'VBtn',
+                    id: `parent_${p.postId}`,
+                    tooltip: "Jump to parent",
+                    props: {
+                        size: "x-small",
+                    },
+                    icon: {
+                        name: mdiArrowTopLeft,
+                        color: "primary",
+                    },
+                    on: { click: () => this.gotoParent(p.parent.postId) },
+                });
+            }
+
+            if (!this.justOnePost) {
+                allButtons.push({
+                    name: 'VBtn',
+                    id: `link_${p.postId}`,
+                    tooltip: "Permalink",
+                    props: {
+                        size: "x-small",
+                        to: `/post/${p.postId}`,
+                    },
+                    icon: {
+                        name: mdiLink,
+                        color: "primary",
+                    },
+                });
+            }
+
+            return allButtons;
+
         },
     },
 }

@@ -4,6 +4,8 @@ services:
       - /root/data/cloudflare:/etc/ssl/cloudflare
     ports:
       - "443:443"
+    environment:
+      - SERVER_NAME=staging.nbfc.org
   postgres:
     volumes:
       - /root/data/content_sieve:/var/lib/postgresql/data
