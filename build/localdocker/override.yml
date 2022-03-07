@@ -7,6 +7,13 @@ services:
         - nodeenv=${NODE_ENV}
     ports:
       - "8080:80"
+  presite:
+    build:
+      context: ..
+      dockerfile: build/Dockerfile.web
+      target: presite
+      args:
+        - nodeenv=${NODE_ENV}
   api:
     build:
       context: ..
