@@ -2,6 +2,7 @@ services:
   web:
     volumes:
       - /root/data/cloudflare:/etc/ssl/cloudflare
+      - /root/data/ssr:/usr/share/nginx/html
     ports:
       - "443:443"
     environment:
