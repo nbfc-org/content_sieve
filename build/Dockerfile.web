@@ -18,6 +18,24 @@ ARG nodeenv
 
 RUN npx vite build -m $nodeenv
 
+FROM buildkite/puppeteer:latest as presite
+
+RUN groupadd -r someuser
+RUN useradd -r -g someuser -G audio,video someuser
+RUN mkdir /home/someuser
+RUN chown -R someuser:someuser /home/someuser
+
+WORKDIR /home/someuser
+
+USER someuser
+
+ENV CHROME_PATH /node_modules/puppeteer/.local-chromium/linux-884014/chrome-linux/chrome
+
+RUN npm i presite
+COPY web/taki.js ./node_modules/taki/dist/index.js
+
+COPY --from=webbuild /build/web/dist ./dist
+
 FROM nginx:alpine
 
 WORKDIR /usr/share/nginx/html
