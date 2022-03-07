@@ -8,11 +8,11 @@
     <title><%= html.title %> • <%= html.description %></title>
   </head>
   <body>
-    <noscript>
-      We're sorry but <%= html.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.
-    </noscript>
     <div id="app"></div>
     <script>window.global = window;</script>
     <script type="module" src="/src/index.js"></script>
+    <noscript>
+      We're sorry but <%= html.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.
+    </noscript>
   </body>
 </html>
