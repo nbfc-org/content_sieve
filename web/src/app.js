@@ -16,6 +16,8 @@ import App from './components/App.vue';
 import createRouter from './lib/router.js';
 import store from './lib/store.js';
 
+import { createMetaManager } from 'vue-meta';
+
 import { config } from '@nbfc/shared/config.js';
 
 function createApp(context) {
@@ -91,6 +93,7 @@ function createApp(context) {
   app.use(router);
   app.use(store);
   app.use(vuetify);
+  app.use(createMetaManager());
 
   app.mount('#app');
 

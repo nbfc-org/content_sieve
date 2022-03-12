@@ -32,6 +32,7 @@
     "uuid62": "^1.0.2",
     "vue": "^3.2.26",
     "vue-infinite-loading": "^3.0.0-alpha.0-0",
+    "vue-meta": "^3.0.0-alpha.10",
     "vue-router": "^4.0.12",
     "vuetify": "^3.0.0-alpha.13",
     "vuex": "^4.0.2"
