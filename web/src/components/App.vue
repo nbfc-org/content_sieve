@@ -25,6 +25,7 @@
 import AppNav from './AppNav.vue';
 import SideBar from './SideBar.vue';
 import { mapActions, mapGetters } from "vuex";
+
 import { useMeta } from 'vue-meta';
 import pkg from '../../package.json';
 
@@ -36,7 +37,6 @@ export default {
     setup () {
         useMeta({
             title: `${pkg.productName} • ${pkg.description}`,
-            htmlAttrs: { lang: 'en' }
         })
     },
     methods: {

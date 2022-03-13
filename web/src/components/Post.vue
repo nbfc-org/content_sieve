@@ -7,7 +7,7 @@
           <v-card-text v-if="post.content.rendered">
             <div class="markdown-body" v-html="post.content.rendered" />
           </v-card-text>
-          <v-card-text v-if="post.content.url">
+          <v-card-text v-else>
             <a :href="post.content.url">{{ post.content.title }}</a>
           </v-card-text>
         </v-col>
@@ -137,11 +137,27 @@ import { mdiReply, mdiDownloadCircle, mdiArrowTopLeft, mdiCommentTextMultiple, m
 
 import pluralize from 'pluralize';
 
+import { useMeta } from 'vue-meta';
+import pkg from '../../package.json';
+
 export default {
     name: 'Post',
     components: {
         TextEditor,
         VoteButton,
+    },
+    setup(props, context) {
+        const { post } = props;
+        if (!post.content) {
+            return;
+        }
+        const title = post.content.rendered || post.content.title;
+        const slug = title.substring(0, 48);
+        const dt = DateTime.fromMillis(post.createdAt).toRFC2822();
+        useMeta({
+            title: `${slug} • ${pkg.productName}`,
+            description: `${title}, Author: ${post.author.username}, Posted on: ${dt}`,
+        });
     },
     props: [
         'post',
