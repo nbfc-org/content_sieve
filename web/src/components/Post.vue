@@ -139,6 +139,7 @@ import pluralize from 'pluralize';
 
 import { useMeta } from 'vue-meta';
 import pkg from '../../package.json';
+import * as strShorten from 'str_shorten';
 
 export default {
     name: 'Post',
@@ -147,16 +148,20 @@ export default {
         VoteButton,
     },
     setup(props, context) {
-        const { post } = props;
-        if (!post.content) {
+        const { post, topLevel } = props;
+        if (!post.content || post.parent || topLevel) {
             return;
         }
-        const title = post.content.rendered || post.content.title;
-        const slug = title.substring(0, 48);
+        const content = post.content.rendered || post.content.title;
+        let tmp = document.createElement("DIV");
+        tmp.innerHTML = content;
+        const no_html = tmp.textContent || tmp.innerText || "";
+        const slug = strShorten(no_html, 48);
+        // TODO: factor out fromMillis, there are two
         const dt = DateTime.fromMillis(post.createdAt).toRFC2822();
         useMeta({
             title: `${slug} • ${pkg.productName}`,
-            description: `${title}, Author: ${post.author.username}, Posted on: ${dt}`,
+            description: `${no_html}, Author: ${post.author.username}, Posted on: ${dt}`,
         });
     },
     props: [
