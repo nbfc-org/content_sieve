@@ -7,7 +7,7 @@
           <v-card-text v-if="post.content.rendered">
             <div class="markdown-body" v-html="post.content.rendered" />
           </v-card-text>
-          <v-card-text v-if="post.content.url">
+          <v-card-text v-else>
             <a :href="post.content.url">{{ post.content.title }}</a>
           </v-card-text>
         </v-col>
@@ -137,11 +137,32 @@ import { mdiReply, mdiDownloadCircle, mdiArrowTopLeft, mdiCommentTextMultiple, m
 
 import pluralize from 'pluralize';
 
+import { useMeta } from 'vue-meta';
+import pkg from '../../package.json';
+import * as strShorten from 'str_shorten';
+
 export default {
     name: 'Post',
     components: {
         TextEditor,
         VoteButton,
+    },
+    setup(props, context) {
+        const { post, topLevel } = props;
+        if (!post.content || post.parent || topLevel) {
+            return;
+        }
+        const content = post.content.rendered || post.content.title;
+        let tmp = document.createElement("DIV");
+        tmp.innerHTML = content;
+        const no_html = tmp.textContent || tmp.innerText || "";
+        const slug = strShorten(no_html, 48);
+        // TODO: factor out fromMillis, there are two
+        const dt = DateTime.fromMillis(post.createdAt).toRFC2822();
+        useMeta({
+            title: `${slug} • ${pkg.productName}`,
+            description: `${no_html}, Author: ${post.author.username}, Posted on: ${dt}`,
+        });
     },
     props: [
         'post',

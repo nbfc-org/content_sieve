@@ -1,5 +1,8 @@
 <template>
   <v-app>
+    <metainfo>
+      <template v-slot:title="{ content }">{{ content }}</template>
+    </metainfo>
     <v-layout>
       <app-nav/>
       <v-main>
@@ -23,10 +26,18 @@ import AppNav from './AppNav.vue';
 import SideBar from './SideBar.vue';
 import { mapActions, mapGetters } from "vuex";
 
+import { useMeta } from 'vue-meta';
+import pkg from '../../package.json';
+
 export default {
     components: {
         AppNav,
         SideBar,
+    },
+    setup () {
+        useMeta({
+            title: `${pkg.productName} • ${pkg.description}`,
+        })
     },
     methods: {
         ...mapActions(["getSession"]),
