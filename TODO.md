@@ -61,7 +61,7 @@ code: "INTERNAL_SERVER_ERROR"
 ​​
 exception: Object { validationErrors: (1) […], stacktrace: (7) […] }
 ​​​
-stacktrace: Array(7) [ "Error: Argument Validation Error", "    at Object.validateArg (/home/***REMOVED***proj/content_sieve/api/node_modules/type-graphql/dist/resolvers/validate-arg.js:29:15)", "    at processTicksAndRejections (internal/process/task_queues.js:95:5)", … ]
+stacktrace: Array(7) [ "Error: Argument Validation Error", "    at Object.validateArg (content_sieve/api/node_modules/type-graphql/dist/resolvers/validate-arg.js:29:15)", "    at processTicksAndRejections (internal/process/task_queues.js:95:5)", … ]
 ​​​
 validationErrors: Array [ {…} ]
 ​​​​

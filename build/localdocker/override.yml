@@ -20,9 +20,9 @@ services:
       dockerfile: build/Dockerfile.api
   postgres:
     volumes:
-      - /attic/***REMOVED***data/local_content_sieve:/var/lib/postgresql/data
+      - ${LOCAL_DATA_DIR}/local_content_sieve:/var/lib/postgresql/data
     ports:
       - "6432:5432"
   keycloak_db:
     volumes:
-      - /attic/***REMOVED***data/local_keycloak:/var/lib/postgresql/data
+      - ${LOCAL_DATA_DIR}/local_keycloak:/var/lib/postgresql/data
